@@ -1533,8 +1533,8 @@
 
       if (error) {
         return (
-          <div className="fixed inset-0 z-[70] bg-black/60 flex items-end justify-center anim-fade-in" onClick={onClose}>
-            <div className="w-full max-w-[430px] bg-white rounded-t-[28px] p-6 text-center anim-slide-up" onClick={e => e.stopPropagation()}>
+          <div className="fixed inset-0 z-[70] bg-black/60 flex items-end lg:items-center justify-center lg:p-6 anim-fade-in" onClick={onClose}>
+            <div className="w-full max-w-[430px] lg:max-w-[400px] bg-white rounded-t-[28px] lg:rounded-[24px] p-6 text-center anim-slide-up" onClick={e => e.stopPropagation()}>
               <Icon name="no_photography" className="text-muted text-[40px] mb-3" />
               <p className="text-navy font-bold mb-1">Camera not available</p>
               <p className="text-muted text-[12px] mb-4">Permission denied or no camera found.</p>
@@ -1577,7 +1577,7 @@
     }
 
     /* ─── VehicleDetailOverlay ─── */
-    function VehicleDetailOverlay({ vehicle: v, onClose, updateVehicle, db, isAdmin, t }) {
+    function VehicleDetailOverlay({ vehicle: v, onClose, updateVehicle, db, isAdmin, t, onDeleteVehicle }) {
       const [tab,          setTab]          = useState('VEHICLE');
       const [dealerName,   setDealerName]   = useState('');
       const [uploading,    setUploading]    = useState(false);
@@ -1592,6 +1592,34 @@
       const pp     = pdiProgress(v);
       const fp     = finalProgress(v);
       const issues = countIssues(v);
+
+      const [editMode,   setEditMode]   = useState(false);
+      const [editFields, setEditFields] = useState({});
+
+      const startEdit = () => {
+        setEditFields({ model: v.model||'', color: v.color||'', engine: v.engine||'', fuel: v.fuel||'Gasolina', lot: v.lot||'', vin: v.vin||'', year: String(v.year||2025) });
+        setEditMode(true);
+      };
+      const saveEdit = async () => {
+        const u = {
+          model:  editFields.model.trim(),
+          color:  editFields.color.trim(),
+          engine: editFields.engine.trim(),
+          fuel:   editFields.fuel || 'Gasolina',
+          lot:    editFields.lot.trim(),
+          vin:    editFields.vin.trim(),
+          year:   parseInt(editFields.year) || 2025,
+        };
+        await sb.from('vehicles').update(u).eq('id', v.id);
+        updateVehicle(v.id, car => ({ ...car, ...u }));
+        setEditMode(false);
+      };
+      const handleDelete = async () => {
+        if (!confirm(`Delete ${v.label||v.model}? This cannot be undone.`)) return;
+        await sb.from('vehicles').delete().eq('id', v.id);
+        if (onDeleteVehicle) onDeleteVehicle(v.id);
+        onClose();
+      };
 
       /* ── check toggle ── */
       const toggleCheck = async (type, idx) => {
@@ -1896,12 +1924,124 @@
         );
       };
 
+      const eFld = (label, field, type='text') => (
+        <div key={field}>
+          <div className="text-[10px] text-muted font-bold uppercase tracking-widest mb-1">{label}</div>
+          <input type={type} value={editFields[field] ?? ''} onChange={e => setEditFields(f => ({...f, [field]: e.target.value}))}
+            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-[12px] text-navy outline-none focus:border-primary transition-colors" />
+        </div>
+      );
+      const EditForm = () => (
+        <div className="space-y-3">
+          {eFld('Model',  'model')}
+          {eFld('Color',  'color')}
+          {eFld('Engine', 'engine')}
+          {eFld('VIN',    'vin')}
+          {eFld('Lot',    'lot')}
+          {eFld('Year',   'year', 'number')}
+          <div>
+            <div className="text-[10px] text-muted font-bold uppercase tracking-widest mb-1">Fuel</div>
+            <select value={editFields.fuel||'Gasolina'} onChange={e => setEditFields(f => ({...f, fuel: e.target.value}))}
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-[12px] text-navy outline-none focus:border-primary transition-colors appearance-none">
+              <option>Gasolina</option><option>Diesel</option><option>Hybrid</option><option>Electric</option>
+            </select>
+          </div>
+          <button onClick={saveEdit} className="w-full py-2.5 bg-primary text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 shadow-primary-glow hover:brightness-110 transition-all">
+            <Icon name="save" className="text-sm" /> Save Changes
+          </button>
+          <button onClick={handleDelete} className="w-full py-2.5 bg-red-50 border border-red-200 text-red-600 font-bold text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-red-100 transition-all">
+            <Icon name="delete_forever" className="text-sm" /> Delete Vehicle
+          </button>
+        </div>
+      );
+
+      /* stage-action buttons — used in both left col (desktop) and VEHICLE tab (mobile) */
+      const StageActions = () => (<>
+        {!isAdmin && v.stage === 'port' && (
+          <button onClick={startPdi} className="w-full py-[14px] bg-primary text-white font-black text-[13px] uppercase tracking-[0.12em] rounded-full shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            <Icon name="play_arrow" fill className="text-xl" /> {t('startPdi')}
+          </button>
+        )}
+        {!isAdmin && v.stage === 'pdi' && (
+          <div className="space-y-2">
+            <div className="bg-white rounded-[16px] p-3 shadow-card">
+              <div className="flex justify-between text-[11px] mb-1.5"><span className="text-muted font-medium">{t('pdiProgress')}</span><span className="font-black text-navy">{pp.done}/{pp.total}</span></div>
+              <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-primary rounded-full" style={{width:`${pp.pct}%`}} /></div>
+            </div>
+            {issues > 0 && <button onClick={putOnHold} className="w-full py-3 bg-red-500 text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-2 hover:bg-red-600 active:scale-[0.98] transition-all"><Icon name="pause_circle" fill className="text-lg" /> {t('putOnHold', {count:issues})}</button>}
+            {pp.pct === 100 && issues === 0 && <button onClick={pdiPassToStock} className="w-full py-3 bg-emerald-500 text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-2 hover:bg-emerald-600 active:scale-[0.98] transition-all shadow-lg"><Icon name="check_circle" fill className="text-lg" /> {t('pdiPassed')}</button>}
+          </div>
+        )}
+        {!isAdmin && v.stage === 'hold' && (
+          <button onClick={resumePdi} className="w-full py-[14px] bg-primary text-white font-black text-[13px] uppercase tracking-[0.12em] rounded-full shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            <Icon name="play_arrow" fill className="text-xl" /> {t('resumePdi')}
+          </button>
+        )}
+        {isAdmin && v.stage === 'hold' && (() => {
+          const raw = v.historyRaw || [];
+          const holdEntry = raw.find(h => h.stage_to === 'hold');
+          const daysHeld = holdEntry ? Math.floor((Date.now() - new Date(holdEntry.created_at).getTime()) / 86400000) : null;
+          const allIssues = [...(v.pdiChecks||[]).filter(c=>c.state==='issue').map(c=>({...c,_src:'PDI'})),...(v.finalChecks||[]).filter(c=>c.state==='issue').map(c=>({...c,_src:'Final'}))];
+          const repairLog = raw.filter(h=>h.stage_from==='hold'&&h.stage_to==='hold').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+          return (
+            <div className="space-y-3">
+              <div className="bg-red-50 border border-red-200 rounded-[14px] p-3 flex items-center gap-2">
+                <Icon name="error" fill className="text-red-500 text-[20px] flex-shrink-0" />
+                <div><div className="font-black text-red-700 text-[13px]">Vehicle On Hold</div><div className="text-[10px] text-red-500">{daysHeld !== null ? `${daysHeld}d on hold` : ''} · {allIssues.length} issue{allIssues.length!==1?'s':''}</div></div>
+              </div>
+              {allIssues.length > 0 && (
+                <div className="bg-white rounded-[14px] p-3 shadow-card space-y-2">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted">Flagged Issues</div>
+                  {allIssues.map((c,i) => (
+                    <div key={i} className="flex items-start gap-2 pb-2 border-b border-gray-50 last:border-0">
+                      <div className="w-4 h-4 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"><div className="w-1.5 h-1.5 bg-red-500 rounded-full"/></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-semibold text-navy">{c.name} <span className="text-[9px] font-bold bg-gray-100 text-muted px-1 rounded">{c._src}</span></div>
+                        {c.note && <div className="text-[10px] text-red-600 italic mt-0.5">{c.note}</div>}
+                        {c.image_url && <img src={c.image_url} alt="" className="mt-1 w-full max-h-24 object-cover rounded-lg border border-red-200"/>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {repairLog.length > 0 && (
+                <div className="bg-white rounded-[14px] p-3 shadow-card space-y-1">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted mb-1">Repair Log</div>
+                  {repairLog.map((h,i) => <div key={i} className="text-[10px] bg-gray-50 rounded px-2 py-1"><span className="font-bold text-muted">{h.created_at?new Date(h.created_at).toLocaleDateString():''}:</span> {h.action}</div>)}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <button onClick={() => { updateVehicle(v.id,car=>({...car,stage:'pdi'})); if(db){db.updateStage(v.id,'pdi').catch(console.error);db.insertHistory(v.id,'Sent back for re-inspection','hold','pdi').catch(console.error);} }} className="flex-1 py-2.5 border-2 border-primary text-primary font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1 hover:bg-primary/5 transition-colors active:scale-95"><Icon name="restart_alt" className="text-sm"/> Re-inspect</button>
+                <button onClick={() => { const today=todayStr(); updateVehicle(v.id,car=>({...car,stage:'stock'})); if(db){db.updateStage(v.id,'stock',{pdi_date:today,stock_date:today}).catch(console.error);db.insertHistory(v.id,'Cleared to stock','hold','stock').catch(console.error);} }} className="flex-1 py-2.5 bg-primary text-white font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1 hover:brightness-110 transition-all active:scale-95"><Icon name="check_circle" className="text-sm"/> Clear to Stock</button>
+              </div>
+            </div>
+          );
+        })()}
+        {!isAdmin && v.stage === 'stock' && (
+          <button onClick={passToFinal} className="w-full py-[14px] bg-purple-600 text-white font-black text-[13px] uppercase tracking-[0.12em] rounded-full shadow-lg hover:bg-purple-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            <Icon name="local_shipping" fill className="text-xl" /> {t('passToFinal')}
+          </button>
+        )}
+        {!isAdmin && v.stage === 'ready' && (
+          <div className="space-y-2">
+            <div className="bg-white rounded-[16px] p-3 shadow-card">
+              <div className="flex justify-between text-[11px] mb-1.5"><span className="text-muted font-medium">{t('finalProgress')}</span><span className="font-black text-navy">{fp.done}/{fp.total}</span></div>
+              <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-purple-500 rounded-full" style={{width:`${fp.pct}%`}}/></div>
+            </div>
+            {fp.pct === 100 && (
+              <div className="space-y-2">
+                <input value={dealerName} onChange={e=>setDealerName(e.target.value)} placeholder={t('dealerPlaceholder')} className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-navy placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"/>
+                <button onClick={releaseCar} disabled={!dealerName.trim()} className="w-full py-3 bg-emerald-500 text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-2 hover:bg-emerald-600 active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed"><Icon name="verified" fill className="text-lg"/> {t('releaseToDealer')}</button>
+              </div>
+            )}
+          </div>
+        )}
+      </>);
+
       return (
-        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end justify-center" onClick={onClose}>
-          {/* Hidden file inputs */}
+        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center" onClick={onClose}>
           <input ref={vehicleImgRef} type="file" accept="image/*" className="hidden" onChange={handleVehicleImgUpload} />
-          <input ref={issueImgRef}   type="file" accept="image/*" capture="environment" className="hidden" onChange={handleIssueImgUpload}  />
-          {/* Desktop camera modal */}
+          <input ref={issueImgRef}   type="file" accept="image/*" capture="environment" className="hidden" onChange={handleIssueImgUpload} />
           {showCamera && (
             <CameraModal
               onCapture={handleCameraCapture}
@@ -1910,379 +2050,220 @@
             />
           )}
 
-          <div className="w-full max-w-[430px] bg-[#F5F5F5] rounded-t-[32px] shadow-2xl anim-slide-up flex flex-col" style={{ maxHeight:'94vh' }} onClick={e => e.stopPropagation()}>
-            <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 flex-shrink-0" />
-            <div className="flex items-center justify-between px-5 pt-3 pb-3 flex-shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-[18px] font-black text-navy">{v.label || v.model}</span>
+          {/* Panel — mobile: bottom sheet · desktop: centered dialog */}
+          <div className="w-full max-w-[430px] lg:max-w-[960px] bg-[#F5F5F5] rounded-t-[32px] lg:rounded-[24px] shadow-2xl anim-slide-up flex flex-col lg:flex-row overflow-hidden" style={{ maxHeight:'94vh' }} onClick={e => e.stopPropagation()}>
+
+            {/* ═══ LEFT COLUMN ═══ */}
+            <div className="flex-shrink-0 lg:w-[300px] flex flex-col lg:bg-white lg:border-r lg:border-gray-100">
+
+              {/* Mobile drag handle */}
+              <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 flex-shrink-0 lg:hidden" />
+
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 pt-3 pb-3 flex-shrink-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-[17px] font-black text-navy truncate">{v.label || v.model}</span>
                   <StatusBadge status={v.stage} t={t} />
                 </div>
-              </div>
-              <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors"><Icon name="close" className="text-navy" /></button>
-            </div>
-            <div className="bg-white px-5 py-3 flex items-center gap-4 border-b border-gray-100 flex-shrink-0">
-              <div className="relative w-24 h-16 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0 group cursor-pointer"
-                   onClick={() => vehicleImgRef.current?.click()}>
-                <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
-                {uploading ? (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  </div>
-                ) : (
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center transition-all">
-                    <Icon name="photo_camera" className="text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                )}
-              </div>
-              <div>
-                <h2 className="text-[15px] font-black text-navy leading-tight">{v.model}</h2>
-                <p className="text-[11px] text-muted">{v.color} · {v.engine}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-muted"><Icon name="fingerprint" className="text-xs text-primary" />{v.vin.slice(0,10)}...</div>
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-muted"><Icon name="location_on" className="text-xs text-primary" />{t('lot')} {v.lot}</div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  {isAdmin && (
+                    <button onClick={() => editMode ? setEditMode(false) : startEdit()}
+                      className={`p-2 rounded-full transition-colors ${editMode ? 'bg-primary/10 text-primary' : 'hover:bg-gray-200 text-navy'}`}
+                      title={editMode ? 'Cancel edit' : 'Edit vehicle'}>
+                      <Icon name={editMode ? 'edit_off' : 'edit'} className="text-[18px]" />
+                    </button>
+                  )}
+                  <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors"><Icon name="close" className="text-navy" /></button>
                 </div>
               </div>
-            </div>
-            <nav className="bg-white border-b border-gray-100 flex px-2 flex-shrink-0">
-              {[['VEHICLE','tabVehicle'],['PDI','tabPdi'],['MAINT','tabMaint'],['FINAL','tabFinal'],['NOTES','tabNotes'],['HISTORY','tabHistory']].map(([key,tKey]) => (
-                <button key={key} onClick={() => setTab(key)}
-                  className={`flex-1 py-3 text-[9px] font-bold tracking-widest transition-colors ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
-                  {t(tKey)}
-                </button>
-              ))}
-            </nav>
-            <div className="flex-1 overflow-y-auto p-4 pb-8">
-              {tab === 'VEHICLE' && (
-                <div className="space-y-4">
+
+              {/* Vehicle image + quick-info */}
+              <div className="bg-white px-5 py-3 flex items-center gap-4 border-b border-gray-100 flex-shrink-0">
+                <div className="relative w-24 h-16 lg:w-28 lg:h-20 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0 group cursor-pointer" onClick={() => vehicleImgRef.current?.click()}>
+                  <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                  {uploading ? (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center"><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /></div>
+                  ) : (
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center transition-all">
+                      <Icon name="photo_camera" className="text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h2 className="text-[15px] font-black text-navy leading-tight">{v.model}</h2>
+                  <p className="text-[11px] text-muted">{v.color} · {v.engine}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-1 text-[10px] font-bold text-muted"><Icon name="fingerprint" className="text-xs text-primary" />{v.vin.slice(0,10)}…</div>
+                    <div className="flex items-center gap-1 text-[10px] font-bold text-muted"><Icon name="location_on" className="text-xs text-primary" />{t('lot')} {v.lot}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop-only: vehicle details or edit form */}
+              <div className="hidden lg:flex flex-col flex-1 overflow-y-auto p-4 space-y-4">
+                {editMode ? <EditForm /> : (<>
                   <div className="bg-white rounded-[16px] p-4 shadow-card space-y-1">
                     {[[t('make'),v.make],[t('model'),v.model],[t('type'),v.type.toUpperCase()],[t('year'),String(v.year)],[t('color'),v.color],[t('engine'),v.engine],[t('fuel'),v.fuel],[t('vin'),v.vin],[t('lot'),v.lot],[t('assignedTo'),tech.name]].map(([k,val]) => (
-                      <div key={k} className="flex justify-between py-2 border-b border-gray-50 last:border-0">
-                        <span className="text-[12px] text-muted font-medium">{k}</span>
-                        <span className="text-[12px] font-bold text-navy">{val}</span>
+                      <div key={k} className="flex justify-between py-1.5 border-b border-gray-50 last:border-0">
+                        <span className="text-[11px] text-muted font-medium">{k}</span>
+                        <span className="text-[11px] font-bold text-navy text-right max-w-[55%] truncate" title={val}>{val}</span>
                       </div>
                     ))}
                   </div>
-                  {!isAdmin && v.stage === 'port' && (
-                    <button onClick={startPdi} className="w-full py-[14px] bg-primary text-white font-black text-[13px] uppercase tracking-[0.12em] rounded-full shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                      <Icon name="play_arrow" fill className="text-xl" /> {t('startPdi')}
-                    </button>
-                  )}
-                  {!isAdmin && v.stage === 'pdi' && (
-                    <div className="space-y-2">
-                      <div className="bg-white rounded-[16px] p-3 shadow-card">
-                        <div className="flex justify-between text-[11px] mb-1.5">
-                          <span className="text-muted font-medium">{t('pdiProgress')}</span>
-                          <span className="font-black text-navy">{pp.done}/{pp.total}</span>
+                  <StageActions />
+                </>)}
+              </div>
+            </div>{/* end LEFT COLUMN */}
+
+            {/* ═══ RIGHT COLUMN ═══ */}
+            <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+              <nav className="bg-white border-b border-gray-100 flex px-2 flex-shrink-0">
+                {[['VEHICLE','tabVehicle','lg:hidden'],['PDI','tabPdi',''],['MAINT','tabMaint',''],['FINAL','tabFinal',''],['NOTES','tabNotes',''],['HISTORY','tabHistory','']].map(([key,tKey,extra]) => (
+                  <button key={key} onClick={() => setTab(key)}
+                    className={`flex-1 py-3 text-[9px] font-bold tracking-widest transition-colors ${extra} ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
+                    {t(tKey)}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="flex-1 overflow-y-auto p-4 pb-8">
+
+                {/* VEHICLE tab — mobile only */}
+                {tab === 'VEHICLE' && (
+                  <div className="space-y-4 lg:hidden">
+                    <div className="bg-white rounded-[16px] p-4 shadow-card space-y-1">
+                      {[[t('make'),v.make],[t('model'),v.model],[t('type'),v.type.toUpperCase()],[t('year'),String(v.year)],[t('color'),v.color],[t('engine'),v.engine],[t('fuel'),v.fuel],[t('vin'),v.vin],[t('lot'),v.lot],[t('assignedTo'),tech.name]].map(([k,val]) => (
+                        <div key={k} className="flex justify-between py-2 border-b border-gray-50 last:border-0">
+                          <span className="text-[12px] text-muted font-medium">{k}</span>
+                          <span className="text-[12px] font-bold text-navy">{val}</span>
                         </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-primary rounded-full" style={{width:`${pp.pct}%`}} /></div>
-                      </div>
-                      {issues > 0 && (
-                        <button onClick={putOnHold} className="w-full py-3 bg-red-500 text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-2 hover:bg-red-600 active:scale-[0.98] transition-all">
-                          <Icon name="pause_circle" fill className="text-lg" /> {t('putOnHold', {count:issues})}
-                        </button>
-                      )}
-                      {pp.pct === 100 && issues === 0 && (
-                        <button onClick={pdiPassToStock} className="w-full py-3 bg-emerald-500 text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-2 hover:bg-emerald-600 active:scale-[0.98] transition-all shadow-lg">
-                          <Icon name="check_circle" fill className="text-lg" /> {t('pdiPassed')}
-                        </button>
+                      ))}
+                    </div>
+                    {editMode ? <EditForm /> : <StageActions />}
+                  </div>
+                )}
+
+                {/* PDI + FINAL tabs */}
+                {(tab === 'PDI' || tab === 'FINAL') && (() => {
+                  const type    = tab === 'PDI' ? 'pdi' : 'final';
+                  const checks  = type === 'pdi' ? v.pdiChecks : v.finalChecks;
+                  const done    = checks.filter(c => c.state === 'done' || c.state === 'na').length;
+                  const issues  = checks.filter(c => c.state === 'issue').length;
+                  const pending = checks.filter(c => c.state === 'pending').length;
+                  const cState  = confirmState[type] || 'idle';
+                  return (
+                    <div className="space-y-4">
+                      {ChecklistTab({ type, checks })}
+                      {!isAdmin && (
+                        <div className="bg-white rounded-[20px] p-4 shadow-card space-y-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full"><Icon name="check_circle" fill className="text-[13px]" /> {done} done</span>
+                              {issues > 0 && <span className="flex items-center gap-1 text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full"><Icon name="error" fill className="text-[13px]" /> {issues} issue{issues!==1?'s':''}</span>}
+                              {pending > 0 && <span className="flex items-center gap-1 text-[11px] font-bold text-muted bg-gray-100 px-2 py-0.5 rounded-full"><Icon name="radio_button_unchecked" className="text-[13px]" /> {pending} pending</span>}
+                            </div>
+                            <span className="text-[11px] font-black text-navy">{done}/{checks.length}</span>
+                          </div>
+                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full transition-all duration-500 ${issues > 0 ? 'bg-red-400' : 'bg-emerald-500'}`} style={{ width:`${checks.length?(done/checks.length)*100:0}%` }} />
+                          </div>
+                          <button onClick={() => handleConfirmSave(type)} disabled={cState==='saving'}
+                            className={`w-full py-3.5 rounded-full font-black text-[13px] uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${cState==='saved'?'bg-emerald-500 text-white shadow-lg shadow-emerald-200':cState==='saving'?'bg-gray-200 text-muted cursor-wait':'bg-primary text-white shadow-primary-glow hover:brightness-110'}`}>
+                            <Icon name={cState==='saved'?'check_circle':cState==='saving'?'hourglass_empty':'cloud_upload'} fill={cState==='saved'} className="text-xl" />
+                            {cState==='saved'?'Checklist Saved!':cState==='saving'?'Saving…':`Confirm & Save ${tab} Checklist`}
+                          </button>
+                          {cState==='saved' && <p className="text-[10px] text-emerald-600 text-center font-medium">All {checks.length} items saved · visible to admin</p>}
+                        </div>
                       )}
                     </div>
-                  )}
-                  {!isAdmin && v.stage === 'hold' && (
-                    <button onClick={resumePdi} className="w-full py-[14px] bg-primary text-white font-black text-[13px] uppercase tracking-[0.12em] rounded-full shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                      <Icon name="play_arrow" fill className="text-xl" /> {t('resumePdi')}
-                    </button>
-                  )}
-                  {isAdmin && v.stage === 'hold' && (() => {
-                    const raw        = v.historyRaw || [];
-                    const holdEntry  = raw.find(h => h.stage_to === 'hold');
-                    const daysHeld   = holdEntry ? Math.floor((Date.now() - new Date(holdEntry.created_at).getTime()) / 86400000) : null;
-                    const allIssues  = [
-                      ...(v.pdiChecks   || []).filter(c => c.state === 'issue').map(c => ({ ...c, _src: 'PDI' })),
-                      ...(v.finalChecks || []).filter(c => c.state === 'issue').map(c => ({ ...c, _src: 'Final' })),
-                    ];
-                    const repairLog  = raw
-                      .filter(h => h.stage_from === 'hold' && h.stage_to === 'hold')
-                      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-                    return (
-                      <div className="space-y-3">
-                        {/* Hold banner */}
-                        <div className="bg-red-50 border border-red-200 rounded-[16px] p-3.5 flex items-center gap-3">
-                          <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Icon name="error" fill className="text-red-500 text-[22px]" />
-                          </div>
-                          <div>
-                            <div className="font-black text-red-700 text-[14px]">Vehicle On Hold</div>
-                            <div className="text-[11px] text-red-500 font-medium">
-                              {daysHeld !== null ? `${daysHeld} day${daysHeld !== 1 ? 's' : ''} on hold` : 'Hold date unknown'}
-                            </div>
-                          </div>
-                        </div>
+                  );
+                })()}
 
-                        {/* Flagged issues */}
-                        {allIssues.length > 0 ? (
-                          <div className="bg-white rounded-[16px] p-4 shadow-card">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-muted mb-3">
-                              Flagged Issues ({allIssues.length})
+                {/* MAINT tab */}
+                {tab === 'MAINT' && (
+                  <div className="space-y-2">
+                    {v.stockMaint.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <Icon name="build_circle" fill className="text-muted text-[52px] mb-3 opacity-40" />
+                        <div className="text-[13px] font-bold text-muted">{t('noMaintenance')}</div>
+                        <div className="text-[11px] text-muted/60 mt-1">{t('maintHint')}</div>
+                      </div>
+                    ) : v.stockMaint.map((m, idx) => {
+                      const overDays  = daysAgo(m.nextDue);
+                      const isOverdue = overDays >= 0;
+                      const isDueSoon = overDays >= -7 && overDays < 0;
+                      return (
+                        <div key={m.id} className={`bg-white rounded-[16px] p-3 shadow-card border-l-4 ${isOverdue?'border-red-400':isDueSoon?'border-amber-400':'border-emerald-400'}`}>
+                          <div className="flex items-start justify-between mb-1">
+                            <div className="flex-1 min-w-0">
+                              <div className="text-[12px] font-bold text-navy leading-snug">{m.name}</div>
+                              <div className="flex items-center gap-2 mt-1"><StatusBadge status={m.priority} /><span className="text-[10px] text-muted">{t('every',{freq:m.freq})}</span></div>
                             </div>
-                            <div className="space-y-2.5">
-                              {allIssues.map((c, i) => (
-                                <div key={i} className="flex items-start gap-2.5 pb-2.5 border-b border-gray-50 last:border-0 last:pb-0">
-                                  <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                                    <div className="w-2 h-2 bg-red-500 rounded-full" />
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                      <span className="text-[12px] font-semibold text-navy">{c.name}</span>
-                                      <span className="text-[9px] font-bold uppercase bg-gray-100 text-muted px-1.5 py-0.5 rounded">{c._src}</span>
-                                      {c.priority && <span className="text-[9px] font-bold uppercase text-muted">{c.priority}</span>}
-                                    </div>
-                                    {c.note
-                                      ? <div className="mt-1.5 px-2.5 py-1.5 bg-red-50 border border-red-100 rounded-lg text-[11px] text-red-700 italic leading-snug">{c.note}</div>
-                                      : <div className="mt-1 text-[10px] text-red-400 font-medium flex items-center gap-1"><Icon name="warning" fill className="text-[12px]" /> No note added</div>
-                                    }
-                                    {c.image_url && (
-                                      <img src={c.image_url} alt="Issue photo" className="mt-1.5 w-full max-h-32 object-cover rounded-lg border border-red-200" />
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
+                            <div className="text-right flex-shrink-0 ml-2">
+                              {isOverdue?<span className="text-[10px] font-black text-red-600">{t('overdueD',{days:overDays})}</span>:isDueSoon?<span className="text-[10px] font-black text-amber-600">{t('dueIn',{days:Math.abs(overDays)})}</span>:<span className="text-[10px] font-bold text-emerald-600">{t('next')} {m.nextDue}</span>}
+                              <div className="text-[9px] text-muted mt-0.5">{t('last')} {m.lastDone}</div>
                             </div>
                           </div>
-                        ) : (
-                          <div className="bg-amber-50 border border-amber-200 rounded-[16px] p-3 text-[12px] text-amber-700 font-medium text-center">
-                            No issues flagged on checklist — check PDI / Final tabs for full details.
-                          </div>
-                        )}
-
-                        {/* Repair log */}
-                        <div className="bg-white rounded-[16px] p-4 shadow-card">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-muted mb-3">Repair Log</div>
-                          {repairLog.length === 0 ? (
-                            <div className="text-[11px] text-muted italic">No repair notes recorded yet.</div>
-                          ) : (
-                            <div className="space-y-2">
-                              {repairLog.map((h, i) => (
-                                <div key={i} className="flex gap-2 text-[11px] bg-gray-50 rounded-lg px-3 py-2">
-                                  <span className="text-muted font-bold flex-shrink-0">
-                                    {h.created_at ? new Date(h.created_at).toLocaleDateString() : ''}:
-                                  </span>
-                                  <span className="text-navy">{h.action}</span>
-                                </div>
-                              ))}
-                            </div>
+                          {!isAdmin && (
+                            <button onClick={() => completeMaint(idx)} className="mt-2 w-full py-2 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-[11px] uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 hover:bg-emerald-100 active:scale-95 transition-all">
+                              <Icon name="check" className="text-sm" /> {t('done')}
+                            </button>
                           )}
                         </div>
+                      );
+                    })}
+                  </div>
+                )}
 
-                        {/* Admin resolution buttons */}
-                        <div className="flex gap-2">
-                          <button onClick={() => {
-                            const action = 'Sent back for re-inspection';
-                            updateVehicle(v.id, car => ({ ...car, stage: 'pdi' }));
-                            if (db) {
-                              db.updateStage(v.id, 'pdi').catch(console.error);
-                              db.insertHistory(v.id, action, 'hold', 'pdi').catch(console.error);
-                            }
-                          }} className="flex-1 py-2.5 border-2 border-primary text-primary font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/5 transition-colors active:scale-95">
-                            <Icon name="restart_alt" className="text-base" /> Re-inspect
-                          </button>
-                          <button onClick={() => {
-                            const today  = todayStr();
-                            const action = 'Cleared to stock';
-                            updateVehicle(v.id, car => ({ ...car, stage: 'stock' }));
-                            if (db) {
-                              db.updateStage(v.id, 'stock', { pdi_date: today, stock_date: today }).catch(console.error);
-                              db.insertHistory(v.id, action, 'hold', 'stock').catch(console.error);
-                            }
-                          }} className="flex-1 py-2.5 bg-primary text-white font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/80 transition-colors active:scale-95">
-                            <Icon name="check_circle" className="text-base" /> Clear to Stock
-                          </button>
-                        </div>
+                {/* NOTES tab */}
+                {tab === 'NOTES' && (
+                  <div className="space-y-3">
+                    <textarea value={v.notes}
+                      onChange={e => { const val=e.target.value; updateVehicle(v.id, car=>({...car, notes:val})); }}
+                      onBlur={e => { if(db) sb.from('vehicles').update({notes:e.target.value}).eq('id',v.id).catch(console.error); }}
+                      rows={6} placeholder={t('addNotes')}
+                      className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-navy placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none shadow-card"
+                      disabled={isAdmin} />
+                  </div>
+                )}
+
+                {/* HISTORY tab */}
+                {tab === 'HISTORY' && (
+                  <div>
+                    {v.history.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <Icon name="history" fill className="text-muted text-[52px] mb-3 opacity-40" />
+                        <div className="text-[13px] font-bold text-muted">{t('noHistory')}</div>
                       </div>
-                    );
-                  })()}
-                  {!isAdmin && v.stage === 'stock' && (
-                    <button onClick={passToFinal} className="w-full py-[14px] bg-purple-600 text-white font-black text-[13px] uppercase tracking-[0.12em] rounded-full shadow-lg hover:bg-purple-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                      <Icon name="local_shipping" fill className="text-xl" /> {t('passToFinal')}
-                    </button>
-                  )}
-                  {!isAdmin && v.stage === 'ready' && (
-                    <div className="space-y-2">
-                      <div className="bg-white rounded-[16px] p-3 shadow-card">
-                        <div className="flex justify-between text-[11px] mb-1.5">
-                          <span className="text-muted font-medium">{t('finalProgress')}</span>
-                          <span className="font-black text-navy">{fp.done}/{fp.total}</span>
-                        </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-purple-500 rounded-full" style={{width:`${fp.pct}%`}} /></div>
-                      </div>
-                      {fp.pct === 100 && (
-                        <div className="space-y-2">
-                          <input value={dealerName} onChange={e => setDealerName(e.target.value)} placeholder={t('dealerPlaceholder')}
-                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-navy placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
-                          <button onClick={releaseCar} disabled={!dealerName.trim()}
-                            className="w-full py-3 bg-emerald-500 text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-2 hover:bg-emerald-600 active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-                            <Icon name="verified" fill className="text-lg" /> {t('releaseToDealer')}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-              {(tab === 'PDI' || tab === 'FINAL') && (() => {
-                const type   = tab === 'PDI' ? 'pdi' : 'final';
-                const checks = type === 'pdi' ? v.pdiChecks : v.finalChecks;
-                const done   = checks.filter(c => c.state === 'done' || c.state === 'na').length;
-                const issues = checks.filter(c => c.state === 'issue').length;
-                const pending = checks.filter(c => c.state === 'pending').length;
-                const cState = confirmState[type] || 'idle';
-                return (
-                  <div className="space-y-4">
-                    {ChecklistTab({ type, checks })}
-                    {!isAdmin && (
-                      <div className="bg-white rounded-[20px] p-4 shadow-card space-y-3">
-                        {/* Summary row */}
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                              <Icon name="check_circle" fill className="text-[13px]" /> {done} done
-                            </span>
-                            {issues > 0 && (
-                              <span className="flex items-center gap-1 text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
-                                <Icon name="error" fill className="text-[13px]" /> {issues} issue{issues !== 1 ? 's' : ''}
-                              </span>
-                            )}
-                            {pending > 0 && (
-                              <span className="flex items-center gap-1 text-[11px] font-bold text-muted bg-gray-100 px-2 py-0.5 rounded-full">
-                                <Icon name="radio_button_unchecked" className="text-[13px]" /> {pending} pending
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[11px] font-black text-navy">{done}/{checks.length}</span>
-                        </div>
-                        {/* Progress bar */}
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full transition-all duration-500 ${issues > 0 ? 'bg-red-400' : 'bg-emerald-500'}`}
-                            style={{ width: `${checks.length ? (done / checks.length) * 100 : 0}%` }} />
-                        </div>
-                        {/* Confirm button */}
-                        <button
-                          onClick={() => handleConfirmSave(type)}
-                          disabled={cState === 'saving'}
-                          className={`w-full py-3.5 rounded-full font-black text-[13px] uppercase tracking-[0.1em] flex items-center justify-center gap-2 transition-all active:scale-[0.98]
-                            ${cState === 'saved'
-                              ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200'
-                              : cState === 'saving'
-                              ? 'bg-gray-200 text-muted cursor-wait'
-                              : 'bg-primary text-white shadow-primary-glow hover:brightness-110'
-                            }`}>
-                          <Icon
-                            name={cState === 'saved' ? 'check_circle' : cState === 'saving' ? 'hourglass_empty' : 'cloud_upload'}
-                            fill={cState === 'saved'}
-                            className="text-xl"
-                          />
-                          {cState === 'saved' ? 'Checklist Saved!' : cState === 'saving' ? 'Saving…' : `Confirm & Save ${tab} Checklist`}
-                        </button>
-                        {cState === 'saved' && (
-                          <p className="text-[10px] text-emerald-600 text-center font-medium">
-                            All {checks.length} items saved · visible to admin
-                          </p>
-                        )}
+                    ) : (
+                      <div className="relative pl-8">
+                        <div className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-gray-200 rounded-full" />
+                        {v.history.map((entry, i) => {
+                          const [date, ...rest] = entry.split(': ');
+                          const text = rest.join(': ');
+                          return (
+                            <div key={i} className="relative mb-4">
+                              <div className="absolute -left-[18px] top-0 w-7 h-7 rounded-full flex items-center justify-center bg-white border-2 border-gray-200">
+                                <Icon name="schedule" fill className="text-muted text-[14px]" />
+                              </div>
+                              <div className="bg-white rounded-[14px] p-3 shadow-card">
+                                <div className="flex items-start justify-between gap-2">
+                                  <span className="font-semibold text-navy text-[12px] leading-snug">{text}</span>
+                                  <span className="text-[10px] text-muted font-medium flex-shrink-0">{date}</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
-                );
-              })()}
-              {tab === 'MAINT' && (
-                <div className="space-y-2">
-                  {v.stockMaint.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-center">
-                      <Icon name="build_circle" fill className="text-muted text-[52px] mb-3 opacity-40" />
-                      <div className="text-[13px] font-bold text-muted">{t('noMaintenance')}</div>
-                      <div className="text-[11px] text-muted/60 mt-1">{t('maintHint')}</div>
-                    </div>
-                  ) : v.stockMaint.map((m, idx) => {
-                    const overDays = daysAgo(m.nextDue);
-                    const isOverdue = overDays >= 0;
-                    const isDueSoon = overDays >= -7 && overDays < 0;
-                    return (
-                      <div key={m.id} className={`bg-white rounded-[16px] p-3 shadow-card border-l-4 ${isOverdue ? 'border-red-400' : isDueSoon ? 'border-amber-400' : 'border-emerald-400'}`}>
-                        <div className="flex items-start justify-between mb-1">
-                          <div className="flex-1 min-w-0">
-                            <div className="text-[12px] font-bold text-navy leading-snug">{m.name}</div>
-                            <div className="flex items-center gap-2 mt-1">
-                              <StatusBadge status={m.priority} />
-                              <span className="text-[10px] text-muted">{t('every', {freq:m.freq})}</span>
-                            </div>
-                          </div>
-                          <div className="text-right flex-shrink-0 ml-2">
-                            {isOverdue ? (
-                              <span className="text-[10px] font-black text-red-600">{t('overdueD', {days:overDays})}</span>
-                            ) : isDueSoon ? (
-                              <span className="text-[10px] font-black text-amber-600">{t('dueIn', {days:Math.abs(overDays)})}</span>
-                            ) : (
-                              <span className="text-[10px] font-bold text-emerald-600">{t('next')} {m.nextDue}</span>
-                            )}
-                            <div className="text-[9px] text-muted mt-0.5">{t('last')} {m.lastDone}</div>
-                          </div>
-                        </div>
-                        {!isAdmin && (
-                          <button onClick={() => completeMaint(idx)}
-                            className="mt-2 w-full py-2 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-[11px] uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 hover:bg-emerald-100 active:scale-95 transition-all">
-                            <Icon name="check" className="text-sm" /> {t('done')}
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-              {tab === 'NOTES' && (
-                <div className="space-y-3">
-                  <textarea
-                    value={v.notes}
-                    onChange={e => { const val = e.target.value; updateVehicle(v.id, car => ({ ...car, notes: val })); }}
-                    onBlur={e => { if (db) sb.from('vehicles').update({ notes: e.target.value }).eq('id', v.id).catch(console.error); }}
-                    rows={6} placeholder={t('addNotes')}
-                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-navy placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none shadow-card"
-                    disabled={isAdmin}
-                  />
-                </div>
-              )}
-              {tab === 'HISTORY' && (
-                <div>
-                  {v.history.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-center">
-                      <Icon name="history" fill className="text-muted text-[52px] mb-3 opacity-40" />
-                      <div className="text-[13px] font-bold text-muted">{t('noHistory')}</div>
-                    </div>
-                  ) : (
-                    <div className="relative pl-8">
-                      <div className="absolute left-3.5 top-2 bottom-2 w-0.5 bg-gray-200 rounded-full" />
-                      {v.history.map((entry, i) => {
-                        const [date, ...rest] = entry.split(': ');
-                        const text = rest.join(': ');
-                        return (
-                          <div key={i} className="relative mb-4">
-                            <div className="absolute -left-[18px] top-0 w-7 h-7 rounded-full flex items-center justify-center bg-white border-2 border-gray-200">
-                              <Icon name="schedule" fill className="text-muted text-[14px]" />
-                            </div>
-                            <div className="bg-white rounded-[14px] p-3 shadow-card">
-                              <div className="flex items-start justify-between gap-2">
-                                <span className="font-semibold text-navy text-[12px] leading-snug">{text}</span>
-                                <span className="text-[10px] text-muted font-medium flex-shrink-0">{date}</span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+                )}
+
+              </div>
+            </div>{/* end RIGHT COLUMN */}
+
+          </div>{/* end panel */}
         </div>
       );
     }
@@ -2472,20 +2453,70 @@
     }
 
     /* ─── FleetListScreen ─── */
-    function FleetListScreen({ navigate, vehicles, onAddVehicle, onNotificationClick, unreadCount, onOpenDetail, t }) {
+    const PAGE_SIZE = 50;
+
+    function FleetListScreen({ navigate, vehicles, onAddVehicle, onImportFleet, onNotificationClick, unreadCount, onOpenDetail, t }) {
       const all = vehicles;
-      const [search, setSearch] = useState('');
-      const [stage, setStage] = useState('all');
+      const [search, setSearch]         = useState('');
+      const [stage, setStage]           = useState('all');
+      const [page, setPage]             = useState(0);
+      const [showSuggestions, setShowSuggestions] = useState(false);
+      const searchRef = useRef(null);
+
       const stages = ['all','port','pdi','hold','stock','ready','released'];
-      const counts = stages.reduce((acc, s) => { acc[s] = s === 'all' ? all.length : all.filter(v => v.stage === s).length; return acc; }, {});
+      const counts = useMemo(() => stages.reduce((acc, s) => {
+        acc[s] = s === 'all' ? all.length : all.filter(v => v.stage === s).length;
+        return acc;
+      }, {}), [all]);
+
+      // Full filtered list (no pagination)
       const filtered = useMemo(() => {
-        const q = search.toLowerCase();
+        const q = search.toLowerCase().trim();
         return all.filter(v => {
-          const ms = !q || (v.label||v.model).toLowerCase().includes(q) || v.vin.toLowerCase().includes(q) || v.lot?.toLowerCase().includes(q);
-          const mst = stage === 'all' || v.stage === stage;
-          return ms && mst;
+          const ms = !q
+            || (v.label||v.model).toLowerCase().includes(q)
+            || v.vin.toLowerCase().includes(q)
+            || (v.color||'').toLowerCase().includes(q)
+            || (v.lot||'').toLowerCase().includes(q)
+            || (v.engine||'').toLowerCase().includes(q);
+          return ms && (stage === 'all' || v.stage === stage);
         });
       }, [all, search, stage]);
+
+      // Reset page whenever filter changes
+      useEffect(() => { setPage(0); }, [search, stage]);
+
+      // Pagination slice
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      const paged = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+      const showFrom = filtered.length ? page * PAGE_SIZE + 1 : 0;
+      const showTo   = Math.min((page + 1) * PAGE_SIZE, filtered.length);
+
+      // Smart search suggestions — model and color attribute counts
+      const suggestions = useMemo(() => {
+        const q = search.toLowerCase().trim();
+        if (q.length < 2) return null;
+        const modelMap = {}, colorMap = {};
+        all.forEach(v => {
+          const m = v.model || '';
+          const c = v.color || '';
+          if (m.toLowerCase().includes(q)) modelMap[m] = (modelMap[m] || 0) + 1;
+          if (c.toLowerCase().includes(q)) colorMap[c] = (colorMap[c] || 0) + 1;
+        });
+        const models = Object.entries(modelMap).sort((a,b) => b[1]-a[1]);
+        const colors = Object.entries(colorMap).sort((a,b) => b[1]-a[1]);
+        return (models.length || colors.length) ? { models, colors } : null;
+      }, [all, search]);
+
+      const applySuggestion = (val) => { setSearch(val); setShowSuggestions(false); };
+
+      // Close suggestions on outside click
+      useEffect(() => {
+        const handler = (e) => { if (searchRef.current && !searchRef.current.contains(e.target)) setShowSuggestions(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+      }, []);
+
       return (
         <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
           <header className="bg-white px-5 pt-12 lg:pt-7 pb-4 shadow-card">
@@ -2504,19 +2535,67 @@
                   <Icon name="notifications" className="text-navy" />
                   {unreadCount > 0 && <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-primary rounded-full ring-2 ring-white" />}
                 </button>
+                {/* Import button (desktop text, mobile icon) */}
+                <button onClick={onImportFleet}
+                  className="w-9 h-9 lg:w-auto lg:px-4 lg:rounded-full bg-gray-100 text-navy rounded-full flex items-center justify-center gap-2 hover:bg-gray-200 transition-all">
+                  <Icon name="upload_file" className="text-navy text-base" />
+                  <span className="hidden lg:inline font-bold text-[12px] uppercase tracking-widest">Import</span>
+                </button>
                 <button onClick={onAddVehicle} className="w-9 h-9 lg:w-auto lg:px-4 lg:rounded-full bg-primary rounded-full flex items-center justify-center gap-2 shadow-primary-glow hover:brightness-110 transition-all">
                   <Icon name="add" fill className="text-white text-base" />
                   <span className="hidden lg:inline text-white font-bold text-[12px] uppercase tracking-widest">{t('addVehicle')}</span>
                 </button>
               </div>
-              <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2.5">
-                <Icon name="search" className="text-muted text-xl" />
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('searchPlaceholder')}
-                  className="flex-1 bg-transparent text-[13px] text-navy placeholder:text-muted outline-none" />
-                {search && <button onClick={() => setSearch('')}><Icon name="close" className="text-muted text-xl" /></button>}
+              {/* Search bar with suggestions */}
+              <div ref={searchRef} className="relative">
+                <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2.5">
+                  <Icon name="search" className="text-muted text-xl" />
+                  <input
+                    value={search}
+                    onChange={e => { setSearch(e.target.value); setShowSuggestions(true); }}
+                    onFocus={() => setShowSuggestions(true)}
+                    placeholder="Search model, color, VIN, lot…"
+                    className="flex-1 bg-transparent text-[13px] text-navy placeholder:text-muted outline-none"
+                  />
+                  {search && <button onClick={() => { setSearch(''); setShowSuggestions(false); }}><Icon name="close" className="text-muted text-xl" /></button>}
+                </div>
+                {/* Suggestions dropdown */}
+                {showSuggestions && suggestions && (
+                  <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-[16px] shadow-card-hover border border-gray-100 z-30 overflow-hidden max-h-[280px] overflow-y-auto">
+                    {suggestions.models.length > 0 && (
+                      <div>
+                        <div className="px-4 pt-3 pb-1 text-[9px] font-black uppercase tracking-[0.15em] text-muted">Models</div>
+                        {suggestions.models.map(([name, count]) => (
+                          <button key={name} onMouseDown={() => applySuggestion(name)}
+                            className="w-full flex items-center justify-between px-4 py-2 hover:bg-gray-50 transition-colors text-left">
+                            <span className="text-[13px] font-semibold text-navy">{name}</span>
+                            <span className="text-[11px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{count} unit{count !== 1 ? 's' : ''}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {suggestions.colors.length > 0 && (
+                      <div className={suggestions.models.length ? 'border-t border-gray-50' : ''}>
+                        <div className="px-4 pt-3 pb-1 text-[9px] font-black uppercase tracking-[0.15em] text-muted">Colors</div>
+                        {suggestions.colors.map(([name, count]) => (
+                          <button key={name} onMouseDown={() => applySuggestion(name)}
+                            className="w-full flex items-center justify-between px-4 py-2 hover:bg-gray-50 transition-colors text-left">
+                            <div className="flex items-center gap-2">
+                              <span className="w-3 h-3 rounded-full bg-gray-300 border border-gray-200 flex-shrink-0" />
+                              <span className="text-[13px] font-semibold text-navy">{name}</span>
+                            </div>
+                            <span className="text-[11px] font-bold text-muted bg-gray-100 px-2 py-0.5 rounded-full">{count} unit{count !== 1 ? 's' : ''}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </header>
+
+          {/* Stage filter pills */}
           <div className="bg-white px-4 lg:px-8 pb-3 pt-3 flex gap-2 overflow-x-auto no-scroll border-b border-gray-100">
             <div className="lg:max-w-7xl lg:mx-auto flex gap-2 w-full">
               {stages.map(s => (
@@ -2528,38 +2607,82 @@
               ))}
             </div>
           </div>
+
           <main className="flex-1 overflow-y-auto p-4 lg:px-8 lg:py-6 pb-20 lg:pb-8">
             <div className="lg:max-w-7xl lg:mx-auto">
-            <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4">
-            {filtered.length === 0 && (
-              <div className="text-center py-20 text-muted">
-                <Icon name="directions_car" fill className="text-[52px] mb-2 opacity-40" />
-                <div className="text-[13px] font-bold">{t('noVehiclesFound')}</div>
-              </div>
-            )}
-            {filtered.map(vehicle => (
-              <button key={vehicle.id} onClick={() => onOpenDetail(vehicle.id)}
-                className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
-                <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                  <img src={vehicle.img} alt={vehicle.model} className="w-full h-full object-contain p-1" />
+              {/* Results count + pagination top */}
+              {filtered.length > 0 && (
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] text-muted font-medium">
+                    {filtered.length <= PAGE_SIZE
+                      ? `${filtered.length} vehicle${filtered.length !== 1 ? 's' : ''}`
+                      : `Showing ${showFrom}–${showTo} of ${filtered.length}`}
+                  </span>
+                  {totalPages > 1 && (
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => setPage(p => Math.max(0, p-1))} disabled={page === 0}
+                        className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-200 disabled:opacity-30 transition-all">
+                        <Icon name="chevron_left" className="text-navy text-base" />
+                      </button>
+                      <span className="text-[11px] font-bold text-navy px-1">{page+1} / {totalPages}</span>
+                      <button onClick={() => setPage(p => Math.min(totalPages-1, p+1))} disabled={page === totalPages-1}
+                        className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-200 disabled:opacity-30 transition-all">
+                        <Icon name="chevron_right" className="text-navy text-base" />
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="text-[10px] font-black text-primary uppercase tracking-wider">{vehicle.label || vehicle.model}</span>
-                    <span className="text-[9px] text-muted">·</span>
-                    <span className="text-[10px] text-muted font-medium">{t('lot')} {vehicle.lot}</span>
+              )}
+
+              <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4">
+                {paged.length === 0 && (
+                  <div className="text-center py-20 text-muted col-span-3">
+                    <Icon name="directions_car" fill className="text-[52px] mb-2 opacity-40" />
+                    <div className="text-[13px] font-bold">{t('noVehiclesFound')}</div>
                   </div>
-                  <div className="font-bold text-navy text-[13px] leading-tight truncate">{vehicle.model}</div>
-                  <div className="text-[11px] text-muted mt-0.5">{vehicle.type.toUpperCase()} · {vehicle.year} · {vehicle.color}</div>
+                )}
+                {paged.map(vehicle => (
+                  <button key={vehicle.id} onClick={() => onOpenDetail(vehicle.id)}
+                    className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
+                    <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
+                      <img src={vehicle.img} alt={vehicle.model} className="w-full h-full object-contain p-1" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-[10px] font-black text-primary uppercase tracking-wider">{vehicle.label || vehicle.model}</span>
+                        <span className="text-[9px] text-muted">·</span>
+                        <span className="text-[10px] text-muted font-medium">{t('lot')} {vehicle.lot}</span>
+                      </div>
+                      <div className="font-bold text-navy text-[13px] leading-tight truncate">{vehicle.model}</div>
+                      <div className="text-[11px] text-muted mt-0.5">{vehicle.type.toUpperCase()} · {vehicle.year} · {vehicle.color}</div>
+                    </div>
+                    <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                      <StatusBadge status={vehicle.stage} t={t} />
+                      <Icon name="chevron_right" className="text-muted text-xl" />
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Bottom pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-3 mt-6">
+                  <button onClick={() => setPage(0)} disabled={page === 0}
+                    className="px-3 py-1.5 rounded-full text-[11px] font-bold bg-gray-100 text-muted hover:bg-gray-200 disabled:opacity-30 transition-all">First</button>
+                  <button onClick={() => setPage(p => Math.max(0, p-1))} disabled={page === 0}
+                    className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-30 transition-all">
+                    <Icon name="chevron_left" className="text-navy" />
+                  </button>
+                  <span className="text-[12px] font-bold text-navy">Page {page+1} of {totalPages}</span>
+                  <button onClick={() => setPage(p => Math.min(totalPages-1, p+1))} disabled={page === totalPages-1}
+                    className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-30 transition-all">
+                    <Icon name="chevron_right" className="text-navy" />
+                  </button>
+                  <button onClick={() => setPage(totalPages-1)} disabled={page === totalPages-1}
+                    className="px-3 py-1.5 rounded-full text-[11px] font-bold bg-gray-100 text-muted hover:bg-gray-200 disabled:opacity-30 transition-all">Last</button>
                 </div>
-                <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                  <StatusBadge status={vehicle.stage} t={t} />
-                  <Icon name="chevron_right" className="text-muted text-xl" />
-                </div>
-              </button>
-            ))}
-            </div>{/* end lg:grid */}
-            </div>{/* end lg:max-w-7xl */}
+              )}
+            </div>
           </main>
           <AdminBottomNav navigate={navigate} currentView="fleet-list" vehicles={vehicles} t={t} />
         </div>
@@ -2567,16 +2690,63 @@
     }
 
     /* ─── TeamScreen ─── */
-    function TeamScreen({ navigate, vehicles, technicians, assignVehicle, onNotificationClick, unreadCount, t }) {
-      const [assigningId, setAssigningId] = useState(null); // profile_id of tech receiving assignment
-      const onlineCount  = technicians.filter(tc => tc.online).length;
-      const assignedCars = (tid) => vehicles.filter(v => v.assignedTech === tid && v.stage !== 'released');
+    function TeamScreen({ navigate, vehicles, technicians, assignVehicle, batchAssignVehicles, onNotificationClick, unreadCount, t }) {
+      const [assigningId,   setAssigningId]   = useState(null);
+      const [assignSearch,  setAssignSearch]  = useState('');
+      const [assignFilter,  setAssignFilter]  = useState('all'); // 'all' | 'unassigned' | 'mine'
+      const [assignPage,    setAssignPage]    = useState(0);
+      const [batchSaving,   setBatchSaving]   = useState(false);
+      const ASSIGN_PAGE_SIZE = 40;
+
+      const onlineCount    = technicians.filter(tc => tc.online).length;
+      const assignedCars   = (tid) => vehicles.filter(v => v.assignedTech === tid && v.stage !== 'released');
       const activeVehicles = vehicles.filter(v => v.stage !== 'released');
-      const assigningTech  = technicians.find(t => t.id === assigningId);
+      const assigningTech  = technicians.find(tc => tc.id === assigningId);
+
+      // Reset search/filter/page whenever the popup opens/closes
+      React.useEffect(() => {
+        if (!assigningId) { setAssignSearch(''); setAssignFilter('all'); setAssignPage(0); }
+      }, [assigningId]);
+
+      // Reset to page 0 when search or filter changes
+      React.useEffect(() => { setAssignPage(0); }, [assignSearch, assignFilter]);
+
+      // Derived filtered list used inside the popup
+      const filteredAssign = React.useMemo(() => {
+        let list = activeVehicles;
+        if (assignFilter === 'unassigned') list = list.filter(v => !v.assignedTech);
+        if (assignFilter === 'mine')       list = list.filter(v => v.assignedTech === assigningId);
+        if (assignSearch.trim()) {
+          const q = assignSearch.toLowerCase();
+          list = list.filter(v =>
+            (v.label||v.model||'').toLowerCase().includes(q) ||
+            (v.vin||'').toLowerCase().includes(q) ||
+            (v.color||'').toLowerCase().includes(q) ||
+            (v.lot||'').toLowerCase().includes(q)
+          );
+        }
+        return list;
+      }, [activeVehicles, assignFilter, assignSearch, assigningId]);
 
       const handleAssign = (vehicleId) => {
         const isAlreadyAssigned = vehicles.find(v => v.id === vehicleId)?.assignedTech === assigningId;
         assignVehicle(vehicleId, isAlreadyAssigned ? null : assigningId);
+      };
+
+      const handleBatchAssign = async () => {
+        if (batchSaving) return;
+        setBatchSaving(true);
+        const toAssign = filteredAssign.filter(v => v.assignedTech !== assigningId).map(v => v.id);
+        await batchAssignVehicles(toAssign, assigningId);
+        setBatchSaving(false);
+      };
+
+      const handleUnassignAll = async () => {
+        if (batchSaving) return;
+        setBatchSaving(true);
+        const mine = activeVehicles.filter(v => v.assignedTech === assigningId).map(v => v.id);
+        await batchAssignVehicles(mine, null);
+        setBatchSaving(false);
       };
 
       return (
@@ -2673,59 +2843,203 @@
             </div>
           </main>
 
-          {/* ── Assign Vehicle bottom sheet ── */}
-          {assigningId && (
-            <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end justify-center pb-16"
-              onClick={() => setAssigningId(null)}>
-              <div className="w-full max-w-[430px] bg-white rounded-t-[32px] shadow-2xl flex flex-col anim-slide-up"
-                style={{ maxHeight: '75vh' }} onClick={e => e.stopPropagation()}>
-                <div className="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
-                  <div>
-                    <div className="text-[15px] font-black text-navy">Assign Vehicle</div>
-                    <div className="text-[11px] text-muted">to {assigningTech?.name} · tap to toggle</div>
-                  </div>
-                  <button onClick={() => setAssigningId(null)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                    <Icon name="close" className="text-muted" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                  {activeVehicles.length === 0 && (
-                    <div className="text-center text-muted text-[13px] py-10">No active vehicles in fleet.</div>
-                  )}
-                  {activeVehicles.map(v => {
-                    const isThisTech   = v.assignedTech === assigningId;
-                    const otherTech    = !isThisTech && v.assignedTech
-                      ? technicians.find(t => t.id === v.assignedTech)
-                      : null;
-                    return (
-                      <button key={v.id} onClick={() => handleAssign(v.id)}
-                        className={`w-full flex items-center gap-3 p-3 rounded-[14px] text-left transition-all
-                          ${isThisTech
-                            ? 'bg-primary/10 border border-primary/30'
-                            : 'bg-gray-50 hover:bg-gray-100 border border-transparent'}`}>
-                        <img src={v.img} alt="" className="w-12 h-8 object-cover rounded-lg flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <div className="text-[12px] font-black text-navy">{v.label || v.model}</div>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <StatusBadge status={v.stage} t={t} />
-                            {otherTech && (
-                              <span className="text-[9px] text-amber-600 font-bold">→ {otherTech.name}</span>
-                            )}
-                            {!v.assignedTech && (
-                              <span className="text-[9px] text-muted">Unassigned</span>
-                            )}
-                          </div>
+          {/* ── Assign Vehicle — bottom sheet on mobile, centered dialog on desktop ── */}
+          {assigningId && (() => {
+            const assignedToMe = activeVehicles.filter(v => v.assignedTech === assigningId).length;
+            const unassignedInFilter = filteredAssign.filter(v => v.assignedTech !== assigningId).length;
+            const filters = [
+              { key: 'all',        label: `All (${activeVehicles.length})` },
+              { key: 'unassigned', label: `Unassigned (${activeVehicles.filter(v => !v.assignedTech).length})` },
+              { key: 'mine',       label: `Mine (${assignedToMe})` },
+            ];
+            return (
+              <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6"
+                onClick={() => setAssigningId(null)}>
+                <div className="w-full max-w-[430px] lg:max-w-[720px] bg-white rounded-t-[32px] lg:rounded-[24px] shadow-2xl flex flex-col anim-slide-up"
+                  style={{ maxHeight: '88vh' }} onClick={e => e.stopPropagation()}>
+
+                  {/* Drag handle — mobile only */}
+                  <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mt-3 lg:hidden" />
+
+                  {/* Header */}
+                  <div className="px-5 lg:px-6 pt-3 lg:pt-5 pb-3 border-b border-gray-100 flex-shrink-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-primary/10 rounded-xl items-center justify-center hidden lg:flex">
+                          <Icon name="person_pin_circle" fill className="text-primary text-[18px]" />
                         </div>
-                        {isThisTech
-                          ? <Icon name="check_circle" className="text-primary text-xl flex-shrink-0" fill />
-                          : <Icon name="radio_button_unchecked" className="text-gray-300 text-xl flex-shrink-0" />}
+                        <div>
+                          <div className="text-[15px] lg:text-[17px] font-black text-navy">Assign Vehicles</div>
+                          <div className="text-[11px] text-muted">to <span className="font-bold text-navy">{assigningTech?.name}</span></div>
+                        </div>
+                      </div>
+                      <button onClick={() => setAssigningId(null)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <Icon name="close" className="text-muted" />
                       </button>
+                    </div>
+
+                    {/* Search bar */}
+                    <div className="relative mt-3">
+                      <Icon name="search" className="absolute left-3 top-2.5 text-muted text-[18px] pointer-events-none" />
+                      <input
+                        value={assignSearch}
+                        onChange={e => setAssignSearch(e.target.value)}
+                        placeholder="Search by model, VIN, color, lot…"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-3 py-2 text-[13px] text-navy outline-none focus:border-primary transition-colors"
+                        autoFocus
+                      />
+                      {assignSearch && (
+                        <button onClick={() => setAssignSearch('')} className="absolute right-2.5 top-2 p-0.5 hover:bg-gray-200 rounded-full">
+                          <Icon name="close" className="text-muted text-[14px]" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Filter chips */}
+                    <div className="flex gap-2 mt-2 overflow-x-auto pb-0.5 scrollbar-hide">
+                      {filters.map(f => (
+                        <button key={f.key} onClick={() => setAssignFilter(f.key)}
+                          className={`flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-bold transition-all
+                            ${assignFilter === f.key ? 'bg-primary text-white' : 'bg-gray-100 text-muted hover:bg-gray-200'}`}>
+                          {f.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Batch action bar — shown when there are unassigned vehicles in current filter */}
+                  {unassignedInFilter > 0 && (
+                    <div className="px-5 lg:px-6 py-2.5 bg-primary/5 border-b border-primary/10 flex items-center justify-between flex-shrink-0">
+                      <span className="text-[12px] text-navy font-medium">
+                        <span className="font-black text-primary">{unassignedInFilter}</span> vehicle{unassignedInFilter !== 1 ? 's' : ''} not yet assigned to {assigningTech?.name}
+                      </span>
+                      <button onClick={handleBatchAssign} disabled={batchSaving}
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary text-white font-black text-[11px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50">
+                        {batchSaving
+                          ? <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          : <Icon name="select_all" className="text-[14px]" />}
+                        {batchSaving ? 'Assigning…' : `Assign All ${unassignedInFilter}`}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Vehicle list — 2-col grid on desktop */}
+                  {(() => {
+                    const totalPages = Math.max(1, Math.ceil(filteredAssign.length / ASSIGN_PAGE_SIZE));
+                    const safePage   = Math.min(assignPage, totalPages - 1);
+                    const pageSlice  = filteredAssign.slice(safePage * ASSIGN_PAGE_SIZE, (safePage + 1) * ASSIGN_PAGE_SIZE);
+                    const startIdx   = safePage * ASSIGN_PAGE_SIZE + 1;
+                    const endIdx     = Math.min((safePage + 1) * ASSIGN_PAGE_SIZE, filteredAssign.length);
+                    return (
+                      <div className="flex-1 overflow-y-auto p-4 lg:p-5 flex flex-col">
+                        {filteredAssign.length === 0 ? (
+                          <div className="flex flex-col items-center justify-center py-12 gap-3 flex-1">
+                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                              <Icon name="search_off" className="text-muted text-[24px]" />
+                            </div>
+                            <p className="text-[13px] text-muted">No vehicles match your search.</p>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                              {pageSlice.map(v => {
+                                const isThisTech = v.assignedTech === assigningId;
+                                const otherTech  = !isThisTech && v.assignedTech
+                                  ? technicians.find(tc => tc.id === v.assignedTech)
+                                  : null;
+                                return (
+                                  <button key={v.id} onClick={() => handleAssign(v.id)}
+                                    className={`w-full flex items-center gap-3 p-3 rounded-[14px] text-left transition-all
+                                      ${isThisTech
+                                        ? 'bg-primary/10 border border-primary/30'
+                                        : 'bg-gray-50 hover:bg-gray-100 border border-transparent'}`}>
+                                    <img src={v.img} alt="" className="w-12 h-8 object-cover rounded-lg flex-shrink-0" />
+                                    <div className="flex-1 min-w-0">
+                                      <div className="text-[12px] font-black text-navy truncate">{v.label || v.model}</div>
+                                      <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                        <StatusBadge status={v.stage} t={t} />
+                                        {v.lot && <span className="text-[9px] text-muted font-medium">Lot {v.lot}</span>}
+                                        {otherTech && (
+                                          <span className="text-[9px] text-amber-600 font-bold">→ {otherTech.name}</span>
+                                        )}
+                                        {!v.assignedTech && (
+                                          <span className="text-[9px] text-muted">Unassigned</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                    {isThisTech
+                                      ? <Icon name="check_circle" className="text-primary text-xl flex-shrink-0" fill />
+                                      : <Icon name="radio_button_unchecked" className="text-gray-300 text-xl flex-shrink-0" />}
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {/* Pagination controls */}
+                            {totalPages > 1 && (
+                              <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 flex-shrink-0">
+                                <span className="text-[11px] text-muted">
+                                  {startIdx}–{endIdx} of {filteredAssign.length}
+                                </span>
+                                <div className="flex items-center gap-1">
+                                  <button onClick={() => setAssignPage(0)} disabled={safePage === 0}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors">
+                                    <Icon name="first_page" className="text-navy text-[16px]" />
+                                  </button>
+                                  <button onClick={() => setAssignPage(p => Math.max(0, p - 1))} disabled={safePage === 0}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors">
+                                    <Icon name="chevron_left" className="text-navy text-[16px]" />
+                                  </button>
+                                  {/* Page number pills */}
+                                  {Array.from({ length: totalPages }, (_, i) => i)
+                                    .filter(i => Math.abs(i - safePage) <= 2)
+                                    .map(i => (
+                                      <button key={i} onClick={() => setAssignPage(i)}
+                                        className={`w-7 h-7 flex items-center justify-center rounded-lg text-[11px] font-bold transition-all
+                                          ${i === safePage ? 'bg-primary text-white' : 'hover:bg-gray-100 text-muted'}`}>
+                                        {i + 1}
+                                      </button>
+                                    ))}
+                                  <button onClick={() => setAssignPage(p => Math.min(totalPages - 1, p + 1))} disabled={safePage === totalPages - 1}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors">
+                                    <Icon name="chevron_right" className="text-navy text-[16px]" />
+                                  </button>
+                                  <button onClick={() => setAssignPage(totalPages - 1)} disabled={safePage === totalPages - 1}
+                                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors">
+                                    <Icon name="last_page" className="text-navy text-[16px]" />
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
                     );
-                  })}
+                  })()}
+
+                  {/* Footer */}
+                  <div className="px-5 lg:px-6 py-3 border-t border-gray-100 flex items-center justify-between flex-shrink-0">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-muted">
+                        <span className="font-black text-navy">{assignedToMe}</span> assigned to {assigningTech?.name}
+                      </span>
+                      {assignedToMe > 0 && (
+                        <button onClick={handleUnassignAll} disabled={batchSaving}
+                          className="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
+                          Unassign all
+                        </button>
+                      )}
+                    </div>
+                    <button onClick={() => setAssigningId(null)}
+                      className="px-5 py-2 rounded-full bg-primary text-white font-black text-[12px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 transition-all">
+                      Done
+                    </button>
+                  </div>
+
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           <AdminBottomNav navigate={navigate} currentView="team" vehicles={vehicles} t={t} />
         </div>
@@ -3235,9 +3549,16 @@
     function NotificationsPanel({ onClose, notifications, onMarkAllRead, t }) {
       const unread = notifications.filter(n => !n.read).length;
       return (
-        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in" onClick={onClose}>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white rounded-b-[32px] shadow-2xl anim-slide-down" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-5 pt-14 pb-4 border-b border-gray-100">
+        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex lg:justify-end" onClick={onClose}>
+          {/* Mobile: slides down from top | Desktop: slides in from right */}
+          <div
+            className="w-full max-w-[430px] lg:max-w-[400px] bg-white shadow-2xl flex flex-col anim-slide-down
+              rounded-b-[32px] lg:rounded-none lg:rounded-l-[24px]
+              absolute top-0 left-1/2 -translate-x-1/2
+              lg:static lg:translate-x-0 lg:h-full"
+            style={{ maxHeight: '80vh' }}
+            onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 pt-14 lg:pt-6 pb-4 border-b border-gray-100 flex-shrink-0">
               <div>
                 <h2 className="font-black text-navy text-[18px]">{t('notificationsTitle')}</h2>
                 <p className="text-[11px] text-muted">{unread > 0 ? t('unread', {count: unread}) : t('allCaughtUp')}</p>
@@ -3247,7 +3568,15 @@
                 <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Icon name="close" className="text-navy" /></button>
               </div>
             </div>
-            <div className="overflow-y-auto" style={{ maxHeight:'60vh' }}>
+            <div className="overflow-y-auto flex-1">
+              {notifications.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16 gap-3">
+                  <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Icon name="notifications_none" className="text-muted text-[28px]" />
+                  </div>
+                  <p className="text-[13px] text-muted font-medium">{t('allCaughtUp')}</p>
+                </div>
+              )}
               {notifications.map(n => (
                 <div key={n.id} className={`flex items-start gap-3 px-5 py-4 border-b border-gray-50 ${!n.read ? 'bg-primary/[0.02]' : ''}`}>
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${!n.read ? 'bg-primary/10' : 'bg-gray-100'}`}>
@@ -3264,7 +3593,7 @@
                 </div>
               ))}
             </div>
-            <div className="h-6" />
+            <div className="h-6 flex-shrink-0" />
           </div>
         </div>
       );
@@ -3603,18 +3932,25 @@
 
     /* ─── ModelManagerScreen ─── */
     function ModelManagerScreen({ navigate, t }) {
-      const [models, setModels] = useState([]);
-      const [loading, setLoading] = useState(true);
+      const [models, setModels]     = useState([]);
+      const [loading, setLoading]   = useState(true);
       const [expanded, setExpanded] = useState(null);
-      const [newName, setNewName] = useState('');
+      const [saving, setSaving]     = useState(false);
+
+      // New model form
+      const [newName,   setNewName]   = useState('');
       const [newEngine, setNewEngine] = useState('');
-      const [newFuel, setNewFuel] = useState('Gasolina');
-      const [saving, setSaving] = useState(false);
+      const [newFuel,   setNewFuel]   = useState('Gasolina');
+      const [newColors, setNewColors] = useState([]); // array of strings
+      const [colorInput, setColorInput] = useState('');
+
+      // Per-model color editing (for existing models)
+      const [editColorId, setEditColorId]     = useState(null); // model id being edited
+      const [editColorInput, setEditColorInput] = useState('');
 
       useEffect(() => {
         sb.from('vehicle_models').select('*').order('name').then(({ data }) => {
           const dbModels = data || [];
-          // Fall back to local GAC_MODELS if DB is empty
           const merged = dbModels.length > 0 ? dbModels : GAC_MODELS.map((m, i) => ({
             id: `local-${i}`, name: m.model, engine: m.engine, fuel_type: m.fuel, color_options: m.colors,
           }));
@@ -3622,14 +3958,25 @@
         });
       }, []);
 
+      /* ── new model form helpers ── */
+      const addColorToNew = () => {
+        const c = colorInput.trim();
+        if (!c || newColors.includes(c)) return;
+        setNewColors(prev => [...prev, c]);
+        setColorInput('');
+      };
+      const removeColorFromNew = (c) => setNewColors(prev => prev.filter(x => x !== c));
+
       const addModel = async () => {
         if (!newName.trim() || !newEngine.trim()) return;
         setSaving(true);
         const { data } = await sb.from('vehicle_models').insert({
-          name: newName.trim(), engine: newEngine.trim(), fuel_type: newFuel, color_options: [],
+          name: newName.trim(), engine: newEngine.trim(),
+          fuel_type: newFuel, color_options: newColors,
         }).select().single();
         if (data) setModels(prev => [...prev, data]);
-        setNewName(''); setNewEngine(''); setSaving(false);
+        setNewName(''); setNewEngine(''); setNewColors([]); setColorInput('');
+        setSaving(false);
       };
 
       const deleteModel = async (id) => {
@@ -3637,6 +3984,28 @@
         if (!confirm('Remove this model?')) return;
         await sb.from('vehicle_models').delete().eq('id', id);
         setModels(prev => prev.filter(m => m.id !== id));
+      };
+
+      /* ── color management on existing models ── */
+      const addColorToModel = async (model) => {
+        const c = editColorInput.trim();
+        if (!c) return;
+        const current = model.color_options || [];
+        if (current.includes(c)) { setEditColorInput(''); return; }
+        const updated = [...current, c];
+        if (!model.id.startsWith('local-')) {
+          await sb.from('vehicle_models').update({ color_options: updated }).eq('id', model.id);
+        }
+        setModels(prev => prev.map(m => m.id === model.id ? { ...m, color_options: updated } : m));
+        setEditColorInput('');
+      };
+
+      const removeColorFromModel = async (model, color) => {
+        const updated = (model.color_options || []).filter(c => c !== color);
+        if (!model.id.startsWith('local-')) {
+          await sb.from('vehicle_models').update({ color_options: updated }).eq('id', model.id);
+        }
+        setModels(prev => prev.map(m => m.id === model.id ? { ...m, color_options: updated } : m));
       };
 
       const inputCls = "bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-navy outline-none focus:border-primary transition-colors";
@@ -3658,14 +4027,14 @@
               <div className="flex justify-center py-12"><div className="w-6 h-6 border-[3px] border-primary border-t-transparent rounded-full animate-spin" /></div>
             ) : models.map(m => (
               <div key={m.id} className="bg-white rounded-[16px] shadow-card overflow-hidden">
-                <button onClick={() => setExpanded(expanded === m.id ? null : m.id)}
+                <button onClick={() => { setExpanded(expanded === m.id ? null : m.id); setEditColorId(null); setEditColorInput(''); }}
                   className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 transition-colors">
                   <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <Icon name="directions_car" className="text-primary text-lg" />
                   </div>
                   <div className="flex-1">
                     <div className="text-[13px] font-black text-navy">{m.name}</div>
-                    <div className="text-[10px] text-muted">{m.engine} · {m.fuel_type || ''}</div>
+                    <div className="text-[10px] text-muted">{m.engine} · {m.fuel_type || ''} · <span className="font-semibold">{(m.color_options||[]).length} color{(m.color_options||[]).length !== 1 ? 's' : ''}</span></div>
                   </div>
                   <div className="flex items-center gap-1">
                     <button onClick={e => { e.stopPropagation(); deleteModel(m.id); }} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors">
@@ -3675,29 +4044,88 @@
                   </div>
                 </button>
                 {expanded === m.id && (
-                  <div className="px-4 pb-3 border-t border-gray-100">
-                    <div className="py-2 text-[11px] font-bold uppercase tracking-widest text-muted mb-2">Color Options</div>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="px-4 pb-4 border-t border-gray-100 space-y-3 pt-3">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-muted">Color Options</div>
+                    {/* Color chips */}
+                    <div className="flex flex-wrap gap-1.5 min-h-[28px]">
                       {(m.color_options || []).map(c => (
-                        <span key={c} className="px-2.5 py-1 bg-gray-100 text-navy text-[11px] font-semibold rounded-full">{c}</span>
+                        <span key={c} className="flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-gray-100 text-navy text-[11px] font-semibold rounded-full">
+                          {c}
+                          <button onClick={() => removeColorFromModel(m, c)}
+                            className="w-3.5 h-3.5 flex items-center justify-center rounded-full bg-gray-300 hover:bg-red-200 transition-colors">
+                            <Icon name="close" className="text-[9px] text-navy" />
+                          </button>
+                        </span>
                       ))}
-                      {!(m.color_options?.length) && <span className="text-[12px] text-muted italic">No colors configured</span>}
+                      {!(m.color_options?.length) && <span className="text-[12px] text-muted italic">No colors yet</span>}
+                    </div>
+                    {/* Add color input */}
+                    <div className="flex gap-2">
+                      <input
+                        value={editColorId === m.id ? editColorInput : ''}
+                        onFocus={() => { setEditColorId(m.id); }}
+                        onChange={e => setEditColorInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addColorToModel(m); } }}
+                        placeholder="Add color (e.g. Crystal White)"
+                        className={inputCls + ' flex-1 text-[12px] py-2'}
+                      />
+                      <button
+                        onClick={() => addColorToModel(m)}
+                        disabled={!editColorInput.trim()}
+                        className="px-4 py-2 rounded-xl bg-primary text-white text-[12px] font-bold hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-30">
+                        Add
+                      </button>
                     </div>
                   </div>
                 )}
               </div>
             ))}
-            {/* Add new model */}
+
+            {/* ── Add new model ── */}
             <div className="bg-white rounded-[16px] p-4 shadow-card space-y-3 border-2 border-dashed border-gray-200">
               <div className="text-[11px] font-bold uppercase tracking-widest text-muted">Add Model</div>
-              <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="Model name (e.g. GS3 Emzoom)" className={inputCls + ' w-full'} />
-              <input value={newEngine} onChange={e => setNewEngine(e.target.value)} placeholder="Engine (e.g. 1.5T 174hp 7-DCT)" className={inputCls + ' w-full'} />
+              <input value={newName} onChange={e => setNewName(e.target.value)}
+                placeholder="Model name (e.g. GS3 Emzoom)" className={inputCls + ' w-full'} />
+              <input value={newEngine} onChange={e => setNewEngine(e.target.value)}
+                placeholder="Engine (e.g. 1.5T 174hp 7-DCT)" className={inputCls + ' w-full'} />
               <select value={newFuel} onChange={e => setNewFuel(e.target.value)} className={inputCls + ' w-full appearance-none'}>
                 <option>Gasolina</option>
                 <option>Diesel</option>
                 <option>Hybrid</option>
                 <option>Electric</option>
               </select>
+
+              {/* Color input for new model */}
+              <div className="space-y-2">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted">Colors</div>
+                {newColors.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {newColors.map(c => (
+                      <span key={c} className="flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-primary/10 text-primary text-[11px] font-semibold rounded-full">
+                        {c}
+                        <button onClick={() => removeColorFromNew(c)}
+                          className="w-3.5 h-3.5 flex items-center justify-center rounded-full bg-primary/20 hover:bg-red-200 transition-colors">
+                          <Icon name="close" className="text-[9px] text-primary" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <input
+                    value={colorInput}
+                    onChange={e => setColorInput(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addColorToNew(); } }}
+                    placeholder="e.g. Crystal White"
+                    className={inputCls + ' flex-1 text-[12px] py-2'}
+                  />
+                  <button onClick={addColorToNew} disabled={!colorInput.trim()}
+                    className="px-4 py-2 rounded-xl bg-gray-100 text-navy text-[12px] font-bold hover:bg-gray-200 active:scale-[0.98] transition-all disabled:opacity-30">
+                    Add
+                  </button>
+                </div>
+              </div>
+
               <button onClick={addModel} disabled={!newName.trim() || !newEngine.trim() || saving}
                 className="w-full py-2 bg-primary text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 disabled:opacity-40 hover:brightness-110 active:scale-[0.98] transition-all">
                 <Icon name="add" className="text-sm" /> {saving ? 'Saving…' : 'Add Model'}
@@ -3761,14 +4189,14 @@
 
       const inputCls = "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-navy outline-none focus:border-primary transition-colors";
       return (
-        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end justify-center" onClick={onClose}>
-          <div className="w-full max-w-[430px] bg-white rounded-t-[32px] shadow-2xl anim-slide-up" onClick={e => e.stopPropagation()}>
-            <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mt-3" />
-            <div className="flex items-center justify-between px-5 pt-3 pb-4 border-b border-gray-100">
+        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6" onClick={onClose}>
+          <div className="w-full max-w-[430px] lg:max-w-[560px] bg-white rounded-t-[32px] lg:rounded-[24px] shadow-2xl anim-slide-up" onClick={e => e.stopPropagation()}>
+            <div className="w-12 h-1 bg-gray-200 rounded-full mx-auto mt-3 lg:hidden" />
+            <div className="flex items-center justify-between px-5 pt-3 lg:pt-5 pb-4 border-b border-gray-100">
               <h2 className="font-black text-navy text-[18px]">{t('addVehicleTitle')}</h2>
               <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Icon name="close" className="text-navy" /></button>
             </div>
-            <div className="overflow-y-auto p-5 space-y-4" style={{ maxHeight:'70vh' }}>
+            <div className="overflow-y-auto p-5 space-y-4" style={{ maxHeight:'75vh' }}>
               {loadingModels ? (
                 <div className="flex justify-center py-8"><div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
               ) : (<>
@@ -3820,6 +4248,269 @@
       );
     }
 
+    /* ─── ImportFleetModal ─── */
+    function ImportFleetModal({ onClose, onBulkAdd }) {
+      const [step, setStep]         = useState('upload'); // upload | preview | importing | done
+      const [rows, setRows]         = useState([]);
+      const [skipped, setSkipped]   = useState(0);
+      const [progress, setProgress] = useState(0);
+      const [imported, setImported] = useState(0);
+      const [dragOver, setDragOver] = useState(false);
+      const fileRef = useRef(null);
+
+      /* column name aliases — case-sensitive exact match first, then case-insensitive */
+      const ALIASES = {
+        vin:    ['VIN','Vin','vin','CHASSIS','Chassis','chassis','Plate Number'],
+        model:  ['Model','model','MODEL','Vehicle Model','vehicle_model'],
+        color:  ['Color','color','COLOR','Colour','colour','COLOUR'],
+        engine: ['Engine','engine','ENGINE','Engine Spec'],
+        fuel:   ['Fuel','fuel','FUEL','Fuel Type','fuel_type'],
+        lot:    ['Lot','lot','LOT','Lot Number','lot_number','Parking','parking','Bay'],
+        year:   ['Year','year','YEAR','Model Year'],
+        stage:  ['Stage','stage','STAGE','Status','status','STATUS'],
+      };
+
+      const findCol = (headers, key) => {
+        for (const alias of ALIASES[key]) {
+          const idx = headers.findIndex(h => String(h).trim() === alias);
+          if (idx >= 0) return idx;
+        }
+        // fallback: case-insensitive partial match
+        const low = key.toLowerCase();
+        return headers.findIndex(h => String(h).toLowerCase().includes(low));
+      };
+
+      const VALID_STAGES = new Set(['port','pdi','hold','stock','ready','released']);
+
+      const parseFile = (file) => {
+        if (!file) return;
+        if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { alert('Please upload an .xlsx, .xls, or .csv file.'); return; }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+            if (raw.length < 2) { alert('File appears empty or has no data rows.'); return; }
+            const headers = raw[0].map(h => String(h).trim());
+            const ci = {};
+            for (const k of Object.keys(ALIASES)) ci[k] = findCol(headers, k);
+            if (ci.vin < 0 || ci.model < 0) {
+              alert('Could not detect a VIN column or Model column.\n\nMake sure row 1 has headers named "VIN" and "Model".');
+              return;
+            }
+            let valid = [], skip = 0;
+            for (let i = 1; i < raw.length; i++) {
+              const r = raw[i];
+              const vin   = String(r[ci.vin]   ?? '').trim();
+              const model = String(r[ci.model] ?? '').trim();
+              if (!vin || vin.length < 10 || !model) { skip++; continue; }
+              const rawStage = ci.stage >= 0 ? String(r[ci.stage] ?? '').trim().toLowerCase() : '';
+              valid.push({
+                vin,
+                model,
+                color:  ci.color  >= 0 ? String(r[ci.color]  ?? '').trim() : '',
+                engine: ci.engine >= 0 ? String(r[ci.engine] ?? '').trim() : '',
+                fuel:   ci.fuel   >= 0 ? String(r[ci.fuel]   ?? '').trim() || 'Gasolina' : 'Gasolina',
+                lot:    ci.lot    >= 0 ? String(r[ci.lot]    ?? '').trim() : '',
+                year:   ci.year   >= 0 ? (parseInt(r[ci.year]) || 2025) : 2025,
+                stage:  VALID_STAGES.has(rawStage) ? rawStage : 'port',
+              });
+            }
+            setRows(valid); setSkipped(skip); setStep('preview');
+          } catch (err) { alert('Failed to parse file: ' + err.message); }
+        };
+        reader.readAsArrayBuffer(file);
+      };
+
+      const handleImport = async () => {
+        setStep('importing'); setProgress(0);
+        const count = await onBulkAdd(rows, p => setProgress(p));
+        setImported(count); setStep('done');
+      };
+
+      const inputCls = "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-navy outline-none focus:border-primary transition-colors";
+
+      return (
+        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-center justify-center p-4"
+          onClick={step === 'importing' ? null : onClose}>
+          <div className="w-full max-w-[620px] lg:max-w-[760px] bg-white rounded-[24px] shadow-2xl anim-slide-up max-h-[92vh] flex flex-col"
+            onClick={e => e.stopPropagation()}>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100 flex-shrink-0">
+              <div>
+                <h2 className="font-black text-navy text-[18px]">Import Fleet</h2>
+                <p className="text-[11px] text-muted mt-0.5">Upload an Excel or CSV file to bulk-add vehicles with full checklists</p>
+              </div>
+              {step !== 'importing' && (
+                <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                  <Icon name="close" className="text-navy" />
+                </button>
+              )}
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+
+              {/* ── UPLOAD ── */}
+              {step === 'upload' && (
+                <div className="space-y-4">
+                  <div
+                    onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={e => { e.preventDefault(); setDragOver(false); parseFile(e.dataTransfer.files[0]); }}
+                    onClick={() => fileRef.current?.click()}
+                    className={`border-2 border-dashed rounded-[20px] p-10 flex flex-col items-center justify-center cursor-pointer transition-all select-none
+                      ${dragOver ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50'}`}>
+                    <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-3">
+                      <Icon name="upload_file" className="text-primary text-3xl" />
+                    </div>
+                    <div className="text-[14px] font-black text-navy mb-1">Drop your file here</div>
+                    <div className="text-[12px] text-muted">or click to browse — .xlsx · .xls · .csv</div>
+                    <input ref={fileRef} type="file" accept=".xlsx,.xls,.csv" className="hidden"
+                      onChange={e => parseFile(e.target.files[0])} />
+                  </div>
+
+                  <div className="bg-gray-50 rounded-[16px] p-4">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-muted mb-3">Column Reference (row 1 headers)</div>
+                    <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+                      {[
+                        ['VIN',    'Min 10 chars',                    true ],
+                        ['Model',  'Must match a vehicle model name', true ],
+                        ['Color',  'Paint color name',                false],
+                        ['Engine', 'Engine spec',                     false],
+                        ['Fuel',   'Gasolina / Diesel / Electric',    false],
+                        ['Lot',    'Parking lot or bay number',       false],
+                        ['Year',   'Model year (default 2025)',        false],
+                        ['Stage',  'port/pdi/hold/stock/ready',       false],
+                      ].map(([col, desc, req]) => (
+                        <div key={col} className="flex items-start gap-2">
+                          <span className={`mt-0.5 text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full flex-shrink-0
+                            ${req ? 'bg-primary/10 text-primary' : 'bg-gray-200 text-muted'}`}>{req ? 'req' : 'opt'}</span>
+                          <div>
+                            <span className="text-[12px] font-bold text-navy">{col}</span>
+                            <span className="text-[10px] text-muted ml-1">{desc}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── PREVIEW ── */}
+              {step === 'preview' && (
+                <div className="space-y-4">
+                  <div className="flex gap-3">
+                    <div className="flex-1 bg-green-50 border border-green-200 rounded-[14px] px-4 py-3 flex items-center gap-3">
+                      <Icon name="check_circle" fill className="text-green-500 text-2xl flex-shrink-0" />
+                      <div>
+                        <div className="text-[14px] font-black text-navy">{rows.length} vehicles ready</div>
+                        <div className="text-[10px] text-muted">PDI, maintenance & final checklists will be seeded</div>
+                      </div>
+                    </div>
+                    {skipped > 0 && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-[14px] px-4 py-3 flex items-center gap-3">
+                        <Icon name="warning" fill className="text-amber-500 text-2xl flex-shrink-0" />
+                        <div>
+                          <div className="text-[14px] font-black text-navy">{skipped} skipped</div>
+                          <div className="text-[10px] text-muted">missing VIN or Model</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="overflow-x-auto rounded-[14px] border border-gray-100">
+                    <table className="w-full text-[11px]">
+                      <thead className="bg-gray-50 sticky top-0">
+                        <tr>
+                          {['#','VIN','Model','Color','Lot','Year','Stage'].map(h => (
+                            <th key={h} className="px-3 py-2 text-left font-bold text-muted text-[9px] uppercase tracking-widest whitespace-nowrap">{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.slice(0, 10).map((r, i) => (
+                          <tr key={i} className="border-t border-gray-50 hover:bg-gray-50/50">
+                            <td className="px-3 py-2 text-muted">{i + 1}</td>
+                            <td className="px-3 py-2 font-mono font-bold text-navy text-[10px]">{r.vin}</td>
+                            <td className="px-3 py-2 text-navy font-medium">{r.model}</td>
+                            <td className="px-3 py-2 text-muted">{r.color || '—'}</td>
+                            <td className="px-3 py-2 text-muted">{r.lot || '—'}</td>
+                            <td className="px-3 py-2 text-muted">{r.year}</td>
+                            <td className="px-3 py-2">
+                              <span className="px-2 py-0.5 bg-primary/10 text-primary font-bold rounded-full">{r.stage}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {rows.length > 10 && (
+                      <div className="text-center py-2 text-[11px] text-muted border-t border-gray-100">
+                        …and {rows.length - 10} more rows not shown
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3 pt-1">
+                    <button onClick={() => { setStep('upload'); setRows([]); setSkipped(0); }}
+                      className="flex-1 py-3 rounded-full border-2 border-gray-200 text-navy font-bold text-[12px] uppercase tracking-wider hover:bg-gray-50 transition-all">
+                      Change File
+                    </button>
+                    <button onClick={handleImport} disabled={rows.length === 0}
+                      className="flex-1 py-3 rounded-full bg-primary text-white font-black text-[12px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-40">
+                      Import {rows.length} Vehicles
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ── IMPORTING ── */}
+              {step === 'importing' && (
+                <div className="flex flex-col items-center py-10 gap-6">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center">
+                    <Icon name="cloud_upload" className="text-primary text-3xl" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[17px] font-black text-navy">Importing {rows.length} vehicles…</div>
+                    <div className="text-[12px] text-muted mt-1">Seeding PDI checklists, maintenance tasks & final checks</div>
+                    <div className="text-[11px] text-muted mt-0.5">Please keep this window open</div>
+                  </div>
+                  <div className="w-full space-y-2">
+                    <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                      <div className="h-full bg-primary rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+                    </div>
+                    <div className="flex justify-between text-[11px] text-muted">
+                      <span>{Math.round(progress * rows.length / 100)} of {rows.length} vehicles</span>
+                      <span className="font-bold text-primary">{Math.round(progress)}%</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── DONE ── */}
+              {step === 'done' && (
+                <div className="flex flex-col items-center py-10 gap-5 text-center">
+                  <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
+                    <Icon name="check_circle" fill className="text-green-500 text-3xl" />
+                  </div>
+                  <div>
+                    <div className="text-[20px] font-black text-navy">Import Complete</div>
+                    <div className="text-[13px] text-muted mt-1">{imported} vehicle{imported !== 1 ? 's' : ''} added to your fleet.</div>
+                    <div className="text-[12px] text-muted mt-0.5">PDI, maintenance & final checklists seeded for each vehicle.</div>
+                  </div>
+                  <button onClick={onClose}
+                    className="px-10 py-3 rounded-full bg-primary text-white font-black text-[13px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 transition-all mt-2">
+                    View Fleet
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     /* ─── APP ROOT ─── */
     function App() {
       /* ── auth / session ── */
@@ -3832,6 +4523,7 @@
       const [view,           setView]             = useState('login');
       const [showNotifs,     setShowNotifs]       = useState(false);
       const [showAddVehicle, setShowAddVehicle]   = useState(false);
+      const [showImportModal, setShowImportModal] = useState(false);
       const [vehicles,       setVehicles]         = useState([]);
       const [technicians,    setTechnicians]       = useState([]);
       const [notifications,  setNotifications]    = useState([]);
@@ -4064,6 +4756,9 @@
       const updateVehicle = (id, fn) => {
         setVehicles(prev => prev.map(v => v.id === id ? fn(v) : v));
       };
+      const deleteVehicle = (id) => {
+        setVehicles(prev => prev.filter(v => v.id !== id));
+      };
 
       /* ── assign / unassign vehicle to technician ── */
       const assignVehicle = async (vehicleId, techProfileId) => {
@@ -4079,6 +4774,31 @@
               tech_id: tech.techId,
               profile_id: techProfileId,
             });
+          }
+        }
+      };
+
+      /* ── batch assign / unassign multiple vehicles at once ── */
+      const batchAssignVehicles = async (vehicleIds, techProfileId) => {
+        if (!vehicleIds.length) return;
+        // Optimistic bulk update
+        setVehicles(prev => prev.map(v =>
+          vehicleIds.includes(v.id) ? { ...v, assignedTech: techProfileId || null } : v
+        ));
+        // Delete all existing assignments for these vehicles in one query
+        await sb.from('vehicle_assignments').delete().in('vehicle_id', vehicleIds);
+        if (techProfileId) {
+          const tech = _techsRef.current.find(t => t.id === techProfileId);
+          if (tech?.techId) {
+            const rows = vehicleIds.map(id => ({
+              vehicle_id: id,
+              tech_id: tech.techId,
+              profile_id: techProfileId,
+            }));
+            // Sub-batch at 500 rows per request
+            for (let i = 0; i < rows.length; i += 500) {
+              await sb.from('vehicle_assignments').insert(rows.slice(i, i + 500));
+            }
           }
         }
       };
@@ -4243,6 +4963,97 @@
         showToastMsg('Vehicle added to fleet ✓');
       };
 
+      /* ── bulk import (called by ImportFleetModal) ── */
+      const handleBulkImport = async (rows, onProgress) => {
+        const today = todayStr();
+        const addDays = (d, n) => { const dt = new Date(d); dt.setDate(dt.getDate() + n); return dt.toISOString().slice(0,10); };
+
+        // Fetch all three template sets in parallel — just once for the whole import
+        const [{ data: pdiT }, { data: maintT }, { data: finalT }] = await Promise.all([
+          sb.from('pdi_item_templates').select('*').eq('active', true),
+          sb.from('maint_task_templates').select('*').eq('active', true),
+          sb.from('final_check_templates').select('*').eq('active', true),
+        ]);
+
+        // Get current per-model counts so vehicle_numbers are correct
+        const { data: existing } = await sb.from('vehicles').select('model');
+        const modelBaseCount = {};
+        (existing || []).forEach(v => { modelBaseCount[v.model] = (modelBaseCount[v.model] || 0) + 1; });
+        const modelLocalCount = {};
+
+        // Helper: insert rows in sub-batches to stay under Supabase limits
+        const batchInsert = async (table, allRows, size = 500) => {
+          for (let i = 0; i < allRows.length; i += size) {
+            const { error } = await sb.from(table).insert(allRows.slice(i, i + size));
+            if (error) console.error(`batchInsert ${table}`, error);
+          }
+        };
+
+        const BATCH = 50;
+        const total = rows.length;
+        let inserted = 0;
+
+        for (let i = 0; i < total; i += BATCH) {
+          const batch = rows.slice(i, i + BATCH);
+
+          // Build vehicle rows with correct vehicle_number per model
+          const vehicleRows = batch.map(r => {
+            modelLocalCount[r.model] = (modelLocalCount[r.model] || 0) + 1;
+            const vehicle_number = (modelBaseCount[r.model] || 0) + modelLocalCount[r.model];
+            return {
+              vin: r.vin, model: r.model, color: r.color || '',
+              engine: r.engine || '', fuel: r.fuel || 'Gasolina',
+              lot: r.lot || '', year: r.year || 2025,
+              stage: r.stage || 'port', make: 'GAC',
+              arrival_date: today, notes: '', vehicle_number,
+            };
+          });
+
+          const { data: newVehicles, error: ve } = await sb.from('vehicles').insert(vehicleRows).select('id');
+          if (ve) { console.error('bulk vehicle insert', ve); inserted += batch.length; onProgress(Math.round((inserted/total)*100)); continue; }
+
+          if (newVehicles?.length) {
+            const pdiRows = [], maintRows = [], finalRows = [], histRows = [];
+            for (const v of newVehicles) {
+              if (pdiT?.length) pdiRows.push(...pdiT.map(tmpl => ({
+                vehicle_id: v.id, item_id: String(tmpl.id),
+                section: tmpl.section || 'General', name: tmpl.name, priority: tmpl.priority || 'med',
+                state: 'pending', note: '',
+              })));
+              if (maintT?.length) maintRows.push(...maintT.map(tmpl => ({
+                vehicle_id: v.id, task_id: String(tmpl.id),
+                name: tmpl.name, freq_days: tmpl.frequency_days || 30, priority: tmpl.priority || 'med',
+                state: 'pending', last_done: today,
+                next_due: addDays(today, tmpl.frequency_days || 30),
+              })));
+              if (finalT?.length) finalRows.push(...finalT.map(tmpl => ({
+                vehicle_id: v.id, item_id: String(tmpl.id),
+                section: tmpl.section || 'General', name: tmpl.name, priority: tmpl.priority || 'med',
+                state: 'pending', note: '',
+              })));
+              if (session) histRows.push({
+                vehicle_id: v.id, actor_id: session.user.id,
+                action: 'Imported from fleet file', stage_to: 'port',
+              });
+            }
+            await Promise.all([
+              pdiRows.length   ? batchInsert('pdi_checks', pdiRows)         : Promise.resolve(),
+              maintRows.length ? batchInsert('stock_maintenance', maintRows) : Promise.resolve(),
+              finalRows.length ? batchInsert('final_checks', finalRows)     : Promise.resolve(),
+              histRows.length  ? batchInsert('vehicle_history', histRows)   : Promise.resolve(),
+            ]);
+          }
+
+          inserted += batch.length;
+          onProgress(Math.round((inserted / total) * 100));
+        }
+
+        await loadVehicles();
+        setShowImportModal(false);
+        showToastMsg(`${inserted} vehicles imported ✓`);
+        return inserted;
+      };
+
       const openDetail  = (id) => setDetailVehicleId(id);
       const closeDetail = () => setDetailVehicleId(null);
 
@@ -4250,9 +5061,10 @@
       const detailVehicle = vehicles.find(v => v.id === detailVehicleId);
 
       const shared = {
-        navigate, vehicles, updateVehicle, technicians, assignVehicle,
+        navigate, vehicles, updateVehicle, technicians, assignVehicle, batchAssignVehicles,
         onNotificationClick: () => setShowNotifs(true),
-        onAddVehicle: () => setShowAddVehicle(true),
+        onAddVehicle:   () => setShowAddVehicle(true),
+        onImportFleet:  () => setShowImportModal(true),
         unreadCount: notifications.filter(n => !n.read).length,
         currentTechId: userProfile?.id || '',
         userProfile,
@@ -4331,6 +5143,7 @@
               vehicle={detailVehicle}
               onClose={closeDetail}
               updateVehicle={updateVehicle}
+              onDeleteVehicle={deleteVehicle}
               db={db}
               isAdmin={isAdminView}
               t={t}
@@ -4352,6 +5165,12 @@
               onClose={() => setShowAddVehicle(false)}
               onAdd={handleAddVehicle}
               t={t}
+            />
+          )}
+          {showImportModal && (
+            <ImportFleetModal
+              onClose={() => setShowImportModal(false)}
+              onBulkAdd={handleBulkImport}
             />
           )}
           {toast && (
