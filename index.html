@@ -4539,7 +4539,7 @@
         return str;
       };
 
-      const navigate = (target) => { setView(target); window.scrollTo(0, 0); };
+      const navigate = (target) => { setView(target); sessionStorage.setItem('stockmo_view', target); window.scrollTo(0, 0); };
       const showToastMsg = (msg) => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
       /* ── load user profile ── */
@@ -4612,7 +4612,12 @@
               if (profile) {
                 if (profile.role === 'tech') setOnline(s.user.id, true);
                 loadAllData(s.user.id);
-                navigate(profile.role === 'admin' ? 'admin-dashboard' : 'tech-home');
+                const defaultDest = profile.role === 'admin' ? 'admin-dashboard' : 'tech-home';
+                const adminViews = ['admin-dashboard','fleet-list','team','reports','settings','pipeline-manager','checklist-editor','model-manager','hold-tracker'];
+                const techViews  = ['tech-home','tech-inspect','tech-stockyard','tech-delivery','tech-settings'];
+                const validViews = profile.role === 'admin' ? adminViews : techViews;
+                const saved = sessionStorage.getItem('stockmo_view');
+                navigate(saved && validViews.includes(saved) ? saved : defaultDest);
               }
             });
           }
@@ -4638,6 +4643,7 @@
             setTechnicians([]);
             setNotifications([]);
             setDataReady(false);
+            sessionStorage.removeItem('stockmo_view');
             navigate('login');
           }
         });
