@@ -4627,7 +4627,8 @@
               if (profile) {
                 if (profile.role === 'tech') setOnline(s.user.id, true);
                 loadAllData(s.user.id);
-                navigate(profile.role === 'admin' ? 'admin-dashboard' : 'tech-home');
+                const dest = profile.role === 'admin' ? 'admin-dashboard' : 'tech-home';
+                setView(v => v === 'login' ? dest : v);
               }
             });
           } else if (!s) {
