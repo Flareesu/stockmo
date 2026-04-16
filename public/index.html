@@ -63,79 +63,9 @@
     const IMG_SEDAN = 'https://lh3.googleusercontent.com/aida-public/AB6AXuAKCqGH3cgvNygdD7Y-Ic7XoAT-_RmmSMOtLczsN_DLDFYLACiw5a80mizoi_70_YoWVYGSqf8hZ6eazbi09__NjeChY7-pyj6bZ0efyncprb94hvO_oQ3MYS2nDSWLsG63ZUzNAe9Z05mRHZY1Bq-Rq4ZQpADzsqGCXDh4TWGUYJfdVDiir3QBFpJIFkb4nsde-_Kc4tz3MxY0WO7zqALVJ2kK6mXAMD7GfUHNnDaCjDYvTxF95bznLsdtok8OVKp6CXlp2iNSroM';
     const IMG_LARGE = 'https://lh3.googleusercontent.com/aida-public/AB6AXuDoywFCnU04O_BWrSkJozkdjF0Pcjcsr5hS7pjbrhCflKv-Xx8lk3cLt7kImgCkV7tZNcNvWSoPDqQtFNThjjHRTjhi9sWxiB03nVnWM7bSzdF5ZSZYw8Q_m27_lZ5nIZMB2bAmB3Q8NY7tbES3uIpOTNNefotoqP8J6hQUcZkseWS3p5Ec297lJIzvC22-KGMPJ3ddjaGDZmu5C3qrwIXLV6iMJr_R9i3p5gbDfV1Y09_r_7p2Y1GG7mKPwP3unXR12OyyPZXd4Bo';
 
-    /* ─── GAC MODELS CATALOG ─── */
-    const GAC_MODELS = [
-      { model:'GS3 Emzoom', type:'suv',   engine:'1.5T 174hp 7-DCT', fuel:'Gasolina', colors:['Superstar Silver','Ivory White','Moonlight Grey','Salt Lake Blue','Graphene Grey','Galaxy Lilac'] },
-      { model:'EMPOW',      type:'sedan', engine:'1.5T 174hp 7-DCT', fuel:'Gasolina', colors:['Ivory White','Moonlight Grey','Elegant Black','Matt Fighter Green'] },
-      { model:'Emkoo',      type:'suv',   engine:'1.5T 177hp 7-DCT', fuel:'Gasolina', colors:['Snow White','Elegant Black','Moonlight Grey','Superstar Silver','Star Lake Green'] },
-      { model:'GS8',        type:'suv',   engine:'2.0T 248hp 8AT',   fuel:'Gasolina', colors:['Crystal White','Elegant Black','Moonlight Grey','Speed Silver','Ink Seal Green'] },
-      { model:'M6 Pro',     type:'mpv',   engine:'1.5T 174hp 7-DCT', fuel:'Gasolina', colors:['Elegant Black','Peacock Blue','Crystal White'] },
-      { model:'M8',         type:'mpv',   engine:'2.0T 248hp 8AT',   fuel:'Gasolina', colors:['Crystal White','Elegant Black','Temple Gold'] },
-      { model:'GN6',        type:'mpv',   engine:'1.5T 170hp 6AT',   fuel:'Gasolina', colors:['Brown','Black','Grey','White','Blue'] },
-    ];
-
-    /* ─── PDI ITEMS TEMPLATE (25 items) ─── */
-    const PDI_ITEMS = [
-      { id:'p1',  section:'Exterior',   name:'Body panels — no shipping damage, dents, or scratches', priority:'high' },
-      { id:'p2',  section:'Exterior',   name:'Paint condition & panel gap alignment',                 priority:'high' },
-      { id:'p3',  section:'Exterior',   name:'All glass — windshield, windows, mirrors — no chips',   priority:'high' },
-      { id:'p4',  section:'Exterior',   name:'All lighting — headlamps, DRL, fog, tail, turn signals',priority:'med'  },
-      { id:'p5',  section:'Exterior',   name:'Door seals, hood & trunk alignment',                    priority:'med'  },
-      { id:'p6',  section:'Exterior',   name:'Wiper blades & washer spray pattern',                   priority:'med'  },
-      { id:'p7',  section:'Exterior',   name:'Wheel & tire condition — correct pressure per GAC spec', priority:'high' },
-      { id:'p8',  section:'Interior',   name:'Dashboard — no warning lights on startup',              priority:'high' },
-      { id:'p9',  section:'Interior',   name:'Infotainment system boot-up & operation',               priority:'med'  },
-      { id:'p10', section:'Interior',   name:'Climate control / A/C operational',                     priority:'med'  },
-      { id:'p11', section:'Interior',   name:'All seat adjustments & seat belt function',             priority:'high' },
-      { id:'p12', section:'Interior',   name:'Interior trim — no damage or defects',                  priority:'med'  },
-      { id:'p13', section:'Interior',   name:'Power windows, mirrors, locks operational',             priority:'med'  },
-      { id:'p14', section:'Interior',   name:'Panoramic sunroof operation (where applicable)',        priority:'med'  },
-      { id:'p15', section:'Mechanical', name:'Engine starts smoothly — no warning lights',            priority:'high' },
-      { id:'p16', section:'Mechanical', name:'Brake pedal firm — no abnormal noise',                  priority:'high' },
-      { id:'p17', section:'Mechanical', name:'7-DCT / 8AT transmission shift quality',                priority:'high' },
-      { id:'p18', section:'Mechanical', name:'Battery voltage check (12V system)',                    priority:'high' },
-      { id:'p19', section:'Mechanical', name:'Engine oil & coolant levels',                           priority:'med'  },
-      { id:'p20', section:'Mechanical', name:'All fluid levels — brake, power steering, washer',      priority:'med'  },
-      { id:'p21', section:'Electrical', name:'ADAS / 360° camera calibration verified',               priority:'med'  },
-      { id:'p22', section:'Electrical', name:'Parking sensors functional',                            priority:'med'  },
-      { id:'p23', section:'Documents',  name:"Owner's manual & warranty book present",                priority:'med'  },
-      { id:'p24', section:'Documents',  name:'All key sets — smart keys accounted for',               priority:'high' },
-      { id:'p25', section:'Documents',  name:'VIN plate matches documents',                           priority:'high' },
-    ];
-
-    /* ─── STOCK MAINTENANCE TEMPLATE (12 tasks) ─── */
-    const STOCK_MAINT_TEMPLATE = [
-      { id:'sm1',  name:'Engine start & idle run (10-15 min turbo warm-up)', freq:7,  priority:'high' },
-      { id:'sm2',  name:'Battery voltage check & top charge',                freq:14, priority:'high' },
-      { id:'sm3',  name:'Tire pressure check (TPMS verification)',           freq:14, priority:'med'  },
-      { id:'sm4',  name:'Tire rotation (prevent flat spots)',                freq:30, priority:'high' },
-      { id:'sm5',  name:'Exterior wash & paint protection',                  freq:14, priority:'low'  },
-      { id:'sm6',  name:'Interior clean & dehumidify',                       freq:30, priority:'low'  },
-      { id:'sm7',  name:'All fluid levels check (oil, coolant, brake)',      freq:30, priority:'med'  },
-      { id:'sm8',  name:'Brake pad & disc inspection',                       freq:60, priority:'med'  },
-      { id:'sm9',  name:'DCT/AT transmission warm-up cycle',                 freq:14, priority:'med'  },
-      { id:'sm10', name:'Pest & rodent inspection',                          freq:30, priority:'med'  },
-      { id:'sm11', name:'A/C system run cycle',                              freq:14, priority:'low'  },
-      { id:'sm12', name:'Smart key fob battery check',                       freq:60, priority:'low'  },
-    ];
-
-    /* ─── FINAL ITEMS TEMPLATE (14 items) ─── */
-    const FINAL_ITEMS = [
-      { id:'f1',  section:'Exterior',   name:'No new exterior damage since PDI',                      priority:'high' },
-      { id:'f2',  section:'Exterior',   name:'Paint — no new scratches, swirls, or blemishes',        priority:'high' },
-      { id:'f3',  section:'Exterior',   name:'All glass clean & undamaged',                           priority:'high' },
-      { id:'f4',  section:'Exterior',   name:'Professional exterior wash & polish complete',           priority:'med'  },
-      { id:'f5',  section:'Exterior',   name:'Shipping protection films removed',                     priority:'med'  },
-      { id:'f6',  section:'Interior',   name:'Full interior detail & vacuum complete',                 priority:'med'  },
-      { id:'f7',  section:'Interior',   name:'No new interior damage since PDI',                      priority:'high' },
-      { id:'f8',  section:'Mechanical', name:'Engine start — no new warning lights',                   priority:'high' },
-      { id:'f9',  section:'Mechanical', name:'All 4 tires at delivery pressure (GAC spec)',            priority:'high' },
-      { id:'f10', section:'Mechanical', name:'Battery fully charged (12.6V+)',                         priority:'high' },
-      { id:'f11', section:'Documents',  name:'All smart key sets present & functional',                priority:'high' },
-      { id:'f12', section:'Documents',  name:"Owner's manual, warranty book, service booklet complete",priority:'high' },
-      { id:'f13', section:'Documents',  name:'PDI findings resolved or documented',                   priority:'high' },
-      { id:'f14', section:'Electrical', name:'ADAS systems verified operational',                      priority:'med'  },
-    ];
+    // Template data is loaded from Supabase tables:
+    // vehicle_models, pdi_item_templates, maint_task_templates, final_check_templates
+    // (seeded via migration 08_seed_templates.sql)
 
     /* ─── TECHNICIANS FALLBACK (replaced at runtime with live DB data) ─── */
     const TECH_FALLBACK = [
@@ -153,12 +83,35 @@
     };
 
     /* ─── DB → COMPONENT DATA TRANSFORM ─── */
-    const getModelType = (modelName) => {
-      const mpvs = ['M6 Pro','M8','GN6'];
-      const sedans = ['EMPOW'];
-      if (mpvs.includes(modelName)) return 'mpv';
-      if (sedans.includes(modelName)) return 'sedan';
-      return 'suv';
+    const getModelType = (_modelName) => 'suv';
+
+    // ── Date utilities ──────────────────────────────────────────────────────────
+    const fmtDate = (d) => {
+      if (!d) return '—';
+      const s = String(d);
+      const dt = new Date(s.includes('T') ? s : s + 'T00:00:00');
+      return isNaN(dt) ? s : dt.toLocaleDateString('en-PH', { year:'numeric', month:'short', day:'numeric' });
+    };
+
+    const excelDateToISO = (v) => {
+      if (v === null || v === undefined || v === '') return null;
+      if (typeof v === 'number') {
+        const d = new Date((v - 25569) * 86400 * 1000);
+        return isNaN(d) ? null : d.toISOString().split('T')[0];
+      }
+      const d = new Date(v);
+      return isNaN(d) ? null : d.toISOString().split('T')[0];
+    };
+
+    // Detect fuel type from variant string AND model name
+    const detectFuel = (variant = '', model = '') => {
+      const v = (variant + ' ' + model).toUpperCase();
+      if (v.includes('PHEV'))  return 'PHEV';
+      if (v.includes('HEV'))   return 'HEV';
+      if (v.includes(' EV') || v.startsWith('EV') || v.includes('BEV') || v.includes('ELECTRIC')) return 'Electric';
+      if (v.includes('DIESEL')) return 'Diesel';
+      if (/\bAION\b/.test(v))  return 'Electric';
+      return 'Gasoline';
     };
 
     // Transforms a Supabase vehicle row (with nested join data) into the shape
@@ -212,11 +165,22 @@
         year:        row.year         || 2025,
         color:       row.color        || '',
         engine:      row.engine       || '',
-        fuel:        row.fuel         || 'Gasolina',
+        fuel:          row.fuel || detectFuel(row.variant || '', row.model || ''),
+        variant:       row.variant        || '',
+        exteriorColor: row.exterior_color || row.color || '',
+        interiorColor: row.interior_color || '',
+        csNumber:      row.cs_number      || '',
+        engineNumber:  row.engine_number  || '',
+        invoiceNumber: row.invoice_number || '',
+        blNumber:      row.bl_number      || '',
+        contractNo:    row.contract_no    || '',
+        salesStatus:   row.sales_status   || '',
+        dealerGroup:   row.dealer_group   || '',
+        region:        row.region         || '',
         lot:         row.lot          || '',
         stage:       row.stage        || 'port',
         img:         row.cover_photo_url || imgForType(type),
-        arrivalDate: row.arrival_date,
+        arrivalDate: row.arrival_date || null,
         pdiDate:     row.pdi_date,
         stockDate:   row.stock_date,
         finalDate:   row.final_date,
@@ -229,6 +193,7 @@
         finalChecks,
         history,
         historyRaw,
+        extraFields: row.extra_fields || {},
       };
     };
 
@@ -314,6 +279,7 @@
         tabMaint: 'MAINT',
         tabFinal: 'FINAL',
         tabNotes: 'NOTES',
+        tabReports: 'REPORTS',
         tabHistory: 'HISTORY',
         startPdi: 'Start PDI Inspection',
         pdiProgress: 'PDI Progress',
@@ -489,6 +455,7 @@
         tabMaint: 'MAINT',
         tabFinal: 'HULING',
         tabNotes: 'NOTES',
+        tabReports: 'REPORTS',
         tabHistory: 'KASAYSAYAN',
         startPdi: 'Simulan ang PDI',
         pdiProgress: 'Progreso ng PDI',
@@ -664,6 +631,7 @@
         tabMaint: '维护',
         tabFinal: '终检',
         tabNotes: '备注',
+        tabReports: '报告',
         tabHistory: '历史',
         startPdi: '开始PDI检查',
         pdiProgress: 'PDI进度',
@@ -767,9 +735,10 @@
     const addDays = (d, n) => { const dt = new Date(d); dt.setDate(dt.getDate() + n); return dt.toISOString().slice(0, 10); };
     const imgForType = (t) => t === 'sedan' ? IMG_SEDAN : t === 'mpv' ? IMG_LARGE : IMG_SUV;
 
-    const makePdi = () => PDI_ITEMS.map(i => ({ id:i.id, section:i.section, name:i.name, priority:i.priority, state:'pending', note:'' }));
-    const makeFinal = () => FINAL_ITEMS.map(i => ({ id:i.id, section:i.section, name:i.name, priority:i.priority, state:'pending', note:'' }));
-    const makeMaint = (start) => STOCK_MAINT_TEMPLATE.map(m => ({ id:m.id, name:m.name, freq:m.freq, priority:m.priority, lastDone:start, nextDue:addDays(start, m.freq), note:'' }));
+    // These are legacy stubs — actual check data comes from Supabase (pdi_item_templates, etc.)
+    const makePdi = () => [];
+    const makeFinal = () => [];
+    const makeMaint = (_start) => [];
 
     const pdiProgress = (car) => {
       const done = car.pdiChecks.filter(c => c.state === 'done' || c.state === 'na').length;
@@ -1596,22 +1565,77 @@
       const [editMode,   setEditMode]   = useState(false);
       const [editFields, setEditFields] = useState({});
 
+      // ── Reports tab state ──────────────────────────────────────────────────
+      const [reports,          setReports]          = useState([]);
+      const [reportText,       setReportText]       = useState('');
+      const [loadingReports,   setLoadingReports]   = useState(false);
+      const [submittingReport, setSubmittingReport] = useState(false);
+
+      useEffect(() => {
+        if (tab !== 'REPORTS') return;
+        setLoadingReports(true);
+        sb.from('vehicle_reports')
+          .select('id, content, created_at, created_by')
+          .eq('vehicle_id', v.id)
+          .order('created_at', { ascending: false })
+          .then(({ data }) => { setReports(data || []); setLoadingReports(false); });
+      }, [tab, v.id]);
+
+      const submitReport = async () => {
+        const txt = reportText.trim();
+        if (!txt) return;
+        setSubmittingReport(true);
+        const { data } = await sb.from('vehicle_reports')
+          .insert({ vehicle_id: v.id, content: txt })
+          .select('id, content, created_at, created_by')
+          .single();
+        if (data) setReports(prev => [data, ...prev]);
+        setReportText('');
+        setSubmittingReport(false);
+      };
+
       const startEdit = () => {
-        setEditFields({ model: v.model||'', color: v.color||'', engine: v.engine||'', fuel: v.fuel||'Gasolina', lot: v.lot||'', vin: v.vin||'', year: String(v.year||2025) });
+        setEditFields({
+          model:          v.model          || '',
+          variant:        v.variant        || '',
+          exterior_color: v.exteriorColor  || v.color || '',
+          interior_color: v.interiorColor  || '',
+          fuel:           v.fuel           || 'Gasoline',
+          vin:            v.vin            || '',
+          engine_number:  v.engineNumber   || '',
+          cs_number:      v.csNumber       || '',
+          lot:            v.lot            || '',
+          year:           String(v.year    || 2025),
+          _extra: { ...(v.extraFields || {}) },
+        });
         setEditMode(true);
       };
       const saveEdit = async () => {
         const u = {
-          model:  editFields.model.trim(),
-          color:  editFields.color.trim(),
-          engine: editFields.engine.trim(),
-          fuel:   editFields.fuel || 'Gasolina',
-          lot:    editFields.lot.trim(),
-          vin:    editFields.vin.trim(),
-          year:   parseInt(editFields.year) || 2025,
+          model:          editFields.model.trim(),
+          variant:        editFields.variant.trim(),
+          exterior_color: editFields.exterior_color.trim(),
+          interior_color: editFields.interior_color.trim(),
+          color:          editFields.exterior_color.trim(), // backward compat
+          engine:         editFields.variant.trim(),        // backward compat
+          fuel:           editFields.fuel || 'Gasoline',
+          vin:            editFields.vin.trim(),
+          engine_number:  editFields.engine_number.trim(),
+          cs_number:      editFields.cs_number.trim(),
+          lot:            editFields.lot.trim(),
+          year:           parseInt(editFields.year) || 2025,
+          extra_fields:   editFields._extra || {},
         };
         await sb.from('vehicles').update(u).eq('id', v.id);
-        updateVehicle(v.id, car => ({ ...car, ...u }));
+        const { extra_fields, color, engine, ...rest } = u;
+        updateVehicle(v.id, car => ({
+          ...car, ...rest,
+          exteriorColor: u.exterior_color,
+          interiorColor: u.interior_color,
+          engineNumber:  u.engine_number,
+          csNumber:      u.cs_number,
+          extraFields:   extra_fields,
+        }));
         setEditMode(false);
       };
       const handleDelete = async () => {
@@ -1825,38 +1849,42 @@
       const ChecklistTab = ({ type, checks }) => {
         const sections = [...new Set(checks.map(c => c.section))];
         return (
-          <div className="space-y-5">
+          <div className="space-y-6">
             {sections.map(sec => {
               const items = checks.map((c, i) => ({ ...c, _i: i })).filter(c => c.section === sec);
               const done = items.filter(c => c.state === 'done' || c.state === 'na').length;
+              const pct  = items.length ? Math.round((done / items.length) * 100) : 0;
               return (
                 <div key={sec}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-[11px] font-bold uppercase tracking-widest text-muted">{sec} ({done}/{items.length})</h3>
-                    <div className="h-1.5 w-20 bg-primary/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full" style={{ width: `${items.length ? (done / items.length) * 100 : 0}%` }} />
+                  {/* Section header */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-muted whitespace-nowrap">{sec}</h3>
+                    <div className="flex-1 h-1.5 bg-primary/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                     </div>
+                    <span className="text-[10px] font-black text-primary whitespace-nowrap">{done}/{items.length}</span>
                   </div>
-                  <div className="space-y-2">
+                  {/* Items — 1 col mobile, 2 col desktop */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     {items.map(item => {
                       const st = item.state;
                       const stIcon = st === 'done' ? 'check_circle' : st === 'issue' ? 'error' : st === 'na' ? 'remove_circle' : null;
                       const stBg = st === 'done' ? 'bg-emerald-50 border-emerald-200' : st === 'issue' ? 'bg-red-50 border-red-200' : st === 'na' ? 'bg-gray-100 border-gray-300' : 'bg-white border-gray-200';
                       const stColor = st === 'done' ? 'bg-emerald-500' : st === 'issue' ? 'bg-red-500' : st === 'na' ? 'bg-gray-400' : '';
                       return (
-                        <div key={item.id}>
+                        <div key={item.id} className="flex flex-col">
                           <button onClick={() => toggleCheck(type, item._i)} disabled={isAdmin}
-                            className={`flex items-start gap-3 p-3 rounded-xl text-left w-full border transition-all duration-150 ${stBg} ${!isAdmin ? 'cursor-pointer active:scale-[0.98]' : 'cursor-default'}`}>
+                            className={`flex items-start gap-2.5 p-2.5 rounded-xl text-left w-full border transition-all duration-150 ${stBg} ${!isAdmin ? 'cursor-pointer active:scale-[0.98]' : 'cursor-default'}`}>
                             {stIcon ? (
-                              <div className={`w-6 h-6 ${stColor} rounded-md flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                                <Icon name={stIcon} fill className="text-white text-sm" />
+                              <div className={`w-5 h-5 ${stColor} rounded-md flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                                <Icon name={stIcon} fill className="text-white text-xs" />
                               </div>
                             ) : (
-                              <div className="w-6 h-6 border-2 border-gray-300 rounded-md flex-shrink-0 mt-0.5" />
+                              <div className="w-5 h-5 border-2 border-gray-300 rounded-md flex-shrink-0 mt-0.5" />
                             )}
                             <div className="flex-1 min-w-0">
                               <p className="text-[12px] font-semibold text-navy leading-snug">{item.name}</p>
-                              <div className="flex items-center gap-2 mt-1">
+                              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                                 <StatusBadge status={item.priority} />
                                 <span className="text-[9px] font-bold uppercase text-muted tracking-wider">{st}</span>
                               </div>
@@ -1870,10 +1898,10 @@
                                   placeholder={t('describeIssue')}
                                   className="w-full px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-[12px] text-navy outline-none focus:border-primary" />
                               )}
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 {/* Photo button — always visible */}
                                 <button onClick={() => openCameraForCheck(type, item)}
-                                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${item.image_url ? 'bg-green-50 border border-green-200 text-green-700 hover:bg-green-100' : st === 'issue' ? 'bg-red-50 border border-red-200 text-red-500 hover:bg-red-100' : 'bg-gray-50 border border-gray-200 text-muted hover:bg-gray-100'}`}
+                                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${item.image_url ? 'bg-green-50 border border-green-200 text-green-700 hover:bg-green-100' : st === 'issue' ? 'bg-red-50 border border-red-200 text-red-500 hover:bg-red-100' : 'bg-gray-50 border border-gray-200 text-muted hover:bg-gray-100'}`}
                                   title="Take photo">
                                   <Icon name="photo_camera" className="text-sm" />
                                   {item.image_url ? 'Retake' : 'Photo'}
@@ -1933,19 +1961,34 @@
       );
       const EditForm = () => (
         <div className="space-y-3">
-          {eFld('Model',  'model')}
-          {eFld('Color',  'color')}
-          {eFld('Engine', 'engine')}
-          {eFld('VIN',    'vin')}
-          {eFld('Lot',    'lot')}
-          {eFld('Year',   'year', 'number')}
+          {eFld('Model',          'model')}
+          {eFld('Variant',        'variant')}
+          {eFld('Exterior Color', 'exterior_color')}
+          {eFld('Interior Color', 'interior_color')}
+          {eFld('VIN',            'vin')}
+          {eFld('Engine No.',     'engine_number')}
+          {eFld('CS No.',         'cs_number')}
+          {eFld('Lot',            'lot')}
+          {eFld('Year',           'year', 'number')}
           <div>
             <div className="text-[10px] text-muted font-bold uppercase tracking-widest mb-1">Fuel</div>
-            <select value={editFields.fuel||'Gasolina'} onChange={e => setEditFields(f => ({...f, fuel: e.target.value}))}
+            <select value={editFields.fuel||'Gasoline'} onChange={e => setEditFields(f => ({...f, fuel: e.target.value}))}
               className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-[12px] text-navy outline-none focus:border-primary transition-colors appearance-none">
-              <option>Gasolina</option><option>Diesel</option><option>Hybrid</option><option>Electric</option>
+              <option>Gasoline</option><option>Diesel</option><option>HEV</option><option>PHEV</option><option>Electric</option>
             </select>
           </div>
+          {Object.keys(editFields._extra || {}).length > 0 && (
+            <div className="pt-2 border-t border-gray-100">
+              <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Additional Fields</div>
+              {Object.entries(editFields._extra).map(([key, val]) => (
+                <div key={key} className="mb-2">
+                  <div className="text-[10px] text-muted font-bold uppercase tracking-widest mb-1">{key}</div>
+                  <input value={String(val)} onChange={e => setEditFields(f => ({...f, _extra: {...f._extra, [key]: e.target.value}}))}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-[12px] text-navy outline-none focus:border-primary transition-colors" />
+                </div>
+              ))}
+            </div>
+          )}
           <button onClick={saveEdit} className="w-full py-2.5 bg-primary text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 shadow-primary-glow hover:brightness-110 transition-all">
             <Icon name="save" className="text-sm" /> Save Changes
           </button>
@@ -2103,13 +2146,43 @@
               <div className="hidden lg:flex flex-col flex-1 overflow-y-auto p-4 space-y-4">
                 {editMode ? <EditForm /> : (<>
                   <div className="bg-white rounded-[16px] p-4 shadow-card space-y-1">
-                    {[[t('make'),v.make],[t('model'),v.model],[t('type'),v.type.toUpperCase()],[t('year'),String(v.year)],[t('color'),v.color],[t('engine'),v.engine],[t('fuel'),v.fuel],[t('vin'),v.vin],[t('lot'),v.lot],[t('assignedTo'),tech.name]].map(([k,val]) => (
-                      <div key={k} className="flex justify-between py-1.5 border-b border-gray-50 last:border-0">
-                        <span className="text-[11px] text-muted font-medium">{k}</span>
-                        <span className="text-[11px] font-bold text-navy text-right max-w-[55%] truncate" title={val}>{val}</span>
+                    {[
+                      ['Invoice #',      v.invoiceNumber],
+                      ['CS No.',         v.csNumber],
+                      ['Contract No.',   v.contractNo],
+                      ['Model',          v.model],
+                      ['Variant',        v.variant],
+                      ['Year',           String(v.year)],
+                      ['Exterior Color', v.exteriorColor],
+                      ['Interior Color', v.interiorColor],
+                      ['Fuel',           v.fuel],
+                      ['VIN',            v.vin],
+                      ['Engine No.',     v.engineNumber],
+                      ['BL No.',         v.blNumber],
+                      ['Lot',            v.lot],
+                      ['Region',         v.region],
+                      ['Dealer Group',   v.dealerGroup],
+                      ['Dealer',         v.dealer],
+                      ['Port Arrival',   fmtDate(v.arrivalDate)],
+                      ['Assigned To',    tech.name],
+                    ].filter(([,val]) => val && val !== '—').map(([k,val]) => (
+                      <div key={k} className="flex justify-between gap-2 py-1.5 border-b border-gray-50 last:border-0">
+                        <span className="text-[11px] text-muted font-medium flex-shrink-0">{k}</span>
+                        <span className="text-[11px] font-bold text-navy text-right min-w-0 break-all" title={val}>{val}</span>
                       </div>
                     ))}
                   </div>
+                  {Object.keys(v.extraFields || {}).length > 0 && (
+                    <div className="bg-white rounded-[16px] p-4 shadow-card space-y-1">
+                      <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Additional Information</div>
+                      {Object.entries(v.extraFields).map(([key, val]) => (
+                        <div key={key} className="flex justify-between gap-2 py-1.5 border-b border-gray-50 last:border-0">
+                          <span className="text-[11px] text-muted font-medium flex-shrink-0">{key}</span>
+                          <span className="text-[11px] font-bold text-navy text-right min-w-0 break-all" title={String(val)}>{/date|arrival/i.test(key) ? fmtDate(String(val)) : String(val)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <StageActions />
                 </>)}
               </div>
@@ -2118,7 +2191,7 @@
             {/* ═══ RIGHT COLUMN ═══ */}
             <div className="flex-1 flex flex-col overflow-hidden min-w-0">
               <nav className="bg-white border-b border-gray-100 flex px-2 flex-shrink-0">
-                {[['VEHICLE','tabVehicle','lg:hidden'],['PDI','tabPdi',''],['MAINT','tabMaint',''],['FINAL','tabFinal',''],['NOTES','tabNotes',''],['HISTORY','tabHistory','']].map(([key,tKey,extra]) => (
+                {[['VEHICLE','tabVehicle','lg:hidden'],['PDI','tabPdi',''],['MAINT','tabMaint',''],['FINAL','tabFinal',''],['NOTES','tabNotes',''],['REPORTS','tabReports',''],['HISTORY','tabHistory','']].map(([key,tKey,extra]) => (
                   <button key={key} onClick={() => setTab(key)}
                     className={`flex-1 py-3 text-[9px] font-bold tracking-widest transition-colors ${extra} ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
                     {t(tKey)}
@@ -2132,13 +2205,43 @@
                 {tab === 'VEHICLE' && (
                   <div className="space-y-4 lg:hidden">
                     <div className="bg-white rounded-[16px] p-4 shadow-card space-y-1">
-                      {[[t('make'),v.make],[t('model'),v.model],[t('type'),v.type.toUpperCase()],[t('year'),String(v.year)],[t('color'),v.color],[t('engine'),v.engine],[t('fuel'),v.fuel],[t('vin'),v.vin],[t('lot'),v.lot],[t('assignedTo'),tech.name]].map(([k,val]) => (
-                        <div key={k} className="flex justify-between py-2 border-b border-gray-50 last:border-0">
-                          <span className="text-[12px] text-muted font-medium">{k}</span>
-                          <span className="text-[12px] font-bold text-navy">{val}</span>
+                      {[
+                        ['Invoice #',      v.invoiceNumber],
+                        ['CS No.',         v.csNumber],
+                        ['Contract No.',   v.contractNo],
+                        ['Model',          v.model],
+                        ['Variant',        v.variant],
+                        ['Year',           String(v.year)],
+                        ['Exterior Color', v.exteriorColor],
+                        ['Interior Color', v.interiorColor],
+                        ['Fuel',           v.fuel],
+                        ['VIN',            v.vin],
+                        ['Engine No.',     v.engineNumber],
+                        ['BL No.',         v.blNumber],
+                        ['Lot',            v.lot],
+                        ['Region',         v.region],
+                        ['Dealer Group',   v.dealerGroup],
+                        ['Dealer',         v.dealer],
+                        ['Port Arrival',   fmtDate(v.arrivalDate)],
+                        ['Assigned To',    tech.name],
+                      ].filter(([,val]) => val && val !== '—').map(([k,val]) => (
+                        <div key={k} className="flex justify-between gap-2 py-2 border-b border-gray-50 last:border-0">
+                          <span className="text-[12px] text-muted font-medium flex-shrink-0">{k}</span>
+                          <span className="text-[12px] font-bold text-navy text-right min-w-0 break-all" title={val}>{val}</span>
                         </div>
                       ))}
                     </div>
+                    {Object.keys(v.extraFields || {}).length > 0 && (
+                      <div className="bg-white rounded-[16px] p-4 shadow-card space-y-1">
+                        <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Additional Information</div>
+                        {Object.entries(v.extraFields).map(([key, val]) => (
+                          <div key={key} className="flex justify-between gap-2 py-2 border-b border-gray-50 last:border-0">
+                            <span className="text-[12px] text-muted font-medium flex-shrink-0">{key}</span>
+                            <span className="text-[12px] font-bold text-navy text-right min-w-0 break-all" title={String(val)}>{/date|arrival/i.test(key) ? fmtDate(String(val)) : String(val)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     {editMode ? <EditForm /> : <StageActions />}
                   </div>
                 )}
@@ -2224,6 +2327,55 @@
                       rows={6} placeholder={t('addNotes')}
                       className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-navy placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none shadow-card"
                       disabled={isAdmin} />
+                  </div>
+                )}
+
+                {/* REPORTS tab — issue log */}
+                {tab === 'REPORTS' && (
+                  <div className="space-y-4">
+                    {/* Submit new issue */}
+                    <div className="bg-white rounded-[16px] p-4 shadow-card space-y-3">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-muted">Report an Issue</div>
+                      <textarea
+                        value={reportText}
+                        onChange={e => setReportText(e.target.value)}
+                        rows={3}
+                        placeholder="Describe the issue with this vehicle…"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-navy placeholder:text-muted outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none transition-colors"
+                      />
+                      <button
+                        onClick={submitReport}
+                        disabled={!reportText.trim() || submittingReport}
+                        className="w-full py-2.5 bg-primary text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 shadow-primary-glow hover:brightness-110 transition-all disabled:opacity-40 active:scale-[0.98]">
+                        <Icon name="flag" fill className="text-sm" />
+                        {submittingReport ? 'Submitting…' : 'Report Issue'}
+                      </button>
+                    </div>
+                    {/* Issue list */}
+                    {loadingReports ? (
+                      <div className="flex justify-center py-8"><div className="w-5 h-5 border-[3px] border-primary border-t-transparent rounded-full animate-spin" /></div>
+                    ) : reports.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-16 text-center">
+                        <Icon name="report_off" fill className="text-muted text-[48px] mb-3 opacity-40" />
+                        <div className="text-[13px] font-bold text-muted">No issues reported</div>
+                        <div className="text-[11px] text-muted/60 mt-1">Use the form above to log a vehicle issue</div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {reports.map(r => (
+                          <div key={r.id} className="bg-white rounded-[16px] p-4 shadow-card border-l-4 border-red-400">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <div className="flex items-center gap-1.5">
+                                <Icon name="flag" fill className="text-red-500 text-[14px]" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-red-600">Issue Report</span>
+                              </div>
+                              <span className="text-[10px] text-muted flex-shrink-0">{fmtDate(r.created_at?.split('T')[0])}</span>
+                            </div>
+                            <p className="text-[12px] text-navy leading-relaxed">{r.content}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -2475,10 +2627,18 @@
         return all.filter(v => {
           const ms = !q
             || (v.label||v.model).toLowerCase().includes(q)
-            || v.vin.toLowerCase().includes(q)
-            || (v.color||'').toLowerCase().includes(q)
+            || (v.vin||'').toLowerCase().includes(q)
+            || (v.variant||'').toLowerCase().includes(q)
+            || (v.exteriorColor||v.color||'').toLowerCase().includes(q)
+            || (v.interiorColor||'').toLowerCase().includes(q)
+            || (v.csNumber||'').toLowerCase().includes(q)
+            || (v.engineNumber||'').toLowerCase().includes(q)
+            || (v.invoiceNumber||'').toLowerCase().includes(q)
+            || (v.dealer||'').toLowerCase().includes(q)
+            || (v.dealerGroup||'').toLowerCase().includes(q)
+            || (v.region||'').toLowerCase().includes(q)
             || (v.lot||'').toLowerCase().includes(q)
-            || (v.engine||'').toLowerCase().includes(q);
+            || Object.values(v.extraFields||{}).some(val => String(val).toLowerCase().includes(q));
           return ms && (stage === 'all' || v.stage === stage);
         });
       }, [all, search, stage]);
@@ -2655,6 +2815,16 @@
                       </div>
                       <div className="font-bold text-navy text-[13px] leading-tight truncate">{vehicle.model}</div>
                       <div className="text-[11px] text-muted mt-0.5">{vehicle.type.toUpperCase()} · {vehicle.year} · {vehicle.color}</div>
+                      {Object.keys(vehicle.extraFields || {}).length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {Object.entries(vehicle.extraFields).slice(0, 2).map(([k, val]) => (
+                            <span key={k} className="text-[9px] font-medium text-muted bg-gray-100 px-1.5 py-0.5 rounded-full truncate max-w-[120px]" title={`${k}: ${val}`}>{k}: {String(val)}</span>
+                          ))}
+                          {Object.keys(vehicle.extraFields).length > 2 && (
+                            <span className="text-[9px] font-medium text-primary bg-primary/5 px-1.5 py-0.5 rounded-full">+{Object.keys(vehicle.extraFields).length - 2} more</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
                       <StatusBadge status={vehicle.stage} t={t} />
@@ -3938,9 +4108,10 @@
       const [saving, setSaving]     = useState(false);
 
       // New model form
-      const [newName,   setNewName]   = useState('');
-      const [newEngine, setNewEngine] = useState('');
-      const [newFuel,   setNewFuel]   = useState('Gasolina');
+      const [newName,    setNewName]    = useState('');
+      const [newVariant, setNewVariant] = useState('');
+      const [newEngine,  setNewEngine]  = useState('');
+      const [newFuel,    setNewFuel]    = useState('Gasoline');
       const [newColors, setNewColors] = useState([]); // array of strings
       const [colorInput, setColorInput] = useState('');
 
@@ -3951,9 +4122,7 @@
       useEffect(() => {
         sb.from('vehicle_models').select('*').order('name').then(({ data }) => {
           const dbModels = data || [];
-          const merged = dbModels.length > 0 ? dbModels : GAC_MODELS.map((m, i) => ({
-            id: `local-${i}`, name: m.model, engine: m.engine, fuel_type: m.fuel, color_options: m.colors,
-          }));
+          const merged = dbModels.length > 0 ? dbModels : [];
           setModels(merged); setLoading(false);
         });
       }, []);
@@ -3968,19 +4137,22 @@
       const removeColorFromNew = (c) => setNewColors(prev => prev.filter(x => x !== c));
 
       const addModel = async () => {
-        if (!newName.trim() || !newEngine.trim()) return;
+        if (!newName.trim()) return;
         setSaving(true);
+        const fuel = newFuel || detectFuel(newVariant, newName);
         const { data } = await sb.from('vehicle_models').insert({
-          name: newName.trim(), engine: newEngine.trim(),
-          fuel_type: newFuel, color_options: newColors,
+          name:      newName.trim(),
+          variant:   newVariant.trim(),
+          engine:    newEngine.trim(),
+          fuel_type: fuel,
+          color_options: newColors,
         }).select().single();
         if (data) setModels(prev => [...prev, data]);
-        setNewName(''); setNewEngine(''); setNewColors([]); setColorInput('');
+        setNewName(''); setNewVariant(''); setNewEngine(''); setNewColors([]); setColorInput('');
         setSaving(false);
       };
 
       const deleteModel = async (id) => {
-        if (id.startsWith('local-')) return;
         if (!confirm('Remove this model?')) return;
         await sb.from('vehicle_models').delete().eq('id', id);
         setModels(prev => prev.filter(m => m.id !== id));
@@ -4086,12 +4258,15 @@
               <div className="text-[11px] font-bold uppercase tracking-widest text-muted">Add Model</div>
               <input value={newName} onChange={e => setNewName(e.target.value)}
                 placeholder="Model name (e.g. GS3 Emzoom)" className={inputCls + ' w-full'} />
+              <input value={newVariant} onChange={e => setNewVariant(e.target.value)}
+                placeholder="Variant (e.g. Premium, Elite — optional)" className={inputCls + ' w-full'} />
               <input value={newEngine} onChange={e => setNewEngine(e.target.value)}
-                placeholder="Engine (e.g. 1.5T 174hp 7-DCT)" className={inputCls + ' w-full'} />
+                placeholder="Engine (e.g. 1.5T 174hp 7-DCT — optional)" className={inputCls + ' w-full'} />
               <select value={newFuel} onChange={e => setNewFuel(e.target.value)} className={inputCls + ' w-full appearance-none'}>
-                <option>Gasolina</option>
+                <option>Gasoline</option>
                 <option>Diesel</option>
-                <option>Hybrid</option>
+                <option>HEV</option>
+                <option>PHEV</option>
                 <option>Electric</option>
               </select>
 
@@ -4126,7 +4301,7 @@
                 </div>
               </div>
 
-              <button onClick={addModel} disabled={!newName.trim() || !newEngine.trim() || saving}
+              <button onClick={addModel} disabled={!newName.trim() || saving}
                 className="w-full py-2 bg-primary text-white font-black text-[12px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 disabled:opacity-40 hover:brightness-110 active:scale-[0.98] transition-all">
                 <Icon name="add" className="text-sm" /> {saving ? 'Saving…' : 'Add Model'}
               </button>
@@ -4149,12 +4324,7 @@
 
       useEffect(() => {
         sb.from('vehicle_models').select('*').order('name').then(({ data }) => {
-          const dbModels = (data || []).length > 0
-            ? data
-            : GAC_MODELS.map((m, i) => ({
-                id: `local-${i}`, name: m.model, engine: m.engine,
-                fuel_type: m.fuel, color_options: m.colors,
-              }));
+          const dbModels = (data || []).length > 0 ? data : [];
           setModels(dbModels);
           const firstColors = dbModels[0]?.color_options || [];
           setColor(firstColors[0] || '');
@@ -4260,14 +4430,27 @@
 
       /* column name aliases — case-sensitive exact match first, then case-insensitive */
       const ALIASES = {
-        vin:    ['VIN','Vin','vin','CHASSIS','Chassis','chassis','Plate Number'],
-        model:  ['Model','model','MODEL','Vehicle Model','vehicle_model'],
-        color:  ['Color','color','COLOR','Colour','colour','COLOUR'],
-        engine: ['Engine','engine','ENGINE','Engine Spec'],
-        fuel:   ['Fuel','fuel','FUEL','Fuel Type','fuel_type'],
-        lot:    ['Lot','lot','LOT','Lot Number','lot_number','Parking','parking','Bay'],
-        year:   ['Year','year','YEAR','Model Year'],
-        stage:  ['Stage','stage','STAGE','Status','status','STATUS'],
+        vin:            ['VIN','Vin','vin','CHASSIS','Chassis','chassis','Plate Number'],
+        model:          ['MODEL','Model','model','Vehicle Model','vehicle_model'],
+        variant:        ['VARIANT','Variant','variant','Trim'],
+        exterior_color: ['Exterior COLOR','Exterior Color','Exterior','Color','color','COLOR','Colour','colour'],
+        interior_color: ['Interior COLOR','Interior Color','Interior'],
+        cs_number:      ['CS No.','CS No','CS Number'],
+        engine_number:  ['ENGINE NUMBER','Engine Number'],
+        fuel:           ['Fuel','fuel','FUEL','Fuel Type','fuel_type'],
+        lot:            ['Lot','lot','LOT','Lot Number','lot_number','Parking','parking','Bay'],
+        year:           ['YEAR','Year','year','Model Year'],
+        stage:          ['Inventory Status','Stage','stage','STAGE','Status','status','STATUS'],
+        arrival_date:   ['Port Arrival','Port Arrival Date','Arrival Date'],
+        release_date:   ['Actual Delivery Date','Delivery Date'],
+        invoice_number: ['Invoice #','Invoice No','Invoice'],
+        bl_number:      ['BL','B/L','Bill of Lading'],
+        contract_no:    ['CONTRACT NO.','Contract No','Contract Number'],
+        sales_status:   ['Sales Status','sales_status'],
+        dealer_group:   ['Dealer Group','dealer_group'],
+        dealer:         ['Dealer','DEALER','Dealer Name'],
+        region:         ['Region','region','REGION'],
+        notes:          ['Remarks','remarks','Notes','Comments'],
       };
 
       const findCol = (headers, key) => {
@@ -4281,6 +4464,8 @@
       };
 
       const VALID_STAGES = new Set(['port','pdi','hold','stock','ready','released']);
+
+      const [extraColNames, setExtraColNames] = useState([]);
 
       const parseFile = (file) => {
         if (!file) return;
@@ -4299,6 +4484,15 @@
               alert('Could not detect a VIN column or Model column.\n\nMake sure row 1 has headers named "VIN" and "Model".');
               return;
             }
+
+            // Identify extra columns (not matched by any known alias)
+            const knownIndices = new Set(Object.values(ci).filter(i => i >= 0));
+            const extraCols = []; // [{idx, name}]
+            headers.forEach((h, idx) => {
+              if (h && !knownIndices.has(idx)) extraCols.push({ idx, name: h });
+            });
+            setExtraColNames(extraCols.map(c => c.name));
+
             let valid = [], skip = 0;
             for (let i = 1; i < raw.length; i++) {
               const r = raw[i];
@@ -4306,15 +4500,44 @@
               const model = String(r[ci.model] ?? '').trim();
               if (!vin || vin.length < 10 || !model) { skip++; continue; }
               const rawStage = ci.stage >= 0 ? String(r[ci.stage] ?? '').trim().toLowerCase() : '';
+
+              // Collect extra fields from non-standard columns
+              const extra_fields = {};
+              for (const col of extraCols) {
+                const val = r[col.idx];
+                if (val !== undefined && val !== null && String(val).trim() !== '') {
+                  // Apply excelDateToISO for date-like column names
+                  if (/date|arrival/i.test(col.name) && typeof val === 'number') {
+                    extra_fields[col.name] = excelDateToISO(val) || String(val).trim();
+                  } else {
+                    extra_fields[col.name] = typeof val === 'number' ? val : String(val).trim();
+                  }
+                }
+              }
+
               valid.push({
                 vin,
                 model,
-                color:  ci.color  >= 0 ? String(r[ci.color]  ?? '').trim() : '',
-                engine: ci.engine >= 0 ? String(r[ci.engine] ?? '').trim() : '',
-                fuel:   ci.fuel   >= 0 ? String(r[ci.fuel]   ?? '').trim() || 'Gasolina' : 'Gasolina',
-                lot:    ci.lot    >= 0 ? String(r[ci.lot]    ?? '').trim() : '',
-                year:   ci.year   >= 0 ? (parseInt(r[ci.year]) || 2025) : 2025,
-                stage:  VALID_STAGES.has(rawStage) ? rawStage : 'port',
+                variant:        ci.variant        >= 0 ? String(r[ci.variant]        ?? '').trim() : '',
+                exterior_color: ci.exterior_color >= 0 ? String(r[ci.exterior_color] ?? '').trim() : '',
+                interior_color: ci.interior_color >= 0 ? String(r[ci.interior_color] ?? '').trim() : '',
+                cs_number:      ci.cs_number      >= 0 ? String(r[ci.cs_number]      ?? '').trim() : '',
+                engine_number:  ci.engine_number  >= 0 ? String(r[ci.engine_number]  ?? '').trim() : '',
+                invoice_number: ci.invoice_number >= 0 ? String(r[ci.invoice_number] ?? '').trim() : '',
+                bl_number:      ci.bl_number      >= 0 ? String(r[ci.bl_number]      ?? '').trim() : '',
+                contract_no:    ci.contract_no    >= 0 ? String(r[ci.contract_no]    ?? '').trim() : '',
+                sales_status:   ci.sales_status   >= 0 ? String(r[ci.sales_status]   ?? '').trim() : '',
+                dealer_group:   ci.dealer_group   >= 0 ? String(r[ci.dealer_group]   ?? '').trim() : '',
+                dealer:         ci.dealer         >= 0 ? String(r[ci.dealer]         ?? '').trim() : '',
+                region:         ci.region         >= 0 ? String(r[ci.region]         ?? '').trim() : '',
+                fuel:           ci.fuel           >= 0 ? String(r[ci.fuel]           ?? '').trim() : '',
+                lot:            ci.lot            >= 0 ? String(r[ci.lot]            ?? '').trim() : '',
+                year:           ci.year           >= 0 ? (parseInt(r[ci.year]) || 2025) : 2025,
+                stage:          rawStage,
+                arrival_date:   excelDateToISO(ci.arrival_date >= 0 ? r[ci.arrival_date] : null),
+                release_date:   excelDateToISO(ci.release_date >= 0 ? r[ci.release_date] : null),
+                notes:          ci.notes          >= 0 ? String(r[ci.notes]          ?? '').trim() : '',
+                extra_fields,
               });
             }
             setRows(valid); setSkipped(skip); setStep('preview');
@@ -4379,7 +4602,7 @@
                         ['Model',  'Must match a vehicle model name', true ],
                         ['Color',  'Paint color name',                false],
                         ['Engine', 'Engine spec',                     false],
-                        ['Fuel',   'Gasolina / Diesel / Electric',    false],
+                        ['Fuel',   'Gasoline / Diesel / HEV / PHEV / Electric', false],
                         ['Lot',    'Parking lot or bay number',       false],
                         ['Year',   'Model year (default 2025)',        false],
                         ['Stage',  'port/pdi/hold/stock/ready',       false],
@@ -4420,12 +4643,26 @@
                     )}
                   </div>
 
+                  {extraColNames.length > 0 && (
+                    <div className="bg-blue-50 border border-blue-200 rounded-[14px] px-4 py-3 flex items-start gap-3">
+                      <Icon name="table_chart" className="text-blue-500 text-xl flex-shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-[12px] font-bold text-navy">{extraColNames.length} extra column{extraColNames.length !== 1 ? 's' : ''} detected</div>
+                        <div className="text-[10px] text-muted mt-0.5 leading-relaxed">{extraColNames.join(', ')}</div>
+                        <div className="text-[10px] text-blue-600 mt-1 font-medium">These will be saved and shown in each vehicle's detail view</div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="overflow-x-auto rounded-[14px] border border-gray-100">
                     <table className="w-full text-[11px]">
                       <thead className="bg-gray-50 sticky top-0">
                         <tr>
                           {['#','VIN','Model','Color','Lot','Year','Stage'].map(h => (
                             <th key={h} className="px-3 py-2 text-left font-bold text-muted text-[9px] uppercase tracking-widest whitespace-nowrap">{h}</th>
+                          ))}
+                          {extraColNames.slice(0, 3).map(h => (
+                            <th key={h} className="px-3 py-2 text-left font-bold text-blue-500 text-[9px] uppercase tracking-widest whitespace-nowrap">{h}</th>
                           ))}
                         </tr>
                       </thead>
@@ -4441,6 +4678,9 @@
                             <td className="px-3 py-2">
                               <span className="px-2 py-0.5 bg-primary/10 text-primary font-bold rounded-full">{r.stage}</span>
                             </td>
+                            {extraColNames.slice(0, 3).map(col => (
+                              <td key={col} className="px-3 py-2 text-muted text-[10px]">{r.extra_fields?.[col] ?? '—'}</td>
+                            ))}
                           </tr>
                         ))}
                       </tbody>
@@ -4996,6 +5236,14 @@
           }
         };
 
+        const INVENTORY_STAGE_MAP = {
+          'in-transit': 'port', 'in transit': 'port',
+          'in stock': 'stock', 'available': 'stock',
+          'pdi': 'pdi', 'hold': 'hold', 'ready': 'ready',
+          'released': 'released', 'delivered': 'released',
+        };
+        const VALID_STAGES = new Set(['port','pdi','hold','ready','released','stock']);
+
         const BATCH = 50;
         const total = rows.length;
         let inserted = 0;
@@ -5003,16 +5251,54 @@
         for (let i = 0; i < total; i += BATCH) {
           const batch = rows.slice(i, i + BATCH);
 
+          // Auto-create vehicle_models for any new model names
+          const uniqueModels = [...new Set(batch.map(r => r.model).filter(Boolean))];
+          for (const modelName of uniqueModels) {
+            const sample = batch.find(r => r.model === modelName);
+            const fuelType = detectFuel(sample.variant || '', modelName);
+            await sb.from('vehicle_models').upsert({
+              name: modelName,
+              variant: sample.variant || '',
+              engine: sample.engine || sample.variant || '',
+              fuel_type: fuelType,
+              color_options: sample.exterior_color ? [sample.exterior_color] : [],
+            }, { onConflict: 'name', ignoreDuplicates: true });
+          }
+
           // Build vehicle rows with correct vehicle_number per model
           const vehicleRows = batch.map(r => {
+            const rawStage = String(r.stage || '').trim().toLowerCase();
+            const stage = INVENTORY_STAGE_MAP[rawStage] || (VALID_STAGES.has(rawStage) ? rawStage : 'port');
+            const fuel = r.fuel || detectFuel(r.variant || '', r.model || '');
             modelLocalCount[r.model] = (modelLocalCount[r.model] || 0) + 1;
             const vehicle_number = (modelBaseCount[r.model] || 0) + modelLocalCount[r.model];
             return {
-              vin: r.vin, model: r.model, color: r.color || '',
-              engine: r.engine || '', fuel: r.fuel || 'Gasolina',
-              lot: r.lot || '', year: r.year || 2025,
-              stage: r.stage || 'port', make: 'GAC',
-              arrival_date: today, notes: '', vehicle_number,
+              vin:            r.vin,
+              model:          r.model,
+              year:           Number(r.year) || 2025,
+              stage,
+              make:           r.make || 'GAC',
+              fuel,
+              variant:        r.variant        || '',
+              exterior_color: r.exterior_color || '',
+              interior_color: r.interior_color || '',
+              cs_number:      r.cs_number      || '',
+              engine_number:  r.engine_number  || '',
+              invoice_number: r.invoice_number || '',
+              bl_number:      r.bl_number      || '',
+              contract_no:    r.contract_no    || '',
+              sales_status:   r.sales_status   || '',
+              dealer_group:   r.dealer_group   || '',
+              region:         r.region         || '',
+              color:          r.exterior_color || r.color || '',
+              engine:         r.variant        || r.engine || '',
+              lot:            r.lot            || '',
+              arrival_date:   excelDateToISO(r.arrival_date),
+              release_date:   excelDateToISO(r.release_date),
+              dealer:         r.dealer         || '',
+              notes:          r.notes          || '',
+              extra_fields:   r.extra_fields   || {},
+              vehicle_number,
             };
           });
 
