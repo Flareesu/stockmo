@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; object-src 'none'; base-uri 'self';"/>
   <title>StockMo Desktop — Automotive Intelligence</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -51,8 +52,8 @@
     /* ─── SUPABASE CLIENT ─── */
     const { createClient } = supabase;
     const sb = createClient(
-      'https://eoxwapxwdshfmlyubfkw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVveHdhcHh3ZHNoZm1seXViZmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODkyOTMsImV4cCI6MjA4OTM2NTI5M30.Bxtva5Uf6r4buGISB-R7jKlbKjRnOdvfYQp6kh7n-tQ'
+      'https://jqnekpwerbfzrybsxcsv.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxbmVrcHdlcmJmenJ5YnN4Y3N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDM4NjQsImV4cCI6MjA5MTk3OTg2NH0.IJro2kA77epVt5uO6nXcrIoDh9BKCkafQrdi2VNpNhg'
     );
 
     /* ─── MODULE-LEVEL TECH REF (lets global techById stay reactive) ─── */
@@ -228,6 +229,7 @@
         navStock: 'Stock',
         navDelivery: 'Delivery',
         navSettings: 'Settings',
+        navAccount: 'Account',
         // Greetings
         goodMorning: 'Good Morning',
         goodAfternoon: 'Good Afternoon',
@@ -404,6 +406,7 @@
         navStock: 'Bodega',
         navDelivery: 'Paghahatid',
         navSettings: 'Settings',
+        navAccount: 'Account',
         // Greetings
         goodMorning: 'Magandang Umaga',
         goodAfternoon: 'Magandang Hapon',
@@ -580,6 +583,7 @@
         navStock: '库存',
         navDelivery: '交付',
         navSettings: '设置',
+        navAccount: '账户',
         // Greetings
         goodMorning: '早上好',
         goodAfternoon: '下午好',
@@ -793,10 +797,17 @@
       </button>
     );
 
+    /* ─── ROLE / PERMISSION HELPERS ─── */
+    const isAdminRole    = (role) => role === 'admin';
+    const isEmployeeRole = (role) => role === 'employee';
+    const canEdit = (role, perms) => isAdminRole(role) || (isEmployeeRole(role) && perms?.edit === true);
+    const canConfig = (role) => isAdminRole(role);
+    const canImport = (role, perms) => isAdminRole(role) || (isEmployeeRole(role) && perms?.edit === true);
+
     /* ─── DESKTOP SIDEBAR ─── */
     function DesktopSidebar({ role, currentView, navigate, vehicles, t, onNotificationClick, unreadCount }) {
-      const navItems = role === 'admin' ? ADMIN_NAV : TECH_NAV;
-      const active = role === 'admin'
+      const navItems = role === 'admin' ? ADMIN_NAV : role === 'employee' ? EMPLOYEE_NAV : TECH_NAV;
+      const active = (role === 'admin' || role === 'employee')
         ? (VIEW_TO_NAV[currentView] || 'dash')
         : (TECH_VIEW_TO_NAV[currentView] || 'home');
       const holdCount = (vehicles || []).filter(v => v.stage === 'hold').length;
@@ -812,7 +823,7 @@
               <div>
                 <div className="font-black text-navy text-[15px] leading-tight">StockMo</div>
                 <div className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
-                  {role === 'admin' ? 'Administrator' : 'Technician'}
+                  {role === 'admin' ? 'Administrator' : role === 'employee' ? 'Employee' : 'Technician'}
                 </div>
               </div>
             </div>
@@ -861,19 +872,29 @@
       { id:'config',  icon:'tune',           labelKey:'navConfig',  target:'pipeline-manager'  },
       { id:'admin',   icon:'settings',       labelKey:'navAdmin',   target:'settings'          },
     ];
+    /* ─── EMPLOYEE NAV (view-only, no config/admin) ─── */
+    const EMPLOYEE_NAV = [
+      { id:'dash',    icon:'grid_view',        labelKey:'navDash',    target:'admin-dashboard'   },
+      { id:'fleet',   icon:'directions_car',   labelKey:'navFleet',   target:'fleet-list'        },
+      { id:'team',    icon:'group',            labelKey:'navTeam',    target:'team'              },
+      { id:'holds',   icon:'build_circle',     labelKey:'navHolds',   target:'hold-tracker'      },
+      { id:'acct',    icon:'manage_accounts',  labelKey:'navAccount', target:'employee-settings' },
+    ];
     const VIEW_TO_NAV = {
       'admin-dashboard':'dash','fleet-list':'fleet','team':'team',
       'hold-tracker':'holds',
       'pipeline-manager':'config','checklist-editor':'config','model-manager':'config',
       'settings':'admin',
+      'employee-settings':'acct',
     };
 
-    function AdminBottomNav({ navigate, currentView, vehicles, t }) {
+    function AdminBottomNav({ navigate, currentView, vehicles, t, role }) {
+      const navList = role === 'employee' ? EMPLOYEE_NAV : ADMIN_NAV;
       const active = VIEW_TO_NAV[currentView] || 'dash';
       const holdCount = (vehicles || []).filter(v => v.stage === 'hold').length;
       return (
         <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 flex h-16 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
-          {ADMIN_NAV.map(item => {
+          {navList.map(item => {
             const on = active === item.id;
             const badge = item.id === 'holds' ? holdCount : 0;
             return (
@@ -1546,7 +1567,8 @@
     }
 
     /* ─── VehicleDetailOverlay ─── */
-    function VehicleDetailOverlay({ vehicle: v, onClose, updateVehicle, db, isAdmin, t, onDeleteVehicle }) {
+    function VehicleDetailOverlay({ vehicle: v, onClose, updateVehicle, db, isAdmin, canEdit: canEditProp, t, onDeleteVehicle }) {
+      const canEditVehicle = canEditProp !== undefined ? canEditProp : isAdmin;
       const [tab,          setTab]          = useState('VEHICLE');
       const [dealerName,   setDealerName]   = useState('');
       const [uploading,    setUploading]    = useState(false);
@@ -2109,7 +2131,7 @@
                   <StatusBadge status={v.stage} t={t} />
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
-                  {isAdmin && (
+                  {isAdmin && canEditVehicle && (
                     <button onClick={() => editMode ? setEditMode(false) : startEdit()}
                       className={`p-2 rounded-full transition-colors ${editMode ? 'bg-primary/10 text-primary' : 'hover:bg-gray-200 text-navy'}`}
                       title={editMode ? 'Cancel edit' : 'Edit vehicle'}>
@@ -2421,7 +2443,7 @@
     }
 
     /* ─── AdminDashboard ─── */
-    function AdminDashboard({ navigate, vehicles, technicians, onNotificationClick, onAddVehicle, unreadCount, onOpenDetail, t }) {
+    function AdminDashboard({ navigate, vehicles, technicians, onNotificationClick, onAddVehicle, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role }) {
       const all = vehicles;
       const pipeline = [
         { label:'PORT',     count:all.filter(v => v.stage==='port').length,     color:'bg-orange-500' },
@@ -2445,6 +2467,20 @@
       const recent = [];
       all.forEach(v => v.history.slice(0, 2).forEach(h => recent.push({ vid: v.label || v.model, text:h })));
       recent.sort((a, b) => b.text.localeCompare(a.text));
+
+      // Group active (non-released) vehicles by model for the pipeline breakdown
+      const modelsInPipeline = (() => {
+        const STAGES = ['port','pdi','hold','stock','ready'];
+        const STAGE_COLOR = { port:'bg-amber-500', pdi:'bg-green-500', hold:'bg-red-500', stock:'bg-blue-500', ready:'bg-purple-500' };
+        const map = {};
+        all.filter(v => STAGES.includes(v.stage)).forEach(v => {
+          const key = (v.model || 'Unknown') + (v.variant ? ` · ${v.variant}` : '');
+          if (!map[key]) map[key] = { name: key, total: 0, byStage: {} };
+          map[key].total += 1;
+          map[key].byStage[v.stage] = (map[key].byStage[v.stage] || 0) + 1;
+        });
+        return { rows: Object.values(map).sort((a,b) => b.total - a.total), stages: STAGES, colors: STAGE_COLOR };
+      })();
 
       return (
         <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
@@ -2476,9 +2512,11 @@
                   <button className="flex-1 lg:flex-none lg:px-6 py-2.5 border-2 border-primary text-primary font-bold text-[11px] uppercase tracking-widest rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/5 transition-colors">
                     <Icon name="upload" className="text-base" /> {t('exportReport')}
                   </button>
-                  <button onClick={onAddVehicle} className="flex-1 lg:flex-none lg:px-6 py-2.5 bg-primary text-white font-bold text-[11px] uppercase tracking-widest rounded-full flex items-center justify-center gap-1.5 shadow-primary-glow hover:brightness-110 transition-all">
-                    <Icon name="add" fill className="text-base" /> {t('addVehicle')}
-                  </button>
+                  {canEditProp && (
+                    <button onClick={onAddVehicle} className="flex-1 lg:flex-none lg:px-6 py-2.5 bg-primary text-white font-bold text-[11px] uppercase tracking-widest rounded-full flex items-center justify-center gap-1.5 shadow-primary-glow hover:brightness-110 transition-all">
+                      <Icon name="add" fill className="text-base" /> {t('addVehicle')}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -2516,6 +2554,47 @@
                   ))}
                 </div>
               </div>
+
+              {/* Models in Pipeline */}
+              {modelsInPipeline.rows.length > 0 && (
+                <div className="bg-white rounded-[20px] p-4 lg:p-6 shadow-card">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Icon name="directions_car" fill className="text-primary text-[22px]" />
+                      <span className="font-bold text-navy text-[14px] lg:text-[16px]">Models in Pipeline</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-muted uppercase tracking-wider">
+                      {modelsInPipeline.rows.reduce((a,r) => a + r.total, 0)} active units
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {modelsInPipeline.rows.slice(0, 8).map(row => (
+                      <div key={row.name} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+                        <div className="flex-1 min-w-0">
+                          <div className="text-[12px] font-bold text-navy truncate">{row.name}</div>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {modelsInPipeline.stages.map(s => {
+                              const c = row.byStage[s] || 0;
+                              if (!c) return null;
+                              return (
+                                <span key={s} className="flex items-center gap-1 text-[9px] font-bold text-muted">
+                                  <span className={`w-1.5 h-1.5 rounded-full ${modelsInPipeline.colors[s]}`} />
+                                  {c} {s.toUpperCase()}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <span className="text-[16px] font-black text-navy flex-shrink-0">{row.total}</span>
+                      </div>
+                    ))}
+                    {modelsInPipeline.rows.length > 8 && (
+                      <div className="text-[10px] text-center text-muted pt-1">+{modelsInPipeline.rows.length - 8} more models</div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {holdVehicles.length > 0 && (
                 <div className="bg-white rounded-[20px] p-4 shadow-card">
                   <div className="flex items-center justify-between mb-3">
@@ -2599,7 +2678,7 @@
               </div>
             </div>
           </main>
-          <AdminBottomNav navigate={navigate} currentView="admin-dashboard" vehicles={vehicles} t={t} />
+          <AdminBottomNav navigate={navigate} currentView="admin-dashboard" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }
@@ -2607,7 +2686,7 @@
     /* ─── FleetListScreen ─── */
     const PAGE_SIZE = 50;
 
-    function FleetListScreen({ navigate, vehicles, onAddVehicle, onImportFleet, onNotificationClick, unreadCount, onOpenDetail, t }) {
+    function FleetListScreen({ navigate, vehicles, onAddVehicle, onImportFleet, onNotificationClick, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role }) {
       const all = vehicles;
       const [search, setSearch]         = useState('');
       const [stage, setStage]           = useState('all');
@@ -2670,6 +2749,41 @@
 
       const applySuggestion = (val) => { setSearch(val); setShowSuggestions(false); };
 
+      // Model-level aggregation for overview cards
+      const modelSummary = useMemo(() => {
+        const map = {};
+        all.forEach(v => {
+          const key = v.model || 'Unknown';
+          if (!map[key]) map[key] = {
+            model: key,
+            total: 0,
+            byStage: { port:0, pdi:0, hold:0, stock:0, ready:0, released:0 },
+            variants: new Set(),
+            colors: new Set(),
+            years: new Set(),
+            dealers: new Set(),
+          };
+          const m = map[key];
+          m.total++;
+          if (m.byStage[v.stage] !== undefined) m.byStage[v.stage]++;
+          if (v.variant) m.variants.add(v.variant);
+          if (v.exteriorColor || v.color) m.colors.add(v.exteriorColor || v.color);
+          if (v.year) m.years.add(String(v.year));
+          if (v.dealer) m.dealers.add(v.dealer);
+        });
+        return Object.values(map)
+          .map(m => ({
+            ...m,
+            variants: [...m.variants],
+            colors:   [...m.colors],
+            years:    [...m.years],
+            dealers:  [...m.dealers],
+          }))
+          .sort((a, b) => b.total - a.total);
+      }, [all]);
+
+      const [selectedModel, setSelectedModel] = useState(null);
+
       // Close suggestions on outside click
       useEffect(() => {
         const handler = (e) => { if (searchRef.current && !searchRef.current.contains(e.target)) setShowSuggestions(false); };
@@ -2695,7 +2809,8 @@
                   <Icon name="notifications" className="text-navy" />
                   {unreadCount > 0 && <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-primary rounded-full ring-2 ring-white" />}
                 </button>
-                {/* Import button (desktop text, mobile icon) */}
+                {/* Import button (desktop text, mobile icon) — edit-only */}
+                {canEditProp && (<>
                 <button onClick={onImportFleet}
                   className="w-9 h-9 lg:w-auto lg:px-4 lg:rounded-full bg-gray-100 text-navy rounded-full flex items-center justify-center gap-2 hover:bg-gray-200 transition-all">
                   <Icon name="upload_file" className="text-navy text-base" />
@@ -2705,6 +2820,7 @@
                   <Icon name="add" fill className="text-white text-base" />
                   <span className="hidden lg:inline text-white font-bold text-[12px] uppercase tracking-widest">{t('addVehicle')}</span>
                 </button>
+                </>)}
               </div>
               {/* Search bar with suggestions */}
               <div ref={searchRef} className="relative">
@@ -2770,6 +2886,140 @@
 
           <main className="flex-1 overflow-y-auto p-4 lg:px-8 lg:py-6 pb-20 lg:pb-8">
             <div className="lg:max-w-7xl lg:mx-auto">
+              {/* Model Overview Cards */}
+              {modelSummary.length > 0 && (
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-black uppercase tracking-widest text-muted px-1">
+                      Models ({modelSummary.length})
+                    </span>
+                    <span className="text-[10px] text-muted">{all.length} total units</span>
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 lg:gap-3">
+                    {modelSummary.map(m => {
+                      const active = m.total - m.byStage.released;
+                      const pct = m.total > 0 ? Math.round((m.byStage.released / m.total) * 100) : 0;
+                      return (
+                        <button key={m.model} onClick={() => setSelectedModel(m.model)}
+                          className="bg-white rounded-[16px] shadow-card p-3 text-left hover:shadow-card-hover active:scale-[0.98] transition-all">
+                          <div className="font-black text-navy text-[12px] leading-tight truncate mb-1">{m.model}</div>
+                          <div className="text-[22px] font-black text-primary leading-none">{m.total}</div>
+                          <div className="text-[9px] font-bold text-muted uppercase tracking-wide mb-2">
+                            {active} active · {m.byStage.released} released
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {[
+                              ['port','bg-amber-400'],['pdi','bg-green-400'],['hold','bg-red-400'],
+                              ['stock','bg-blue-400'],['ready','bg-purple-400'],['released','bg-emerald-400'],
+                            ].map(([s,c]) => m.byStage[s] > 0 && (
+                              <span key={s} className={`${c} text-white text-[8px] font-black px-1.5 py-0.5 rounded-full`}>
+                                {s.toUpperCase()} {m.byStage[s]}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="mt-2 h-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-emerald-400 rounded-full transition-all" style={{width:`${pct}%`}} />
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Model detail popup */}
+              {selectedModel && (() => {
+                const m = modelSummary.find(x => x.model === selectedModel);
+                if (!m) return null;
+                const STAGES = [
+                  { key:'port',     label:'Port / Inbound',    color:'bg-amber-500'   },
+                  { key:'pdi',      label:'PDI',               color:'bg-green-500'   },
+                  { key:'hold',     label:'On Hold',           color:'bg-red-500'     },
+                  { key:'stock',    label:'In Stock',          color:'bg-blue-500'    },
+                  { key:'ready',    label:'Ready for Delivery',color:'bg-purple-500'  },
+                  { key:'released', label:'Released to Dealer',color:'bg-emerald-500' },
+                ];
+                return (
+                  <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6"
+                    onClick={() => setSelectedModel(null)}>
+                    <div className="w-full max-w-[430px] lg:max-w-[560px] bg-white rounded-t-[28px] lg:rounded-[24px] shadow-2xl flex flex-col anim-slide-up max-h-[85vh]"
+                      onClick={e => e.stopPropagation()}>
+                      <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mt-3 lg:hidden flex-shrink-0" />
+                      <div className="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+                        <div>
+                          <h2 className="font-black text-navy text-[18px] leading-tight">{m.model}</h2>
+                          <p className="text-[11px] text-muted mt-0.5">{m.total} total unit{m.total !== 1 ? 's' : ''}</p>
+                        </div>
+                        <button onClick={() => setSelectedModel(null)} className="p-2 hover:bg-gray-100 rounded-full">
+                          <Icon name="close" className="text-muted" />
+                        </button>
+                      </div>
+                      <div className="flex-1 overflow-y-auto p-5 space-y-5">
+                        <div>
+                          <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Pipeline Stage Breakdown</div>
+                          <div className="space-y-2">
+                            {STAGES.map(s => {
+                              const count = m.byStage[s.key] || 0;
+                              const pct = m.total > 0 ? (count / m.total) * 100 : 0;
+                              return (
+                                <div key={s.key} className="flex items-center gap-3">
+                                  <span className="text-[10px] font-bold text-navy w-32 flex-shrink-0">{s.label}</span>
+                                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className={`h-full ${s.color} rounded-full transition-all`} style={{width:`${pct}%`}} />
+                                  </div>
+                                  <span className="text-[11px] font-black text-navy w-6 text-right flex-shrink-0">{count}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { label:'Active Units',        value: m.total - m.byStage.released, icon:'directions_car', c:'text-navy'        },
+                            { label:'Released to Dealers', value: m.byStage.released,           icon:'verified',       c:'text-emerald-500' },
+                            { label:'Variants',            value: m.variants.length || 1,       icon:'tune',           c:'text-blue-500'    },
+                            { label:'Colors Available',    value: m.colors.length   || '—',     icon:'palette',        c:'text-purple-500'  },
+                          ].map(s => (
+                            <div key={s.label} className="bg-gray-50 rounded-[14px] p-3">
+                              <div className="flex items-center gap-1.5 mb-1">
+                                <Icon name={s.icon} fill className={`${s.c} text-[16px]`} />
+                                <span className="text-[9px] font-bold text-muted uppercase tracking-wide">{s.label}</span>
+                              </div>
+                              <div className="text-[20px] font-black text-navy leading-none">{s.value}</div>
+                            </div>
+                          ))}
+                        </div>
+                        {m.variants.length > 0 && (
+                          <div>
+                            <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Variants</div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {m.variants.map(v => (
+                                <span key={v} className="text-[11px] font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-full">{v}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {m.colors.length > 0 && (
+                          <div>
+                            <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Colors</div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {m.colors.map(c => (
+                                <span key={c} className="text-[11px] font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-full">{c}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        <button onClick={() => { setSelectedModel(null); setSearch(m.model); setStage('all'); }}
+                          className="w-full py-3 bg-primary text-white font-black text-[12px] uppercase tracking-widest rounded-full shadow-primary-glow hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                          <Icon name="search" className="text-base" />
+                          View All {m.model} Units
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Results count + pagination top */}
               {filtered.length > 0 && (
                 <div className="flex items-center justify-between mb-3">
@@ -2854,19 +3104,49 @@
               )}
             </div>
           </main>
-          <AdminBottomNav navigate={navigate} currentView="fleet-list" vehicles={vehicles} t={t} />
+          <AdminBottomNav navigate={navigate} currentView="fleet-list" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }
 
     /* ─── TeamScreen ─── */
-    function TeamScreen({ navigate, vehicles, technicians, assignVehicle, batchAssignVehicles, onNotificationClick, unreadCount, t }) {
+    function TeamScreen({ navigate, vehicles, technicians, assignVehicle, batchAssignVehicles, onNotificationClick, unreadCount, t, role, canEdit: canEditProp = true }) {
       const [assigningId,   setAssigningId]   = useState(null);
       const [assignSearch,  setAssignSearch]  = useState('');
       const [assignFilter,  setAssignFilter]  = useState('all'); // 'all' | 'unassigned' | 'mine'
       const [assignPage,    setAssignPage]    = useState(0);
       const [batchSaving,   setBatchSaving]   = useState(false);
+      const [teamTab,       setTeamTab]       = useState('techs'); // 'techs' | 'employees'
+      const [employees,     setEmployees]     = useState([]);
+      const [loadingEmps,   setLoadingEmps]   = useState(false);
+      const isAdmin = role === 'admin';
       const ASSIGN_PAGE_SIZE = 40;
+
+      const PERM_KEYS = [
+        { key: 'edit',    label: 'Edit Vehicles' },
+        { key: 'reports', label: 'View Reports'  },
+        { key: 'notes',   label: 'Add Notes'     },
+        { key: 'export',  label: 'Export Data'   },
+      ];
+
+      // Load employees when switching to that tab
+      React.useEffect(() => {
+        if (teamTab !== 'employees') return;
+        setLoadingEmps(true);
+        sb.from('user_profiles').select('*').eq('role', 'employee').then(({ data }) => {
+          setEmployees(data || []);
+          setLoadingEmps(false);
+        });
+      }, [teamTab]);
+
+      const togglePerm = async (emp, key) => {
+        if (!isAdmin) return;
+        const cur = emp.permissions || {};
+        const next = { ...cur, [key]: !cur[key] };
+        setEmployees(prev => prev.map(e => e.id === emp.id ? { ...e, permissions: next } : e));
+        const { error } = await sb.from('user_profiles').update({ permissions: next }).eq('id', emp.id);
+        if (error) console.error('toggle permission', error);
+      };
 
       const onlineCount    = technicians.filter(tc => tc.online).length;
       const assignedCars   = (tid) => vehicles.filter(v => v.assignedTech === tid && v.stage !== 'released');
@@ -2958,6 +3238,63 @@
               </div>{/* end lg:max-w-7xl */}
             </div>
 
+            {/* Tab switcher: Technicians | Employees */}
+            <div className="bg-white px-5 lg:px-8 pt-3 pb-2 border-b border-gray-100">
+              <div className="lg:max-w-7xl lg:mx-auto flex gap-2">
+                {[
+                  { key: 'techs',     label: `Technicians (${technicians.length})` },
+                  { key: 'employees', label: 'Employees' },
+                ].map(tb => (
+                  <button key={tb.key} onClick={() => setTeamTab(tb.key)}
+                    className={`px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all
+                      ${teamTab === tb.key ? 'bg-primary text-white shadow-sm' : 'bg-gray-100 text-muted hover:bg-gray-200'}`}>
+                    {tb.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {teamTab === 'employees' ? (
+              <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4 lg:max-w-7xl lg:mx-auto">
+                {loadingEmps && (
+                  <div className="text-center text-muted text-[13px] py-12 lg:col-span-3">Loading employees…</div>
+                )}
+                {!loadingEmps && employees.length === 0 && (
+                  <div className="text-center text-muted text-[13px] py-12 lg:col-span-3">
+                    No employees yet. Create one in Supabase with <code className="text-navy">role='employee'</code>.
+                  </div>
+                )}
+                {employees.map(emp => {
+                  const initials = (emp.full_name || emp.name || emp.email || '?').split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+                  const perms = emp.permissions || {};
+                  return (
+                    <div key={emp.id} className="bg-white rounded-[20px] p-4 shadow-card">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center text-[14px] font-black text-white shadow-sm flex-shrink-0">{initials}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-black text-navy text-[14px] leading-tight truncate">{emp.full_name || emp.name || emp.email || 'Employee'}</div>
+                          <div className="text-[11px] text-muted truncate">{emp.email || ''}</div>
+                          <div className="text-[9px] font-black uppercase tracking-[0.12em] text-muted mt-0.5">Employee</div>
+                        </div>
+                      </div>
+                      <div className="pt-3 border-t border-gray-100 space-y-2">
+                        <div className="text-[9px] font-black uppercase tracking-widest text-muted">Permissions</div>
+                        {PERM_KEYS.map(p => (
+                          <div key={p.key} className="flex items-center justify-between">
+                            <span className="text-[12px] text-navy font-semibold">{p.label}</span>
+                            <button onClick={() => togglePerm(emp, p.key)} disabled={!isAdmin}
+                              className={`relative w-10 h-5.5 rounded-full transition-all ${perms[p.key] ? 'bg-primary' : 'bg-gray-200'} ${!isAdmin ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              style={{ width: '40px', height: '22px' }}>
+                              <span className="absolute top-[2px] w-[18px] h-[18px] bg-white rounded-full shadow-sm transition-all" style={{ left: perms[p.key] ? '20px' : '2px' }} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
             <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4 lg:max-w-7xl lg:mx-auto">
               {technicians.length === 0 && (
                 <div className="text-center text-muted text-[13px] py-12 lg:col-span-3">No technicians yet.</div>
@@ -2983,11 +3320,13 @@
                           {tech.online ? '● Online' : '○ Offline'}
                         </div>
                       </div>
-                      {/* Assign button */}
-                      <button onClick={() => setAssigningId(tech.id)}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-[11px] font-black hover:bg-primary/20 transition-colors flex-shrink-0">
-                        <Icon name="add" className="text-[14px]" /> Assign
-                      </button>
+                      {/* Assign button — edit-only */}
+                      {canEditProp && (
+                        <button onClick={() => setAssigningId(tech.id)}
+                          className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-[11px] font-black hover:bg-primary/20 transition-colors flex-shrink-0">
+                          <Icon name="add" className="text-[14px]" /> Assign
+                        </button>
+                      )}
                     </div>
 
                     {/* Assigned vehicles */}
@@ -3011,6 +3350,7 @@
                 );
               })}
             </div>
+            )}
           </main>
 
           {/* ── Assign Vehicle — bottom sheet on mobile, centered dialog on desktop ── */}
@@ -3211,7 +3551,7 @@
             );
           })()}
 
-          <AdminBottomNav navigate={navigate} currentView="team" vehicles={vehicles} t={t} />
+          <AdminBottomNav navigate={navigate} currentView="team" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }
@@ -3252,7 +3592,7 @@
       XLSX.writeFile(wb, filename);
     };
 
-    function ReportsScreen({ navigate, vehicles, onNotificationClick, unreadCount, t }) {
+    function ReportsScreen({ navigate, vehicles, onNotificationClick, unreadCount, t, role }) {
       const all = vehicles;
       const ALL_STAGES = ['port','pdi','hold','stock','ready','released'];
       const [stageFilter, setStageFilter] = useState([]);   // empty = all
@@ -3429,13 +3769,13 @@
               </div>
             </div>
           </main>
-          <AdminBottomNav navigate={navigate} currentView="reports" vehicles={vehicles} t={t} />
+          <AdminBottomNav navigate={navigate} currentView="reports" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }
 
     /* ─── HoldTrackerScreen ─── */
-    function HoldTrackerScreen({ navigate, vehicles, updateVehicle, onNotificationClick, unreadCount, t, db, session }) {
+    function HoldTrackerScreen({ navigate, vehicles, updateVehicle, onNotificationClick, unreadCount, t, db, session, role }) {
       const heldVehicles = useMemo(() =>
         [...vehicles.filter(v => v.stage === 'hold')].sort((a, b) => {
           // Sort by longest time on hold — find the most recent hold history entry (raw objects)
@@ -3624,13 +3964,13 @@
               </div>
             )}
           </main>
-          <AdminBottomNav navigate={navigate} currentView="hold-tracker" vehicles={vehicles} t={t} />
+          <AdminBottomNav navigate={navigate} currentView="hold-tracker" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }
 
     /* ─── SettingsScreen ─── */
-    function SettingsScreen({ navigate, vehicles, onNotificationClick, unreadCount, t, lang, setLang }) {
+    function SettingsScreen({ navigate, vehicles, onNotificationClick, unreadCount, t, lang, setLang, role }) {
       const [emailAlerts, setEmailAlerts] = useState(true);
       const [pushNotifs,  setPushNotifs]  = useState(true);
       return (
@@ -3710,7 +4050,158 @@
               </button>
             </div>
           </main>
-          <AdminBottomNav navigate={navigate} currentView="settings" vehicles={vehicles} t={t} />
+          <AdminBottomNav navigate={navigate} currentView="settings" vehicles={vehicles} t={t} role={role} />
+        </div>
+      );
+    }
+
+    /* ─── EmployeeSettingsScreen ─── */
+    function EmployeeSettingsScreen({ navigate, onNotificationClick, unreadCount, t, lang, setLang, userProfile, userEmail }) {
+      const [emailAlerts, setEmailAlerts] = useState(true);
+      const [pushNotifs,  setPushNotifs]  = useState(true);
+
+      const name     = userProfile?.name  || 'Employee';
+      const email    = userEmail          || '';
+      const initials = name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'EU';
+      const perms    = userProfile?.permissions || {};
+
+      const PERM_LABELS = {
+        edit:    { label: 'Edit Vehicles',  icon: 'edit'        },
+        reports: { label: 'View Reports',   icon: 'bar_chart'   },
+        notes:   { label: 'Add Notes',      icon: 'sticky_note_2' },
+        export:  { label: 'Export Data',    icon: 'download'    },
+      };
+
+      return (
+        <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
+          <header className="bg-white px-5 lg:px-8 pt-12 lg:pt-7 pb-4 shadow-card">
+            <div className="lg:max-w-4xl lg:mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-primary rounded-xl items-center justify-center shadow-md shadow-primary/30 hidden lg:flex">
+                  <Icon name="manage_accounts" fill className="text-white text-lg" />
+                </div>
+                <div>
+                  <div className="font-black text-navy text-[15px] lg:text-[22px] leading-tight">Account</div>
+                  <div className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted">Employee Settings</div>
+                </div>
+              </div>
+              <button onClick={onNotificationClick} className="relative p-1.5 hover:bg-gray-100 rounded-full lg:hidden">
+                <Icon name="notifications" className="text-navy" />
+                {unreadCount > 0 && <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-primary rounded-full ring-2 ring-white" />}
+              </button>
+            </div>
+          </header>
+
+          <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
+            {/* Profile card */}
+            <div className="bg-white px-5 lg:px-8 pb-5 border-b border-gray-100">
+              <div className="lg:max-w-4xl lg:mx-auto flex items-center gap-4 mt-5">
+                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-[20px] font-black shadow-md shadow-primary/20">{initials}</div>
+                <div>
+                  <div className="text-[18px] font-black text-navy">{name}</div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[10px] font-black uppercase tracking-[0.12em] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Employee</span>
+                  </div>
+                  {email && <div className="text-[11px] text-primary font-medium mt-0.5">{email}</div>}
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 lg:px-8 lg:py-6 space-y-4 lg:max-w-4xl lg:mx-auto">
+
+              {/* My Permissions — read-only */}
+              <div>
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2 px-1">My Permissions</h2>
+                <div className="bg-white rounded-[20px] shadow-card overflow-hidden">
+                  {Object.entries(PERM_LABELS).map(([key, cfg], i) => {
+                    const granted = !!perms[key];
+                    return (
+                      <div key={key} className={`flex items-center gap-3 px-4 py-3.5 ${i > 0 ? 'border-t border-gray-50' : ''}`}>
+                        <Icon name={cfg.icon} fill className={`text-[22px] ${granted ? 'text-primary' : 'text-gray-300'}`} />
+                        <div className="flex-1 text-[13px] font-medium text-navy">{cfg.label}</div>
+                        <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${granted ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-400'}`}>
+                          {granted ? 'Granted' : 'Restricted'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                  <div className="px-4 py-2.5 border-t border-gray-50 bg-gray-50">
+                    <p className="text-[10px] text-muted">Permissions are managed by your administrator.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notifications */}
+              <div>
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2 px-1">{t('notifications')}</h2>
+                <div className="bg-white rounded-[20px] shadow-card overflow-hidden">
+                  {[
+                    { label: t('emailAlerts'),       icon: 'email',         checked: emailAlerts, onChange: setEmailAlerts },
+                    { label: t('pushNotifications'), icon: 'notifications', checked: pushNotifs,  onChange: setPushNotifs  },
+                  ].map((item, i) => (
+                    <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 ${i > 0 ? 'border-t border-gray-50' : ''}`}>
+                      <Icon name={item.icon} fill className="text-muted text-[22px]" />
+                      <div className="flex-1 text-[13px] font-medium text-navy">{item.label}</div>
+                      <Toggle checked={item.checked} onChange={item.onChange} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Language */}
+              <div>
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2 px-1">{t('language')}</h2>
+                <div className="bg-white rounded-[20px] shadow-card overflow-hidden">
+                  <div className="flex items-center gap-3 px-4 py-3.5">
+                    <Icon name="translate" fill className="text-muted text-[22px]" />
+                    <div className="flex-1 text-[13px] font-medium text-navy">{t('language')}</div>
+                    <select value={lang} onChange={e => setLang(e.target.value)}
+                      className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-[12px] font-bold text-navy outline-none focus:border-primary transition-colors">
+                      <option value="en">English</option>
+                      <option value="tl">Tagalog</option>
+                      <option value="zh">中文 (简体)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* System */}
+              <div>
+                <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2 px-1">{t('system')}</h2>
+                <div className="bg-white rounded-[20px] shadow-card overflow-hidden">
+                  {[
+                    { label: t('version'),     value: '2.1.0',    icon: 'info'         },
+                    { label: t('build'),        value: '20250319', icon: 'build_circle' },
+                    { label: t('environment'),  value: t('production'), icon: 'cloud'  },
+                  ].map((item, i) => (
+                    <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 ${i > 0 ? 'border-t border-gray-50' : ''}`}>
+                      <Icon name={item.icon} fill className="text-muted text-[22px]" />
+                      <div className="flex-1 text-[13px] font-medium text-navy">{item.label}</div>
+                      <span className="text-[11px] font-bold text-muted">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button onClick={async () => { await sb.auth.signOut(); navigate('login'); }}
+                className="w-full py-[14px] rounded-full border-2 border-primary/30 text-primary font-black text-[13px] uppercase tracking-[0.12em] flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors">
+                <Icon name="logout" className="text-lg" /> {t('signOut')}
+              </button>
+            </div>
+          </main>
+
+          {/* Bottom nav */}
+          <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 flex h-16 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
+            {EMPLOYEE_NAV.map(item => {
+              const on = item.target === 'employee-settings';
+              return (
+                <button key={item.id} onClick={() => navigate(item.target)} className="flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors">
+                  <Icon name={item.icon} fill={on} className={`text-[22px] ${on ? 'text-primary' : 'text-muted'}`} />
+                  <span className={`text-[9px] font-bold uppercase tracking-wider ${on ? 'text-primary' : 'text-muted'}`}>{t(item.labelKey)}</span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
       );
     }
@@ -4470,6 +4961,7 @@
       const parseFile = (file) => {
         if (!file) return;
         if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { alert('Please upload an .xlsx, .xls, or .csv file.'); return; }
+        if (file.size > 10 * 1024 * 1024) { alert('File is too large. Maximum size is 10 MB.'); return; }
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
@@ -4852,10 +5344,11 @@
               if (profile) {
                 if (profile.role === 'tech') setOnline(s.user.id, true);
                 loadAllData(s.user.id);
-                const defaultDest = profile.role === 'admin' ? 'admin-dashboard' : 'tech-home';
+                const defaultDest = (profile.role === 'admin' || profile.role === 'employee') ? 'admin-dashboard' : 'tech-home';
                 const adminViews = ['admin-dashboard','fleet-list','team','reports','settings','pipeline-manager','checklist-editor','model-manager','hold-tracker'];
+                const employeeViews = ['admin-dashboard','fleet-list','team','reports','hold-tracker','employee-settings'];
                 const techViews  = ['tech-home','tech-inspect','tech-stockyard','tech-delivery','tech-settings'];
-                const validViews = profile.role === 'admin' ? adminViews : techViews;
+                const validViews = profile.role === 'admin' ? adminViews : profile.role === 'employee' ? employeeViews : techViews;
                 const saved = sessionStorage.getItem('stockmo_view');
                 navigate(saved && validViews.includes(saved) ? saved : defaultDest);
               }
@@ -4872,7 +5365,7 @@
               if (profile) {
                 if (profile.role === 'tech') setOnline(s.user.id, true);
                 loadAllData(s.user.id);
-                const dest = profile.role === 'admin' ? 'admin-dashboard' : 'tech-home';
+                const dest = (profile.role === 'admin' || profile.role === 'employee') ? 'admin-dashboard' : 'tech-home';
                 setView(v => v === 'login' ? dest : v);
               }
             });
@@ -5222,11 +5715,55 @@
           sb.from('final_check_templates').select('*').eq('active', true),
         ]);
 
-        // Get current per-model counts so vehicle_numbers are correct
-        const { data: existing } = await sb.from('vehicles').select('model');
+        // Load existing vehicles keyed by VIN for dedup + patch diffing
+        const { data: existingFull } = await sb.from('vehicles').select('*');
+        const existingByVin = {};
+        (existingFull || []).forEach(ev => { if (ev.vin) existingByVin[ev.vin] = ev; });
+
+        // Split rows into new vs existing (to patch)
+        const newRows = [];
+        const patchList = []; // [{id, patch}]
+        let unchanged = 0;
+        const EXCEL_COLS = ['model','variant','year','make','fuel','exterior_color','interior_color','cs_number','engine_number','invoice_number','bl_number','contract_no','sales_status','dealer_group','dealer','region','lot','notes','arrival_date','release_date','stage'];
+        for (const r of rows) {
+          const existing = existingByVin[r.vin];
+          if (!existing) { newRows.push(r); continue; }
+          const patch = {};
+          for (const col of EXCEL_COLS) {
+            const nv = r[col];
+            if (nv === null || nv === undefined) continue;
+            const normalized = typeof nv === 'string' ? nv.trim() : nv;
+            if (normalized === '' || normalized === 0 && col !== 'year') continue;
+            if (col === 'year' && (!normalized || Number(normalized) === Number(existing.year))) continue;
+            const ev = existing[col];
+            if (String(normalized) !== String(ev ?? '')) patch[col] = normalized;
+          }
+          // extra_fields: shallow merge, only add new/changed keys
+          if (r.extra_fields && Object.keys(r.extra_fields).length) {
+            const merged = { ...(existing.extra_fields || {}) };
+            let changedExtra = false;
+            for (const [k, v] of Object.entries(r.extra_fields)) {
+              if (v === null || v === undefined || String(v).trim() === '') continue;
+              if (String(merged[k] ?? '') !== String(v)) { merged[k] = v; changedExtra = true; }
+            }
+            if (changedExtra) patch.extra_fields = merged;
+          }
+          if (Object.keys(patch).length === 0) { unchanged++; continue; }
+          patchList.push({ id: existing.id, patch });
+        }
+
+        // Apply patches (updates) for existing VINs
+        for (const { id, patch } of patchList) {
+          const { error } = await sb.from('vehicles').update(patch).eq('id', id);
+          if (error) console.error('update vehicle', error);
+        }
+
+        // Per-model counts for new vehicle_number assignment
         const modelBaseCount = {};
-        (existing || []).forEach(v => { modelBaseCount[v.model] = (modelBaseCount[v.model] || 0) + 1; });
+        (existingFull || []).forEach(v => { modelBaseCount[v.model] = (modelBaseCount[v.model] || 0) + 1; });
         const modelLocalCount = {};
+        // Swap in the filtered list so only truly-new rows are inserted below
+        rows = newRows;
 
         // Helper: insert rows in sub-batches to stay under Supabase limits
         const batchInsert = async (table, allRows, size = 500) => {
@@ -5343,15 +5880,20 @@
 
         await loadVehicles();
         setShowImportModal(false);
-        showToastMsg(`${inserted} vehicles imported ✓`);
+        const updated = patchList.length;
+        showToastMsg(`Added ${inserted} · Updated ${updated} · Unchanged ${unchanged} ✓`);
         return inserted;
       };
 
       const openDetail  = (id) => setDetailVehicleId(id);
       const closeDetail = () => setDetailVehicleId(null);
 
-      const isAdminView = view.startsWith('admin') || view === 'fleet-list' || view === 'team' || view === 'reports' || view === 'settings';
+      const isAdminView = view.startsWith('admin') || view === 'fleet-list' || view === 'team' || view === 'reports' || view === 'settings' || view === 'employee-settings';
       const detailVehicle = vehicles.find(v => v.id === detailVehicleId);
+      const role = userProfile?.role;
+      const perms = userProfile?.permissions || {};
+      const userCanEdit   = canEdit(role, perms);
+      const userCanConfig = canConfig(role);
 
       const shared = {
         navigate, vehicles, updateVehicle, technicians, assignVehicle, batchAssignVehicles,
@@ -5361,6 +5903,8 @@
         unreadCount: notifications.filter(n => !n.read).length,
         currentTechId: userProfile?.id || '',
         userProfile,
+        userEmail: session?.user?.email || '',
+        role, perms, canEdit: userCanEdit, canConfig: userCanConfig,
         onOpenDetail: openDetail,
         t, lang, setLang,
       };
@@ -5395,6 +5939,7 @@
         'pipeline-manager':  <PipelineManagerScreen  navigate={navigate} t={t} />,
         'checklist-editor':  <ChecklistEditorScreen  navigate={navigate} t={t} />,
         'model-manager':     <ModelManagerScreen     navigate={navigate} t={t} />,
+        'employee-settings': <EmployeeSettingsScreen navigate={navigate} onNotificationClick={() => setShowNotifs(true)} unreadCount={notifications.filter(n => !n.read).length} t={t} lang={lang} setLang={setLang} userProfile={userProfile} userEmail={session?.user?.email || ''} />,
       };
 
       const showSidebar = session && userProfile && view !== 'login';
@@ -5439,6 +5984,7 @@
               onDeleteVehicle={deleteVehicle}
               db={db}
               isAdmin={isAdminView}
+              canEdit={userCanEdit}
               t={t}
             />
           )}

@@ -3,6 +3,16 @@
 node_modules/
 .vercel/
 
+# Environment / secrets — never commit these
+.env
+.env.*
+!.env.example
+
+# Agent / AI tooling working dirs
+.agent/
+.agents/
+.claude/
+
 # Terraform secrets & state
 infra/terraform.tfvars
 infra/.terraform/
