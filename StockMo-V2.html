@@ -893,14 +893,14 @@
       const active = VIEW_TO_NAV[currentView] || 'dash';
       const holdCount = (vehicles || []).filter(v => v.stage === 'hold').length;
       return (
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 flex h-16 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-100 flex h-16 landscape:h-12 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
           {navList.map(item => {
             const on = active === item.id;
             const badge = item.id === 'holds' ? holdCount : 0;
             return (
-              <button key={item.id} onClick={() => navigate(item.target)} className="flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors relative">
-                <Icon name={item.icon} fill={on} className={`text-[22px] ${on ? 'text-primary' : 'text-muted'}`} />
-                <span className={`text-[9px] font-bold uppercase tracking-wider ${on ? 'text-primary' : 'text-muted'}`}>{t(item.labelKey)}</span>
+              <button key={item.id} onClick={() => navigate(item.target)} className="flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors relative min-w-0">
+                <Icon name={item.icon} fill={on} className={`text-[22px] landscape:text-[18px] ${on ? 'text-primary' : 'text-muted'}`} />
+                <span className={`text-[9px] font-bold uppercase tracking-wider landscape:hidden ${on ? 'text-primary' : 'text-muted'}`}>{t(item.labelKey)}</span>
                 {badge > 0 && <span className="absolute top-1.5 right-[calc(50%-2px)] translate-x-3 w-4 h-4 bg-primary text-white text-[8px] font-black rounded-full flex items-center justify-center">{badge}</span>}
               </button>
             );
@@ -922,14 +922,14 @@
     function TechBottomNav({ navigate, currentView, holdCount, overdueCount, t }) {
       const active = TECH_VIEW_TO_NAV[currentView] || 'home';
       return (
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 flex h-16 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
+        <nav className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-gray-100 flex h-16 landscape:h-12 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] lg:hidden">
           {TECH_NAV.map(item => {
             const on = active === item.id;
             const badge = item.id === 'inspect' ? holdCount : item.id === 'stock' ? overdueCount : 0;
             return (
-              <button key={item.id} onClick={() => navigate(item.target)} className="flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors relative">
-                <Icon name={item.icon} fill={on} className={`text-[22px] ${on ? 'text-primary' : 'text-muted'}`} />
-                <span className={`text-[9px] font-bold uppercase tracking-wider ${on ? 'text-primary' : 'text-muted'}`}>{t(item.labelKey)}</span>
+              <button key={item.id} onClick={() => navigate(item.target)} className="flex-1 flex flex-col items-center justify-center gap-0.5 transition-colors relative min-w-0">
+                <Icon name={item.icon} fill={on} className={`text-[22px] landscape:text-[18px] ${on ? 'text-primary' : 'text-muted'}`} />
+                <span className={`text-[9px] font-bold uppercase tracking-wider landscape:hidden ${on ? 'text-primary' : 'text-muted'}`}>{t(item.labelKey)}</span>
                 {badge > 0 && <span className="absolute top-1.5 right-[calc(50%-2px)] translate-x-3 w-4 h-4 bg-primary text-white text-[8px] font-black rounded-full flex items-center justify-center">{badge}</span>}
               </button>
             );
@@ -1082,7 +1082,7 @@
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto p-4 pb-20 space-y-4">
+          <main className="flex-1 overflow-y-auto p-4 pb-20 landscape:pb-14 space-y-4">
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3">
               {[
@@ -1193,7 +1193,7 @@
             <h1 className="text-[22px] font-black text-navy leading-tight">{t('navInspect')}</h1>
             <p className="text-xs text-muted">Port arrivals, PDI in progress &amp; on hold</p>
           </header>
-          <main className="flex-1 overflow-y-auto p-4 pb-20 space-y-3">
+          <main className="flex-1 overflow-y-auto p-4 pb-20 landscape:pb-14 space-y-3">
             {myCars.length === 0 && (
               <div className="text-center py-20 text-muted">
                 <Icon name="search" fill className="text-[52px] mb-2 opacity-40" />
@@ -1274,7 +1274,7 @@
               <option value="alpha">{t('sortAZ')}</option>
             </select>
           </div>
-          <main className="flex-1 overflow-y-auto p-4 pb-20 space-y-3">
+          <main className="flex-1 overflow-y-auto p-4 pb-20 landscape:pb-14 space-y-3">
             {filtered.length === 0 && (
               <div className="text-center py-20 text-muted">
                 <Icon name="warehouse" fill className="text-[52px] mb-2 opacity-40" />
@@ -1329,7 +1329,7 @@
             <h1 className="text-[22px] font-black text-navy leading-tight">{t('delivery')}</h1>
             <p className="text-xs text-muted">{t('readyFinalVehicles')}</p>
           </header>
-          <main className="flex-1 overflow-y-auto p-4 pb-20 space-y-4">
+          <main className="flex-1 overflow-y-auto p-4 pb-20 landscape:pb-14 space-y-4">
             {pdiComplete.length > 0 && (
               <div>
                 <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2">{t('readyForStockyard')}</h2>
@@ -1424,7 +1424,7 @@
               </button>
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
+          <main className="flex-1 overflow-y-auto pb-20 landscape:pb-14 lg:pb-8">
             <div className="bg-white px-5 pb-5 border-b border-gray-100">
               <div className="flex items-center gap-4 mt-5">
                 <div className="w-16 h-16 rounded-full flex items-center justify-center text-white text-[20px] font-black shadow-md" style={{backgroundColor:tech.color}}>{tech.ini}</div>
@@ -2111,7 +2111,7 @@
       </>);
 
       return (
-        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center" onClick={onClose}>
+        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end md:items-center justify-center" onClick={onClose}>
           <input ref={vehicleImgRef} type="file" accept="image/*" className="hidden" onChange={handleVehicleImgUpload} />
           <input ref={issueImgRef}   type="file" accept="image/*" capture="environment" className="hidden" onChange={handleIssueImgUpload} />
           {showCamera && (
@@ -2123,7 +2123,7 @@
           )}
 
           {/* Panel — mobile: bottom sheet · desktop: centered dialog */}
-          <div className="w-full max-w-[430px] lg:max-w-[960px] bg-[#F5F5F5] rounded-t-[32px] lg:rounded-[24px] shadow-2xl anim-slide-up flex flex-col lg:flex-row overflow-hidden" style={{ maxHeight:'94vh' }} onClick={e => e.stopPropagation()}>
+          <div className="w-full sm:max-w-[430px] md:max-w-[700px] lg:max-w-[960px] bg-[#F5F5F5] rounded-t-[32px] md:rounded-[24px] shadow-2xl anim-slide-up flex flex-col lg:flex-row overflow-hidden" style={{ maxHeight:'94vh' }} onClick={e => e.stopPropagation()}>
 
             {/* ═══ LEFT COLUMN ═══ */}
             <div className="flex-shrink-0 lg:w-[300px] flex flex-col lg:bg-white lg:border-r lg:border-gray-100">
@@ -2219,10 +2219,10 @@
 
             {/* ═══ RIGHT COLUMN ═══ */}
             <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-              <nav className="bg-white border-b border-gray-100 flex px-2 flex-shrink-0">
+              <nav className="bg-white border-b border-gray-100 flex overflow-x-auto no-scroll flex-shrink-0">
                 {[['VEHICLE','tabVehicle','lg:hidden'],['PDI','tabPdi',''],['MAINT','tabMaint',''],['FINAL','tabFinal',''],['NOTES','tabNotes',''],['REPORTS','tabReports',''],['HISTORY','tabHistory','']].map(([key,tKey,extra]) => (
                   <button key={key} onClick={() => setTab(key)}
-                    className={`flex-1 py-3 text-[9px] font-bold tracking-widest transition-colors ${extra} ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
+                    className={`flex-shrink-0 px-4 py-3 text-[10px] font-bold tracking-widest transition-colors ${extra} ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
                     {t(tKey)}
                   </button>
                 ))}
@@ -2511,7 +2511,7 @@
               </div>
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
+          <main className="flex-1 overflow-y-auto pb-20 landscape:pb-14 lg:pb-8">
             <div className="bg-white px-5 lg:px-8 pb-5 pt-3 lg:pt-7 border-b border-gray-100">
               <div className="lg:max-w-7xl lg:mx-auto">
                 <h1 className="text-[22px] lg:text-[28px] font-black text-navy mt-3 lg:mt-0 leading-tight">{t('fleetOperations')}</h1>
@@ -2891,7 +2891,7 @@
             </div>
           </div>
 
-          <main className="flex-1 overflow-y-auto p-4 lg:px-8 lg:py-6 pb-20 lg:pb-8">
+          <main className="flex-1 overflow-y-auto p-4 lg:px-8 lg:py-6 pb-20 landscape:pb-14 lg:pb-8">
             <div className="lg:max-w-7xl lg:mx-auto">
               {/* Model Overview Cards */}
               {modelSummary.length > 0 && (
@@ -3051,7 +3051,7 @@
                 </div>
               )}
 
-              <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4">
+              <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 xl:grid-cols-3 md:gap-3 lg:gap-4">
                 {paged.length === 0 && (
                   <div className="text-center py-20 text-muted col-span-3">
                     <Icon name="directions_car" fill className="text-[52px] mb-2 opacity-40" />
@@ -3262,7 +3262,7 @@
             </div>
 
             {teamTab === 'employees' ? (
-              <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-4 lg:max-w-7xl lg:mx-auto">
+              <div className="p-4 lg:px-8 lg:py-6 space-y-3 md:space-y-0 md:grid md:grid-cols-2 xl:grid-cols-3 md:gap-3 lg:gap-4 lg:max-w-7xl lg:mx-auto">
                 {loadingEmps && (
                   <div className="text-center text-muted text-[13px] py-12 lg:col-span-3">Loading employees…</div>
                 )}
@@ -3370,9 +3370,9 @@
               { key: 'mine',       label: `Mine (${assignedToMe})` },
             ];
             return (
-              <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6"
+              <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end md:items-center justify-center md:p-6"
                 onClick={() => setAssigningId(null)}>
-                <div className="w-full max-w-[430px] lg:max-w-[720px] bg-white rounded-t-[32px] lg:rounded-[24px] shadow-2xl flex flex-col anim-slide-up"
+                <div className="w-full sm:max-w-[430px] md:max-w-[580px] lg:max-w-[720px] bg-white rounded-t-[32px] md:rounded-[24px] shadow-2xl flex flex-col anim-slide-up"
                   style={{ maxHeight: '88vh' }} onClick={e => e.stopPropagation()}>
 
                   {/* Drag handle — mobile only */}
@@ -3402,7 +3402,7 @@
                         value={assignSearch}
                         onChange={e => setAssignSearch(e.target.value)}
                         placeholder="Search by model, VIN, color, lot…"
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-3 py-2 text-[13px] text-navy outline-none focus:border-primary transition-colors"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-3 py-3 text-[13px] text-navy outline-none focus:border-primary transition-colors"
                         autoFocus
                       />
                       {assignSearch && (
@@ -3431,7 +3431,7 @@
                         <span className="font-black text-primary">{unassignedInFilter}</span> vehicle{unassignedInFilter !== 1 ? 's' : ''} not yet assigned to {assigningTech?.name}
                       </span>
                       <button onClick={handleBatchAssign} disabled={batchSaving}
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary text-white font-black text-[11px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50">
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-white font-black text-[11px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50">
                         {batchSaving
                           ? <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                           : <Icon name="select_all" className="text-[14px]" />}
@@ -3542,7 +3542,7 @@
                       </span>
                       {assignedToMe > 0 && (
                         <button onClick={handleUnassignAll} disabled={batchSaving}
-                          className="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
+                          className="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40 px-2 py-1.5 rounded-lg">
                           Unassign all
                         </button>
                       )}
@@ -3657,7 +3657,7 @@
               </button>
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
+          <main className="flex-1 overflow-y-auto pb-20 landscape:pb-14 lg:pb-8">
             <div className="bg-white px-5 pb-5 border-b border-gray-100">
               <h1 className="text-[22px] font-black text-navy mt-3 leading-tight">{t('reports')}</h1>
               <p className="text-xs text-muted mb-4">{t('fleetPerformance')}</p>
@@ -3734,12 +3734,12 @@
                   <div className="flex-1">
                     <label className="text-[10px] text-muted block mb-1">From</label>
                     <input type="date" value={arrivalFrom} onChange={e => setArrivalFrom(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary" />
+                      className="w-full px-3 py-3 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary" />
                   </div>
                   <div className="flex-1">
                     <label className="text-[10px] text-muted block mb-1">To</label>
                     <input type="date" value={arrivalTo} onChange={e => setArrivalTo(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary" />
+                      className="w-full px-3 py-3 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary" />
                   </div>
                 </div>
 
@@ -3747,7 +3747,7 @@
                 <p className="text-[10px] font-bold uppercase tracking-wider text-muted mb-2">Dealer</p>
                 <input type="text" value={dealerFilter} onChange={e => setDealerFilter(e.target.value)}
                   placeholder="Filter by dealer name…"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary mb-4" />
+                  className="w-full px-3 py-3 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary mb-4" />
 
                 {/* Match count + clear */}
                 <div className="flex items-center justify-between mb-4">
@@ -3869,7 +3869,7 @@
                 <div className="text-muted text-[13px]">All units are progressing through the pipeline normally.</div>
               </div>
             ) : (
-              <div className="p-4 lg:px-8 lg:py-6 space-y-4 lg:grid lg:grid-cols-2 lg:gap-4 lg:items-start lg:max-w-7xl lg:mx-auto">
+              <div className="p-4 lg:px-8 lg:py-6 space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-4 lg:items-start lg:max-w-7xl lg:mx-auto">
                 {heldVehicles.map(v => {
                   const raw       = v.historyRaw || [];
                   // Find earliest hold entry (raw is sorted newest-first, so last hold entry)
@@ -3942,11 +3942,11 @@
                             onChange={e => setNotes(p => ({ ...p, [v.id]: e.target.value }))}
                             onKeyDown={e => { if (e.key === 'Enter') addRepairNote(v.id, notes[v.id]); }}
                             placeholder="Add repair note…"
-                            className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary" />
+                            className="flex-1 px-3 py-3 border border-gray-200 rounded-xl text-[12px] text-navy outline-none focus:border-primary" />
                           <button
                             onClick={() => addRepairNote(v.id, notes[v.id])}
                             disabled={!notes[v.id]?.trim() || saving[v.id]}
-                            className="px-4 py-2 bg-navy text-white font-bold text-[12px] rounded-xl disabled:opacity-40 hover:bg-navy/80 transition-colors flex items-center gap-1">
+                            className="px-4 py-3 bg-navy text-white font-bold text-[12px] rounded-xl disabled:opacity-40 hover:bg-navy/80 transition-colors flex items-center gap-1">
                             {saving[v.id] ? <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Icon name="send" className="text-sm" />}
                           </button>
                         </div>
@@ -3956,12 +3956,12 @@
                       <div className="flex gap-3 p-4">
                         <button
                           onClick={() => resolveVehicle(v.id, 'pdi')}
-                          className="flex-1 py-2.5 border-2 border-primary text-primary font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/5 transition-colors active:scale-95">
+                          className="flex-1 py-3 border-2 border-primary text-primary font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/5 transition-colors active:scale-95">
                           <Icon name="restart_alt" className="text-base" /> Re-inspect
                         </button>
                         <button
                           onClick={() => resolveVehicle(v.id, 'stock')}
-                          className="flex-1 py-2.5 bg-primary text-white font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/80 transition-colors active:scale-95">
+                          className="flex-1 py-3 bg-primary text-white font-black text-[11px] uppercase tracking-wider rounded-full flex items-center justify-center gap-1.5 hover:bg-primary/80 transition-colors active:scale-95">
                           <Icon name="check_circle" className="text-base" /> Clear to Stock
                         </button>
                       </div>
@@ -3999,7 +3999,7 @@
               </button>
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
+          <main className="flex-1 overflow-y-auto pb-20 landscape:pb-14 lg:pb-8">
             <div className="bg-white px-5 lg:px-8 pb-5 border-b border-gray-100 lg:max-w-4xl lg:mx-auto lg:w-full">
               <div className="flex items-center gap-4 mt-5">
                 <div className="w-16 h-16 rounded-full bg-navy flex items-center justify-center text-white text-[20px] font-black shadow-md">JD</div>
@@ -4099,7 +4099,7 @@
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
+          <main className="flex-1 overflow-y-auto pb-20 landscape:pb-14 lg:pb-8">
             {/* Profile card */}
             <div className="bg-white px-5 lg:px-8 pb-5 border-b border-gray-100">
               <div className="lg:max-w-4xl lg:mx-auto flex items-center gap-4 mt-5">
@@ -4278,7 +4278,7 @@
         <div className="bg-white border-b border-gray-100 flex px-2">
           {tabs.map(tab => (
             <button key={tab.key} onClick={() => navigate(tab.key)}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[9px] font-bold uppercase tracking-widest transition-colors border-b-2 ${current === tab.key ? 'text-primary border-primary' : 'text-muted border-transparent'}`}>
+              className={`flex-1 flex flex-col items-center gap-0.5 py-3 text-[10px] font-bold uppercase tracking-widest transition-colors border-b-2 ${current === tab.key ? 'text-primary border-primary' : 'text-muted border-transparent'}`}>
               <Icon name={tab.icon} fill={current === tab.key} className="text-base" />
               {tab.label}
             </button>
