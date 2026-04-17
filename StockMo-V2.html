@@ -1692,14 +1692,21 @@
           await fn(v.id, curCheck?.id, nextState, curCheck?.note || '').catch(console.error);
         }
 
-        // ② Only after check is committed, trigger hold (which fires realtime refetch)
-        if (nextState === 'issue' && ['port', 'pdi', 'ready'].includes(v.stage)) {
-          const today  = todayStr();
-          const action = `On hold — issue flagged on ${type.toUpperCase()} checklist — ${tech?.name || 'Tech'}`;
-          updateVehicle(v.id, car => ({ ...car, stage: 'hold' }));
+        // ② Only after check is committed, trigger hold + auto-notify admin
+        if (nextState === 'issue') {
+          // Auto-notify admin immediately — no manual "Report to Admin" needed
           if (db) {
-            db.updateStage(v.id, 'hold').catch(console.error);
-            db.insertHistory(v.id, action, v.stage, 'hold').catch(console.error);
+            db.reportIssue(v.id, v.label || v.model, type, curCheck?.name || '', curCheck?.note || '', tech?.name || 'Tech')
+              .catch(console.error);
+          }
+          // Move to hold if in an active stage
+          if (['port', 'pdi', 'ready'].includes(v.stage)) {
+            const action = `On hold — issue flagged on ${type.toUpperCase()} checklist — ${tech?.name || 'Tech'}`;
+            updateVehicle(v.id, car => ({ ...car, stage: 'hold' }));
+            if (db) {
+              db.updateStage(v.id, 'hold').catch(console.error);
+              db.insertHistory(v.id, action, v.stage, 'hold').catch(console.error);
+            }
           }
         }
       };
@@ -1836,7 +1843,7 @@
             checks[idx] = { ...checks[idx], image_url: url };
             return { ...car, [field]: checks };
           });
-        } catch (err) { console.error(err); }
+        } catch (err) { console.error(err); alert('Photo upload failed: ' + (err.message || err)); }
         e.target.value = '';
         setImgCheckInfo(null);
       };
@@ -1864,7 +1871,7 @@
             checks[idx] = { ...checks[idx], image_url: url };
             return { ...car, [field]: checks };
           });
-        } catch (err) { console.error(err); }
+        } catch (err) { console.error(err); alert('Photo upload failed: ' + (err.message || err)); }
         setImgCheckInfo(null);
       };
 
@@ -4911,12 +4918,15 @@
 
     /* ─── ImportFleetModal ─── */
     function ImportFleetModal({ onClose, onBulkAdd }) {
-      const [step, setStep]         = useState('upload'); // upload | preview | importing | done
+      const [step, setStep]         = useState('upload'); // upload | sheet | preview | importing | done
       const [rows, setRows]         = useState([]);
       const [skipped, setSkipped]   = useState(0);
       const [progress, setProgress] = useState(0);
       const [imported, setImported] = useState(0);
       const [dragOver, setDragOver] = useState(false);
+      const [workbook, setWorkbook]       = useState(null);
+      const [sheetOptions, setSheetOptions] = useState([]); // [{name, rows, vinCount}]
+      const [selectedSheet, setSelectedSheet] = useState('');
       const fileRef = useRef(null);
 
       /* column name aliases — case-sensitive exact match first, then case-insensitive */
@@ -4958,18 +4968,11 @@
 
       const [extraColNames, setExtraColNames] = useState([]);
 
-      const parseFile = (file) => {
-        if (!file) return;
-        if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { alert('Please upload an .xlsx, .xls, or .csv file.'); return; }
-        if (file.size > 10 * 1024 * 1024) { alert('File is too large. Maximum size is 10 MB.'); return; }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-            if (raw.length < 2) { alert('File appears empty or has no data rows.'); return; }
-            const headers = raw[0].map(h => String(h).trim());
+      const parseSheet = (ws) => {
+        try {
+          const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+          if (raw.length < 2) { alert('Sheet appears empty or has no data rows.'); return; }
+          const headers = raw[0].map(h => String(h).trim());
             const ci = {};
             for (const k of Object.keys(ALIASES)) ci[k] = findCol(headers, k);
             if (ci.vin < 0 || ci.model < 0) {
@@ -5032,16 +5035,64 @@
                 extra_fields,
               });
             }
-            setRows(valid); setSkipped(skip); setStep('preview');
+          setRows(valid); setSkipped(skip); setStep('preview');
+        } catch (err) { alert('Failed to parse sheet: ' + err.message); }
+      };
+
+      const parseFile = (file) => {
+        if (!file) return;
+        if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { alert('Please upload an .xlsx, .xls, or .csv file.'); return; }
+        if (file.size > 10 * 1024 * 1024) { alert('File is too large. Maximum size is 10 MB.'); return; }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            if (!wb.SheetNames.length) { alert('No sheets found in workbook.'); return; }
+            if (wb.SheetNames.length === 1) {
+              parseSheet(wb.Sheets[wb.SheetNames[0]]);
+              return;
+            }
+            // Multiple sheets — build options with VIN counts
+            const opts = wb.SheetNames.map(name => {
+              const ws = wb.Sheets[name];
+              const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+              if (raw.length < 2) return { name, rows: Math.max(0, raw.length - 1), vinCount: 0 };
+              const hdrs = raw[0].map(h => String(h).trim());
+              const vinIdx = findCol(hdrs, 'vin');
+              let vinCount = 0;
+              if (vinIdx >= 0) {
+                for (let i = 1; i < raw.length; i++) {
+                  const v = String(raw[i][vinIdx] ?? '').trim();
+                  if (v.length >= 10) vinCount++;
+                }
+              }
+              return { name, rows: raw.length - 1, vinCount };
+            });
+            // Default-select sheet with most VINs (fallback: most rows)
+            const best = [...opts].sort((a, b) => (b.vinCount - a.vinCount) || (b.rows - a.rows))[0];
+            setWorkbook(wb);
+            setSheetOptions(opts);
+            setSelectedSheet(best?.name || wb.SheetNames[0]);
+            setStep('sheet');
           } catch (err) { alert('Failed to parse file: ' + err.message); }
         };
         reader.readAsArrayBuffer(file);
       };
 
+      const confirmSheet = () => {
+        if (!workbook || !selectedSheet) return;
+        parseSheet(workbook.Sheets[selectedSheet]);
+      };
+
       const handleImport = async () => {
         setStep('importing'); setProgress(0);
-        const count = await onBulkAdd(rows, p => setProgress(p));
-        setImported(count); setStep('done');
+        try {
+          const count = await onBulkAdd(rows, p => setProgress(p));
+          setImported(count); setStep('done');
+        } catch (err) {
+          alert('Import failed: ' + (err.message || String(err)));
+          setStep('preview');
+        }
       };
 
       const inputCls = "w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-[13px] text-navy outline-none focus:border-primary transition-colors";
@@ -5109,6 +5160,54 @@
                         </div>
                       ))}
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── SHEET PICKER ── */}
+              {step === 'sheet' && (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-[14px] px-4 py-3 flex items-start gap-3">
+                    <Icon name="tab" className="text-blue-500 text-xl flex-shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-[13px] font-black text-navy">Multiple sheets detected</div>
+                      <div className="text-[11px] text-muted mt-0.5">Select which sheet contains the vehicles to import. We pre-selected the one with the most VIN rows.</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    {sheetOptions.map(opt => {
+                      const active = opt.name === selectedSheet;
+                      return (
+                        <button key={opt.name} onClick={() => setSelectedSheet(opt.name)}
+                          className={`w-full text-left rounded-[14px] border-2 px-4 py-3 flex items-center gap-3 transition-all
+                            ${active ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/40 hover:bg-gray-50'}`}>
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                            ${active ? 'border-primary' : 'border-gray-300'}`}>
+                            {active && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-[14px] font-black text-navy truncate">{opt.name}</div>
+                            <div className="text-[11px] text-muted">
+                              {opt.rows.toLocaleString()} data row{opt.rows !== 1 ? 's' : ''}
+                              {opt.vinCount > 0 && <> · <span className="text-primary font-bold">{opt.vinCount.toLocaleString()} VIN{opt.vinCount !== 1 ? 's' : ''}</span></>}
+                              {opt.vinCount === 0 && opt.rows > 0 && <> · <span className="text-amber-600">no VIN column</span></>}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex gap-3 pt-1">
+                    <button onClick={() => { setStep('upload'); setWorkbook(null); setSheetOptions([]); setSelectedSheet(''); }}
+                      className="flex-1 py-3 rounded-full border-2 border-gray-200 text-navy font-bold text-[12px] uppercase tracking-wider hover:bg-gray-50 transition-all">
+                      Change File
+                    </button>
+                    <button onClick={confirmSheet} disabled={!selectedSheet}
+                      className="flex-1 py-3 rounded-full bg-primary text-white font-black text-[12px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-40">
+                      Continue
+                    </button>
                   </div>
                 </div>
               )}
@@ -5185,9 +5284,9 @@
                   </div>
 
                   <div className="flex gap-3 pt-1">
-                    <button onClick={() => { setStep('upload'); setRows([]); setSkipped(0); }}
+                    <button onClick={() => { setStep(workbook && sheetOptions.length > 1 ? 'sheet' : 'upload'); setRows([]); setSkipped(0); }}
                       className="flex-1 py-3 rounded-full border-2 border-gray-200 text-navy font-bold text-[12px] uppercase tracking-wider hover:bg-gray-50 transition-all">
-                      Change File
+                      {workbook && sheetOptions.length > 1 ? 'Change Sheet' : 'Change File'}
                     </button>
                     <button onClick={handleImport} disabled={rows.length === 0}
                       className="flex-1 py-3 rounded-full bg-primary text-white font-black text-[12px] uppercase tracking-wider shadow-primary-glow hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-40">
@@ -5290,7 +5389,8 @@
       const loadVehicles = async () => {
         const { data, error } = await sb.from('vehicles')
           .select(VEHICLE_Q)
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(10000);
         if (error) { console.error('loadVehicles', error); return; }
         const transformed = (data || []).map(transformVehicle);
         setVehicles(transformed);
@@ -5840,7 +5940,7 @@
           });
 
           const { data: newVehicles, error: ve } = await sb.from('vehicles').insert(vehicleRows).select('id');
-          if (ve) { console.error('bulk vehicle insert', ve); inserted += batch.length; onProgress(Math.round((inserted/total)*100)); continue; }
+          if (ve) { throw new Error(ve.message || JSON.stringify(ve)); }
 
           if (newVehicles?.length) {
             const pdiRows = [], maintRows = [], finalRows = [], histRows = [];
