@@ -319,8 +319,8 @@
         exportReport: 'Export Report',
         addVehicle: 'Add Vehicle',
         totalFleet: 'Total Fleet',
-        inbound: 'Inbound',
-        processing: 'Processing',
+        inbound: 'Port',
+        processing: 'Stockyard',
         dispatched: 'Dispatched',
         pipelineProgress: 'Pipeline Progress',
         needsAttention: 'Needs Attention',
@@ -496,8 +496,8 @@
         exportReport: 'I-export ang Ulat',
         addVehicle: 'Magdagdag ng Sasakyan',
         totalFleet: 'Kabuuang Fleet',
-        inbound: 'Papasok',
-        processing: 'Pinoproseso',
+        inbound: 'Port',
+        processing: 'Stockyard',
         dispatched: 'Naipadala',
         pipelineProgress: 'Progreso ng Pipeline',
         needsAttention: 'Nangangailangan ng Pansin',
@@ -673,8 +673,8 @@
         exportReport: '导出报表',
         addVehicle: '添加车辆',
         totalFleet: '车队总数',
-        inbound: '入站',
-        processing: '处理中',
+        inbound: 'Port',
+        processing: 'Stockyard',
         dispatched: '已调度',
         pipelineProgress: '流程进度',
         needsAttention: '需要关注',
@@ -777,7 +777,7 @@
     const STATUS_KEY_MAP = { port:'statusPort', pdi:'statusPdi', hold:'statusHold', stock:'statusStock', ready:'statusReady', released:'statusReleased', online:'statusOnline', offline:'statusOffline' };
     const StatusBadge = ({ status, t }) => (
       <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${S[status] || 'bg-gray-100 text-gray-600'}`}>
-        {t && STATUS_KEY_MAP[status] ? t(STATUS_KEY_MAP[status]) : status}
+        {t && STATUS_KEY_MAP[status] ? t(STATUS_KEY_MAP[status]) : (status || '').replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase())}
       </span>
     );
 
@@ -2948,7 +2948,7 @@
     /* ─── FleetListScreen ─── */
     const PAGE_SIZE = 50;
 
-    function FleetListScreen({ navigate, vehicles, onAddVehicle, onImportFleet, onNotificationClick, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role }) {
+    function FleetListScreen({ navigate, vehicles, onAddVehicle, onImportFleet, onNotificationClick, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role, pipelineStages = [] }) {
       const all = vehicles;
       const [search, setSearch]         = useState('');
       const [stage, setStage]           = useState('all');
@@ -2956,11 +2956,16 @@
       const [showSuggestions, setShowSuggestions] = useState(false);
       const searchRef = useRef(null);
 
-      const stages = ['all','port','pdi','hold','stock','ready','released'];
-      const counts = useMemo(() => stages.reduce((acc, s) => {
-        acc[s] = s === 'all' ? all.length : all.filter(v => v.stage === s).length;
+      // Build dynamic stage list from pipelineStages prop (fall back to known slugs if not loaded)
+      const stagesActive = pipelineStages.filter(s => s.active).sort((a, b) => a.ord - b.ord);
+      const stageSlugs   = ['all', ...stagesActive.map(s => s.slug)];
+      const stageMeta    = Object.fromEntries(stagesActive.map(s => [s.slug, s]));
+
+      const counts = useMemo(() => {
+        const acc = { all: all.length };
+        stagesActive.forEach(s => { acc[s.slug] = all.filter(v => v.stage === s.slug).length; });
         return acc;
-      }, {}), [all]);
+      }, [all, stageSlugs.join(',')]);
 
       // Full filtered list (no pagination)
       const filtered = useMemo(() => {
@@ -3019,25 +3024,28 @@
           if (!map[key]) map[key] = {
             model: key,
             total: 0,
-            byStage: { port:0, pdi:0, hold:0, stock:0, ready:0, released:0 },
-            variants: new Set(),
-            colors: new Set(),
+            byStage: {},         // dynamic: slug → count
+            variantCounts: {},   // variant label → count
+            colorCounts: {},     // color label → count
             years: new Set(),
             dealers: new Set(),
           };
           const m = map[key];
           m.total++;
-          if (m.byStage[v.stage] !== undefined) m.byStage[v.stage]++;
-          if (v.variant) m.variants.add(v.variant);
-          if (v.exteriorColor || v.color) m.colors.add(v.exteriorColor || v.color);
+          m.byStage[v.stage] = (m.byStage[v.stage] || 0) + 1;
+          const variant = (v.variant || '').trim() || '(Standard)';
+          m.variantCounts[variant] = (m.variantCounts[variant] || 0) + 1;
+          const color = (v.exteriorColor || v.color || '').trim() || '(Unknown)';
+          m.colorCounts[color] = (m.colorCounts[color] || 0) + 1;
           if (v.year) m.years.add(String(v.year));
           if (v.dealer) m.dealers.add(v.dealer);
         });
         return Object.values(map)
           .map(m => ({
             ...m,
-            variants: [...m.variants],
-            colors:   [...m.colors],
+            // sorted arrays of [label, count] pairs for display
+            variants: Object.entries(m.variantCounts).sort((a, b) => b[1] - a[1]),
+            colors:   Object.entries(m.colorCounts).sort((a, b) => b[1] - a[1]),
             years:    [...m.years],
             dealers:  [...m.dealers],
           }))
@@ -3133,16 +3141,26 @@
             </div>
           </header>
 
-          {/* Stage filter pills */}
+          {/* Stage filter pills — driven by pipeline_stages table */}
           <div className="bg-white px-4 lg:px-8 pb-3 pt-3 flex gap-2 overflow-x-auto no-scroll border-b border-gray-100">
             <div className="lg:max-w-7xl lg:mx-auto flex gap-2 w-full">
-              {stages.map(s => (
-                <button key={s} onClick={() => setStage(s)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${stage === s ? 'bg-primary text-white shadow-md' : 'bg-gray-100 text-muted hover:bg-gray-200'}`}>
-                  {s.toUpperCase()}
-                  <span className={`text-[10px] font-black ${stage === s ? 'text-white/70' : 'text-muted/70'}`}>{counts[s]}</span>
-                </button>
-              ))}
+              {stageSlugs.map(s => {
+                const meta    = stageMeta[s];
+                const isActive = stage === s;
+                const hexColor = meta?.color;
+                return (
+                  <button key={s} onClick={() => { setStage(s); setPage(0); }}
+                    style={isActive && hexColor ? { background: hexColor, color: '#fff' } : {}}
+                    className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${
+                      isActive
+                        ? hexColor ? 'shadow-md' : 'bg-primary text-white shadow-md'
+                        : 'bg-gray-100 text-muted hover:bg-gray-200'
+                    }`}>
+                    {s === 'all' ? 'ALL' : (meta?.name || s.replace(/_/g,' ')).toUpperCase()}
+                    <span className={`text-[10px] font-black ${isActive ? 'text-white/70' : 'text-muted/70'}`}>{counts[s] ?? 0}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -3159,23 +3177,22 @@
                   </div>
                   <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 lg:gap-3">
                     {modelSummary.map(m => {
-                      const active = m.total - m.byStage.released;
-                      const pct = m.total > 0 ? Math.round((m.byStage.released / m.total) * 100) : 0;
+                      const releasedCount = m.byStage['released'] || 0;
+                      const active = m.total - releasedCount;
+                      const pct = m.total > 0 ? Math.round((releasedCount / m.total) * 100) : 0;
                       return (
                         <button key={m.model} onClick={() => setSelectedModel(m.model)}
                           className="bg-white rounded-[16px] shadow-card p-3 text-left hover:shadow-card-hover active:scale-[0.98] transition-all">
                           <div className="font-black text-navy text-[12px] leading-tight truncate mb-1">{m.model}</div>
                           <div className="text-[22px] font-black text-primary leading-none">{m.total}</div>
                           <div className="text-[9px] font-bold text-muted uppercase tracking-wide mb-2">
-                            {active} active · {m.byStage.released} released
+                            {active} active · {releasedCount} released
                           </div>
                           <div className="flex flex-wrap gap-1">
-                            {[
-                              ['port','bg-amber-400'],['pdi','bg-green-400'],['hold','bg-red-400'],
-                              ['stock','bg-blue-400'],['ready','bg-purple-400'],['released','bg-emerald-400'],
-                            ].map(([s,c]) => m.byStage[s] > 0 && (
-                              <span key={s} className={`${c} text-white text-[8px] font-black px-1.5 py-0.5 rounded-full`}>
-                                {s.toUpperCase()} {m.byStage[s]}
+                            {stagesActive.map(s => (m.byStage[s.slug] || 0) > 0 && (
+                              <span key={s.slug} style={{ background: s.color || '#6b7280' }}
+                                className="text-white text-[8px] font-black px-1.5 py-0.5 rounded-full">
+                                {(s.name || s.slug).toUpperCase()} {m.byStage[s.slug]}
                               </span>
                             ))}
                           </div>
@@ -3193,13 +3210,13 @@
               {selectedModel && (() => {
                 const m = modelSummary.find(x => x.model === selectedModel);
                 if (!m) return null;
-                const STAGES = [
-                  { key:'port',     label:'Port / Inbound',    color:'bg-amber-500'   },
-                  { key:'pdi',      label:'PDI',               color:'bg-green-500'   },
-                  { key:'hold',     label:'On Hold',           color:'bg-red-500'     },
-                  { key:'stock',    label:'In Stock',          color:'bg-blue-500'    },
-                  { key:'ready',    label:'Ready for Delivery',color:'bg-purple-500'  },
-                  { key:'released', label:'Released to Dealer',color:'bg-emerald-500' },
+                const stagesForPopup = stagesActive.length ? stagesActive : [
+                  { slug:'port',     name:'Port',                color:'#f59e0b' },
+                  { slug:'pdi',      name:'PDI',                 color:'#22c55e' },
+                  { slug:'hold',     name:'On Hold',             color:'#ef4444' },
+                  { slug:'stock',    name:'In Stock',            color:'#3b82f6' },
+                  { slug:'ready',    name:'Ready for Delivery',  color:'#a855f7' },
+                  { slug:'released', name:'Released to Dealer',  color:'#10b981' },
                 ];
                 return (
                   <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6"
@@ -3220,14 +3237,14 @@
                         <div>
                           <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Pipeline Stage Breakdown</div>
                           <div className="space-y-2">
-                            {STAGES.map(s => {
-                              const count = m.byStage[s.key] || 0;
+                            {stagesForPopup.map(s => {
+                              const count = m.byStage[s.slug] || 0;
                               const pct = m.total > 0 ? (count / m.total) * 100 : 0;
                               return (
-                                <div key={s.key} className="flex items-center gap-3">
-                                  <span className="text-[10px] font-bold text-navy w-32 flex-shrink-0">{s.label}</span>
+                                <div key={s.slug} className="flex items-center gap-3">
+                                  <span className="text-[10px] font-bold text-navy w-32 flex-shrink-0">{s.name || s.slug}</span>
                                   <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div className={`h-full ${s.color} rounded-full transition-all`} style={{width:`${pct}%`}} />
+                                    <div className="h-full rounded-full transition-all" style={{width:`${pct}%`, background: s.color || '#6b7280'}} />
                                   </div>
                                   <span className="text-[11px] font-black text-navy w-6 text-right flex-shrink-0">{count}</span>
                                 </div>
@@ -3237,8 +3254,8 @@
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           {[
-                            { label:'Active Units',        value: m.total - m.byStage.released, icon:'directions_car', c:'text-navy'        },
-                            { label:'Released to Dealers', value: m.byStage.released,           icon:'verified',       c:'text-emerald-500' },
+                            { label:'Active Units',        value: m.total - (m.byStage['released'] || 0), icon:'directions_car', c:'text-navy'        },
+                            { label:'Released to Dealers', value: m.byStage['released'] || 0,  icon:'verified',       c:'text-emerald-500' },
                             { label:'Variants',            value: m.variants.length || 1,       icon:'tune',           c:'text-blue-500'    },
                             { label:'Colors Available',    value: m.colors.length   || '—',     icon:'palette',        c:'text-purple-500'  },
                           ].map(s => (
@@ -3255,8 +3272,10 @@
                           <div>
                             <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Variants</div>
                             <div className="flex flex-wrap gap-1.5">
-                              {m.variants.map(v => (
-                                <span key={v} className="text-[11px] font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-full">{v}</span>
+                              {m.variants.map(([name, count]) => (
+                                <span key={name} className="inline-flex items-center gap-1 text-[11px] font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-full">
+                                  {name} <span className="font-black text-primary text-[10px]">{count}</span>
+                                </span>
                               ))}
                             </div>
                           </div>
@@ -3265,8 +3284,10 @@
                           <div>
                             <div className="text-[9px] font-black uppercase tracking-widest text-muted mb-2">Colors</div>
                             <div className="flex flex-wrap gap-1.5">
-                              {m.colors.map(c => (
-                                <span key={c} className="text-[11px] font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-full">{c}</span>
+                              {m.colors.map(([name, count]) => (
+                                <span key={name} className="inline-flex items-center gap-1 text-[11px] font-semibold text-navy bg-gray-100 px-2.5 py-1 rounded-full">
+                                  {name} <span className="font-black text-primary text-[10px]">{count}</span>
+                                </span>
                               ))}
                             </div>
                           </div>
