@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import type { User } from '@supabase/supabase-js';
 import { supabase, FUNCTIONS_URL } from './lib/supabase';
 
@@ -42,9 +43,24 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) return <Spinner />;
-  if (!user)   return <LoginPage />;
-  return <Dashboard user={user} />;
+  if (loading) return (
+    <>
+      <Spinner />
+      <SpeedInsights />
+    </>
+  );
+  if (!user) return (
+    <>
+      <LoginPage />
+      <SpeedInsights />
+    </>
+  );
+  return (
+    <>
+      <Dashboard user={user} />
+      <SpeedInsights />
+    </>
+  );
 }
 
 // ─── Login ────────────────────────────────────────────────────────────────────
