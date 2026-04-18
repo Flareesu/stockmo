@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fleet Command | Precision Concierge</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#5f5e5e",
+              "primary": "#bd0013",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#e4e2e1",
+              "on-background": "#1a1c1c",
+              "inverse-surface": "#2f3131",
+              "error-container": "#ffdad6",
+              "tertiary-fixed": "#d1e4ff",
+              "on-secondary-fixed": "#1b1c1c",
+              "on-primary-fixed": "#410002",
+              "surface-container-low": "#f3f3f3",
+              "tertiary-container": "#0079c8",
+              "on-tertiary-fixed": "#001d36",
+              "secondary-fixed-dim": "#c8c6c6",
+              "primary-fixed": "#ffdad6",
+              "on-tertiary-fixed-variant": "#00497c",
+              "primary-fixed-dim": "#ffb4ab",
+              "primary-container": "#eb0a1d",
+              "error": "#ba1a1a",
+              "on-error-container": "#93000a",
+              "outline-variant": "#e9bcb7",
+              "tertiary-fixed-dim": "#9dcaff",
+              "on-surface": "#1a1c1c",
+              "surface-container-lowest": "#ffffff",
+              "surface": "#f9f9f9",
+              "background": "#f9f9f9",
+              "inverse-primary": "#ffb4ab",
+              "on-primary": "#ffffff",
+              "surface-tint": "#c00013",
+              "surface-container": "#eeeeee",
+              "secondary-container": "#e4e2e1",
+              "on-secondary-fixed-variant": "#474747",
+              "surface-container-highest": "#e2e2e2",
+              "surface-bright": "#f9f9f9",
+              "on-primary-container": "#fffeff",
+              "surface-dim": "#dadada",
+              "on-tertiary-container": "#fffdff",
+              "on-primary-fixed-variant": "#93000c",
+              "surface-container-high": "#e8e8e8",
+              "tertiary": "#0060a0",
+              "surface-variant": "#e2e2e2",
+              "outline": "#936e6a",
+              "on-surface-variant": "#5e3f3b",
+              "on-secondary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-secondary-container": "#656464",
+              "inverse-on-surface": "#f1f1f1"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; color: #1a1c1c; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      .glass-nav { backdrop-filter: blur(24px); background-color: rgba(255, 255, 255, 0.8); }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col py-6 bg-zinc-50 dark:bg-zinc-900 h-screen w-64 border-r border-zinc-200/15 dark:border-zinc-800/15 z-50">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-white text-sm" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<div>
+<h1 class="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tighter uppercase">Fleet Command</h1>
+<p class="font-inter text-[10px] font-bold tracking-widest uppercase text-zinc-400">Precision Logistics</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active: Overview -->
+<a class="flex items-center px-6 py-3 border-l-4 border-red-700 bg-red-50/50 dark:bg-red-900/10 text-red-700 dark:text-red-500 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>
+<span class="font-inter text-sm font-bold tracking-wide uppercase">Overview</span>
+</a>
+<a class="flex items-center px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">group</span>
+<span class="font-inter text-sm font-bold tracking-wide uppercase">Users</span>
+</a>
+<a class="flex items-center px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">local_shipping</span>
+<span class="font-inter text-sm font-bold tracking-wide uppercase">Logistics</span>
+</a>
+<a class="flex items-center px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">analytics</span>
+<span class="font-inter text-sm font-bold tracking-wide uppercase">Analytics</span>
+</a>
+<a class="flex items-center px-6 py-3 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-all duration-300" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]">settings</span>
+<span class="font-inter text-sm font-bold tracking-wide uppercase">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-primary text-white py-3 px-4 rounded-md font-bold text-xs tracking-widest uppercase hover:opacity-90 transition-opacity">
+                New Report
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 bg-surface min-h-screen">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 flex items-center justify-between px-8 py-3 w-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-200/15 dark:border-zinc-800/15 shadow-sm shadow-zinc-900/5">
+<div class="flex items-center gap-8">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-lg">search</span>
+<input class="bg-zinc-100/50 border-none rounded-lg pl-10 pr-4 py-2 text-[10px] font-bold tracking-widest uppercase focus:ring-2 focus:ring-primary/20 w-64 transition-all" placeholder="SEARCH LOGISTICS DATA..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="p-2 text-zinc-500 hover:bg-zinc-100 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-zinc-500 hover:bg-zinc-100 rounded-lg transition-colors">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-6 w-[1px] bg-zinc-200"></div>
+<button class="text-[10px] font-bold tracking-widest uppercase text-zinc-500 hover:text-primary transition-colors">Support</button>
+</div>
+<div class="flex items-center gap-3 pl-4">
+<div class="text-right">
+<p class="text-[10px] font-black uppercase tracking-tight text-zinc-900">Chief Executive</p>
+<p class="text-[9px] font-bold text-primary uppercase tracking-widest">Online</p>
+</div>
+<img alt="CEO Profile Avatar" class="w-9 h-9 rounded-lg object-cover ring-2 ring-zinc-100" data-alt="Close up portrait of a senior male executive" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc7OpkWWqK4KIQcRMJUQ1zhCzHShx4JxgAE82A_pUjjumTBPiL5dYd4Lmq8HGB_hNOusno1HJOa2t1De8A2RSd2ZcQOXD5foWHDOK67f62WUqnlBIpMFQlWQcNou_dOz9MsNb9-NOZLpKqAUy4TXGsC-zNq9-I8KLmtE4lBL19ZjenPWLZUa_Y6-eP_PnqAvPiQlQHTNg76c9Pso6MjTluloM9-35fBktVKFQW2wng4DbXfMVel0UsF8FJVK5DhSFfPB4eYJ570eI"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 space-y-8">
+<!-- Operations Summary (Main Hero) -->
+<section class="grid grid-cols-12 gap-6">
+<div class="col-span-12 lg:col-span-8 bg-zinc-900 p-8 rounded-xl relative overflow-hidden group">
+<!-- Subtle pattern background -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="relative z-10">
+<h2 class="text-[11px] font-bold tracking-[0.2em] text-zinc-400 uppercase mb-8">System Operations Live</h2>
+<div class="grid grid-cols-3 gap-12">
+<div>
+<p class="text-5xl font-black text-white tracking-tighter">478</p>
+<p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-2">Active Units</p>
+</div>
+<div>
+<div class="flex items-end gap-2">
+<p class="text-5xl font-black text-white tracking-tighter">98%</p>
+<span class="material-symbols-outlined text-green-500 mb-2">trending_up</span>
+</div>
+<p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-2">Fleet Health</p>
+</div>
+<div>
+<p class="text-5xl font-black text-primary tracking-tighter">STABLE</p>
+<p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mt-2">Network Status</p>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-zinc-200/50 p-6 rounded-xl flex flex-col">
+<h3 class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase mb-4">Live Activity</h3>
+<div class="flex-1 space-y-4">
+<div class="flex items-start gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5"></div>
+<div>
+<p class="text-[11px] font-bold text-zinc-900 uppercase">Load #829 Dispatch</p>
+<p class="text-[10px] text-zinc-500">Terminal 4 • 2m ago</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-zinc-300 mt-1.5"></div>
+<div>
+<p class="text-[11px] font-bold text-zinc-900 uppercase">Unit 112 PDI Complete</p>
+<p class="text-[10px] text-zinc-500">Service Center • 14m ago</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5"></div>
+<div>
+<p class="text-[11px] font-bold text-zinc-900 uppercase">Executive Approval Req</p>
+<p class="text-[10px] text-zinc-500">Logistics Hub • 22m ago</p>
+</div>
+</div>
+</div>
+<button class="mt-4 text-[9px] font-black text-primary uppercase tracking-[0.2em] border-b border-primary/20 pb-1 self-start">View All Events</button>
+</div>
+</section>
+<!-- Priority & Financials Row -->
+<section class="grid grid-cols-12 gap-6">
+<!-- Critical Alerts -->
+<div class="col-span-12 md:col-span-7 bg-red-50/30 border-l-4 border-primary p-6 rounded-r-xl">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-[11px] font-bold tracking-widest text-primary uppercase">Critical Bottlenecks</h2>
+<span class="bg-primary text-white text-[9px] font-black px-2 py-0.5 rounded">2 ACTION REQUIRED</span>
+</div>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-lg flex items-center justify-between shadow-sm border border-red-100">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">warning</span>
+<div>
+<p class="text-[12px] font-bold text-zinc-900 uppercase">Regional Storage Overflow</p>
+<p class="text-[10px] text-zinc-500">Chicago Hub at 104% capacity. Reroute advised.</p>
+</div>
+</div>
+<button class="px-4 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest rounded transition-transform active:scale-95">Resolve</button>
+</div>
+<div class="bg-white p-4 rounded-lg flex items-center justify-between shadow-sm border border-red-100">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<div>
+<p class="text-[12px] font-bold text-zinc-900 uppercase">Delayed Last-Mile (48h+)</p>
+<p class="text-[10px] text-zinc-500">12 units flagged in NE Corridor. Resource shortage.</p>
+</div>
+</div>
+<button class="px-4 py-2 bg-zinc-900 text-white text-[10px] font-bold uppercase tracking-widest rounded transition-transform active:scale-95">Analyze</button>
+</div>
+</div>
+</div>
+<!-- Revenue & Financials -->
+<div class="col-span-12 md:col-span-5 bg-surface-container-lowest border border-zinc-200/50 p-6 rounded-xl relative">
+<h3 class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase mb-8">MTD Volume &amp; Trends</h3>
+<div class="flex items-center justify-between">
+<div>
+<p class="text-4xl font-black text-zinc-900 tracking-tighter">$142.8k</p>
+<p class="text-[10px] font-bold text-green-600 uppercase tracking-widest mt-1">+12.4% vs Last Month</p>
+</div>
+<div class="w-32 h-16 flex items-end gap-1">
+<!-- Visual Mock Sparkline -->
+<div class="flex-1 bg-zinc-100 h-[20%] rounded-t-sm"></div>
+<div class="flex-1 bg-zinc-100 h-[40%] rounded-t-sm"></div>
+<div class="flex-1 bg-zinc-200 h-[30%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[60%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[85%] rounded-t-sm"></div>
+<div class="flex-1 bg-zinc-300 h-[55%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary h-[100%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Map & Efficiency Grid -->
+<section class="grid grid-cols-12 gap-6">
+<!-- Density Map -->
+<div class="col-span-12 lg:col-span-8 h-[400px] bg-zinc-100 rounded-xl overflow-hidden border border-zinc-200/50 relative">
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Stylized greyscale map of urban logistics routes" data-location="Chicago" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDHphxEfldqKvfcFFuUT5FbFItkvD_yMHwqDKnf_4SNaOrMHDOpMNCVJsTEbsGRhsj1kDB34M27w6z6VdHXjbTmQ6774uDXOcWSwOrke_RlOkj_XDIrvkR7w2NNYrj-NMNIoAjruh2A8-fpw68RT-cJUoSZQ6C8vMQHWByzxKuWqm9SF0IJKsTPRAqthdkFYmIe-sbmVYwAT_m24HuUYrDcezwzWt_dro-f2h_LptXx2OMWlHRsoZLHyoJhIFJSuyonFYnLezDlyxA')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent"></div>
+<div class="absolute top-6 left-6 bg-white/90 backdrop-blur px-4 py-2 rounded-lg border border-zinc-200">
+<p class="text-[10px] font-black uppercase tracking-widest text-zinc-900">Regional Density Map</p>
+<p class="text-[9px] text-zinc-500 font-bold uppercase tracking-tight">Active Heat: North America Central</p>
+</div>
+<!-- Mock Map Markers -->
+<div class="absolute top-1/2 left-1/3 w-4 h-4 bg-primary rounded-full border-2 border-white animate-pulse"></div>
+<div class="absolute top-1/4 left-1/2 w-3 h-3 bg-primary/60 rounded-full border-2 border-white"></div>
+<div class="absolute bottom-1/3 right-1/4 w-5 h-5 bg-primary rounded-full border-2 border-white"></div>
+</div>
+<!-- Efficiency Metrics -->
+<div class="col-span-12 lg:col-span-4 grid grid-rows-3 gap-4">
+<div class="bg-surface-container-lowest border border-zinc-200/50 p-5 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Avg PDI Time</p>
+<p class="text-2xl font-black text-zinc-900">2.4 Days</p>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-3xl">timer</span>
+</div>
+<div class="bg-surface-container-lowest border border-zinc-200/50 p-5 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Pass Rate</p>
+<p class="text-2xl font-black text-zinc-900">99.2%</p>
+</div>
+<span class="material-symbols-outlined text-green-500 text-3xl">verified</span>
+</div>
+<div class="bg-surface-container-lowest border border-zinc-200/50 p-5 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">System Up-time</p>
+<p class="text-2xl font-black text-zinc-900">100%</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">bolt</span>
+</div>
+</div>
+</section>
+<!-- Staffing & Activity Feed -->
+<section class="grid grid-cols-12 gap-6">
+<!-- Staffing Overview -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest border border-zinc-200/50 p-6 rounded-xl">
+<h2 class="text-[11px] font-bold tracking-widest text-zinc-900 uppercase mb-6">Staffing &amp; Performance</h2>
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-zinc-100 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-600">engineering</span>
+</div>
+<div>
+<p class="text-[12px] font-bold text-zinc-900">42 Technicians</p>
+<p class="text-[10px] text-zinc-500">89% Efficiency</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-green-600">+4%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-zinc-100 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-600">admin_panel_settings</span>
+</div>
+<div>
+<p class="text-[12px] font-bold text-zinc-900">12 Admins</p>
+<p class="text-[10px] text-zinc-500">Global Coverage</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-zinc-400">Stable</span>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-zinc-100">
+<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4">Activity Trend</p>
+<div class="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[75%]"></div>
+</div>
+<p class="text-[9px] font-bold text-zinc-500 mt-2">Peak performance reached in 8/10 sectors</p>
+</div>
+</div>
+<!-- Recent Activity Feed -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-zinc-200/50 rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
+<h2 class="text-[11px] font-bold tracking-widest text-zinc-900 uppercase">Global Network Activity</h2>
+<button class="text-[10px] font-bold text-zinc-400 hover:text-zinc-900 transition-colors uppercase">Filter</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-zinc-50">
+<tr>
+<th class="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Entity</th>
+<th class="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Action</th>
+<th class="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Location</th>
+<th class="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Time</th>
+<th class="px-6 py-3 text-[10px] font-black text-zinc-400 uppercase tracking-widest">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-zinc-100">
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-[11px] font-bold text-zinc-900">CAR-992-GT</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Inspection Passed</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Miami Yard</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-400">14:22 EST</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-block w-2 h-2 rounded-full bg-green-500"></span>
+</td>
+</tr>
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-[11px] font-bold text-zinc-900">LOAD-8472</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Carrier Assigned</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Dallas Hub</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-400">14:18 EST</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-block w-2 h-2 rounded-full bg-blue-500"></span>
+</td>
+</tr>
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-[11px] font-bold text-zinc-900">SYST-77</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Security Audit</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Global</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-400">14:05 EST</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-block w-2 h-2 rounded-full bg-zinc-300"></span>
+</td>
+</tr>
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-[11px] font-bold text-zinc-900">UNIT-404</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Repair Flagged</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-600">Denver Yard</p>
+</td>
+<td class="px-6 py-4">
+<p class="text-[11px] text-zinc-400">13:42 EST</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

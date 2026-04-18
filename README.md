@@ -1,72 +1,96 @@
 # StockMo — Stockyard Management System
 
-**Version:** 1.0  
-**Client:** Apex Motors (Car Dealership)  
-**Platform:** Mobile-first, offline-capable single HTML file  
-**Languages:** English / Filipino (Tagalog)  
-**Target Users:** Stockyard technicians, service supervisors
+Purpose-built fleet app for car-dealership technicians. Tracks every vehicle from port arrival → PDI → stockyard care → final inspection → dealer release, with bilingual EN/TL UI (Chinese also wired).
+
+**Stack:** React 18 + Tailwind + Supabase, loaded via CDN inside a single HTML file served by Vercel. Single-file on purpose — Babel compiles JSX in-browser so there's no build step.
+
+**Users:** admin (full CRUD, fleet ops) · tech (inspect, update, deliver) · employee (limited).
 
 ---
 
-## What is StockMo?
+## Quick start (dev)
 
-StockMo is a purpose-built stockyard management app for car dealership technicians. It tracks every vehicle from the moment it arrives at port through pre-delivery inspection (PDI), stockyard care, final inspection, and dealer release — all offline, from a single `.html` file that runs on any low-spec Android or iOS phone.
+```bash
+# 1. Serve the HTML locally
+npx serve public                # or: python3 -m http.server 8000 --directory public
+open http://localhost:3000      # adjust port
 
----
-
-## Folder Structure
-
-```
-StockMo/
-├── README.md                          ← You are here
-├── 01_project_brief/
-│   ├── PROJECT_BRIEF.md               ← Full project overview & goals
-│   └── USER_PERSONAS.md               ← Technician & supervisor profiles
-├── 02_product_design/
-│   ├── DESIGN_SYSTEM.md               ← Colors, typography, components
-│   ├── MOBILE_UX_PRINCIPLES.md        ← Low-tech mobile design rules
-│   └── TAGALOG_TRANSLATIONS.md        ← Full EN/TL string reference
-├── 03_technical_architecture/
-│   ├── ARCHITECTURE.md                ← System layers & data flow
-│   ├── DATA_SCHEMA.md                 ← Vehicle object structure
-│   ├── OFFLINE_STRATEGY.md            ← localStorage + PWA plan
-│   └── ROADMAP.md                     ← Next up, future, infra features
-├── 04_lifecycle_workflow/
-│   ├── LIFECYCLE_OVERVIEW.md          ← 5-stage pipeline description
-│   ├── PDI_CHECKLIST.md               ← 18-item PDI reference (EN + TL)
-│   ├── STOCK_MAINTENANCE.md           ← 9-task recurring schedule
-│   └── FINAL_INSPECTION.md            ← 12-item final checklist (EN + TL)
-├── 05_feature_registry/
-│   └── FEATURE_REGISTRY.md            ← All features: Built / Next / Future
-├── 06_skills/
-│   ├── SKILL_mobile_offline_app.md    ← How to build mobile-first offline apps
-│   ├── SKILL_lifecycle_ui.md          ← How to build stage-gated pipeline UIs
-│   ├── SKILL_bilingual_toggle.md      ← How to implement EN/TL language toggle
-│   ├── SKILL_checklist_engine.md      ← How to build tap-cycle checklist systems
-│   └── SKILL_admin_panel.md           ← How to build supervisor admin panels
-└── 07_assets/
-    └── VEHICLE_SEED_DATA.md           ← 7 demo vehicles for first-load
+# 2. When you change StockMo-V2.html, mirror to public/ before deploying
+./scripts/sync-public.sh
 ```
 
+That's the whole dev loop. No bundler, no node_modules at the root. The Supabase anon key and URL are baked into the HTML at the top of `StockMo-V2.html`.
+
+### Test credentials (dev project only)
+
+| Role  | Email              | Password   |
+|-------|--------------------|------------|
+| Admin | admin@stockmo.com  | Admin123!  |
+| Tech  | tech@stockmo.com   | Tech123!   |
+
 ---
 
-## Quick Start
+## Layout
 
-1. Open `StockMo.html` in any mobile browser (Chrome recommended)
-2. Data auto-loads from `localStorage` — 7 demo vehicles on first run
-3. Tap `+ ARRIVE` to register a new vehicle via the 4-step wizard
-4. Tap `ADMIN` for supervisor controls, technician assignments, and audit log
-5. Toggle `EN / TL` in the topbar to switch language at any time
+```
+.
+├── StockMo-V2.html             ← source of truth, what you edit
+├── public/index.html           ← what Vercel serves (mirror of V2, run sync-public.sh)
+├── scripts/sync-public.sh      ← copies V2 → public/index.html
+├── vercel.json                 ← security headers + CSP
+├── supabase/
+│   └── client-template/
+│       └── migrations/         ← 10 numbered SQL files, apply in order
+├── lambda/                     ← bulk-import Excel/CSV → vehicles via S3 trigger
+├── infra/                      ← Terraform (S3 bucket + Lambdas + IAM)
+├── apps/                       ← experimental Vite/TS rewrite — status TBD
+└── docs/                       ← product, design, and workflow docs
+```
 
 ---
 
-## Core Principles
+## Architecture overview
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Offline first** | All data in `localStorage`, zero network calls |
-| **Single file** | Entire app in one `.html` — no install, no server |
-| **Mobile native feel** | 52px tap targets, bottom nav, slide-up panels |
-| **Tagalog native** | Full bilingual toggle, checklist items in TL |
-| **Lifecycle gated** | Vehicles can only advance forward through stages |
-| **Low-spec ready** | System fonts only, no CDN, runs on Android Go |
+- **Auth:** Supabase Auth (email/password). Role stored on `user_profiles.role`.
+- **Data:** All tables live in one Supabase project per dealership (template at `supabase/client-template/`).
+- **Realtime:** Three channels — `vehicles`, `pdi_checks`, `stock_maintenance` — keep screens live.
+- **Bulk import:** Upload Excel/CSV via a presigned URL → S3 → Lambda parses → inserts into `vehicles`.
+- **RLS:** Every table has policies; `is_admin()` / `is_tech()` / `is_maintenance_mode()` helpers gate writes. A maintenance-mode kill switch in `client_config` freezes writes globally.
+
+Project detail lives in [`docs/`](docs/) — `ARCHITECTURE.md`, `DATA_SCHEMA.md`, `DESIGN_SYSTEM.md`, `LIFECYCLE_OVERVIEW.md`, etc.
+
+---
+
+## Supabase setup
+
+Active dev project: `eoxwapxwdshfmlyubfkw` (stockmo-dev).
+
+To spin up a fresh client project, apply migrations in order:
+
+```bash
+supabase db push --db-url "postgresql://..."
+# or from the SQL editor, paste each file in 01..10 order
+```
+
+---
+
+## Deployment
+
+Pushes to `main` auto-deploy to Vercel. Vercel serves `public/index.html`. Before committing, always run:
+
+```bash
+./scripts/sync-public.sh
+```
+
+otherwise the deployed build stays behind your local edits.
+
+---
+
+## Known gaps (as of 2026-04-18)
+
+- **Offline:** not implemented. The app requires network — `OFFLINE_STRATEGY.md` is a design doc, not live code.
+- **Template editing UI:** admin screens (`ChecklistEditorScreen`, `PipelineManagerScreen`) now have real DB tables behind them (migration 09); seed lives in migration 08.
+- **Language persistence:** resets to EN on reload. Tracked for Tier 2.
+- **Tests:** none yet.
+
+See [`FEATURE_REGISTRY.md`](FEATURE_REGISTRY.md) and [`ROADMAP.md`](ROADMAP.md) for what's built vs. next.

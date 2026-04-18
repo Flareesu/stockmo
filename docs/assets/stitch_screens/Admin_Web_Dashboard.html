@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Admin | Precision Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-tertiary-fixed": "#001d36",
+              "on-primary-fixed-variant": "#93000c",
+              "tertiary-fixed-dim": "#9dcaff",
+              "surface": "#f9f9f9",
+              "inverse-primary": "#ffb4ab",
+              "surface-container-highest": "#e2e2e2",
+              "secondary-container": "#e4e2e1",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "primary-container": "#eb0a1d",
+              "outline-variant": "#e9bcb7",
+              "on-secondary-container": "#656464",
+              "surface-container-low": "#f3f3f3",
+              "secondary": "#5f5e5e",
+              "outline": "#936e6a",
+              "background": "#f9f9f9",
+              "on-tertiary-fixed-variant": "#00497c",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed-variant": "#474747",
+              "on-secondary-fixed": "#1b1c1c",
+              "on-error-container": "#93000a",
+              "on-background": "#1a1c1c",
+              "on-surface-variant": "#5e3f3b",
+              "on-primary-fixed": "#410002",
+              "inverse-on-surface": "#f1f1f1",
+              "primary-fixed": "#ffdad6",
+              "surface-container": "#eeeeee",
+              "surface-tint": "#c00013",
+              "on-tertiary-container": "#fffdff",
+              "tertiary-fixed": "#d1e4ff",
+              "tertiary": "#0060a0",
+              "surface-variant": "#e2e2e2",
+              "surface-container-high": "#e8e8e8",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#0079c8",
+              "inverse-surface": "#2f3131",
+              "primary": "#bd0013",
+              "on-surface": "#1a1c1c",
+              "surface-dim": "#dadada",
+              "secondary-fixed": "#e4e2e1",
+              "primary-fixed-dim": "#ffb4ab",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9f9",
+              "on-primary-container": "#fffeff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="flex flex-col h-full sticky top-0 left-0 h-screen w-64 bg-slate-50 dark:bg-zinc-900 border-r-0">
+<div class="p-8 pb-4">
+<h1 class="text-xl font-black text-zinc-900 dark:text-white">StockMo Admin</h1>
+<p class="text-[10px] uppercase tracking-[0.1em] text-zinc-500 font-bold mt-1">Executive Suite</p>
+</div>
+<nav class="flex-1 mt-6 px-4 space-y-2">
+<!-- Active: Dashboard (Semantic Mapping) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded text-red-600 dark:text-red-500 font-bold border-l-4 border-red-600 bg-red-50/50 transition-all scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span class="text-sm">Fleet</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm">Team</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-sm">Reports</span>
+</a>
+</nav>
+<div class="p-6">
+<button class="w-full py-3 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded transition-all active:scale-95">
+                Generate Report
+            </button>
+<div class="mt-8 flex items-center gap-3 px-2">
+<img class="w-10 h-10 rounded-full bg-zinc-200" data-alt="Admin User Profile Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCm1wntZh9D_hcTYnQpqDhRAH-H9_jhhTkqcsVBn9Y_9meoiBYkOZR9qoPJdj0qw8ndEE7VDADnqobeeha1hDT69smwBHZSHbDqlHry4Qyb0sVBnhs7Gn99ivTfq06D792KBP0ouW9MOiDSDbBh4vxJIdP_s0wlTN0Rr6YuJ7PW56BtXuS9qitZO4-srjnWuGgLZCT1NkyHC6B1_RhFy8paI0nk_mBBQRy89G3NaopxFp5yqv8BhoCX1O-2x3KOVTidcDHLtqebo4M"/>
+<div>
+<p class="text-sm font-bold">Admin User</p>
+<p class="text-[10px] text-zinc-500">Fleet Operations</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 min-h-screen overflow-y-auto">
+<!-- TopNavBar (Authority Source: JSON) -->
+<header class="flex items-center justify-between px-8 w-full h-16 sticky top-0 z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-100 dark:border-zinc-800">
+<div class="flex items-center gap-8">
+<span class="hidden md:block text-lg font-black text-red-600">StockMo Precision</span>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-zinc-400 text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-md text-sm w-80 focus:ring-1 focus:ring-primary" placeholder="Quick Search VIN or Unit..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-zinc-600 cursor-pointer hover:text-red-600 active:scale-95" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-zinc-600 cursor-pointer hover:text-red-600 active:scale-95" data-icon="settings">settings</span>
+<span class="material-symbols-outlined text-zinc-600 cursor-pointer hover:text-red-600 active:scale-95" data-icon="help_outline">help_outline</span>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Bento Section: High-Level Overview -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Active Fleet Summary Card (Stage Breakdown) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-sm shadow-zinc-200/50 border-l-4 border-primary">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h2 class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-500 mb-1">Active Fleet Summary</h2>
+<p class="text-4xl font-black text-on-surface tracking-tighter">47 <span class="text-lg font-medium text-zinc-400">UNITS IN TRANSIT</span></p>
+</div>
+<span class="material-symbols-outlined text-primary bg-primary-fixed/20 p-3 rounded-xl" data-icon="local_shipping" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<div class="flex gap-2 h-12 w-full rounded-lg overflow-hidden mb-6">
+<div class="h-full bg-primary flex items-center justify-center text-[10px] font-bold text-white uppercase" style="width: 45%">Intake</div>
+<div class="h-full bg-primary-container flex items-center justify-center text-[10px] font-bold text-white uppercase" style="width: 25%">PDI Prep</div>
+<div class="h-full bg-zinc-900 flex items-center justify-center text-[10px] font-bold text-white uppercase" style="width: 20%">QC</div>
+<div class="h-full bg-zinc-200 flex items-center justify-center text-[10px] font-bold text-zinc-500 uppercase" style="width: 10%">Out</div>
+</div>
+<div class="grid grid-cols-4 gap-4 text-center">
+<div>
+<p class="text-xl font-bold">21</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Intake Stage</p>
+</div>
+<div>
+<p class="text-xl font-bold">12</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">PDI Prep</p>
+</div>
+<div>
+<p class="text-xl font-bold">9</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Final QC</p>
+</div>
+<div>
+<p class="text-xl font-bold">5</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Dispatch</p>
+</div>
+</div>
+</div>
+<!-- Key Metrics Stack -->
+<div class="col-span-12 lg:col-span-4 grid grid-rows-3 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between border-l-4 border-zinc-200">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Avg PDI Cycle</p>
+<p class="text-2xl font-black">2.8 <span class="text-sm font-medium">Days</span></p>
+</div>
+<span class="material-symbols-outlined text-zinc-400" data-icon="timer">timer</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between border-l-4 border-zinc-200">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Pass Rate</p>
+<p class="text-2xl font-black text-primary">94.2%</p>
+</div>
+<span class="material-symbols-outlined text-zinc-400" data-icon="verified">verified</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between border-l-4 border-zinc-200">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Pending Approval</p>
+<p class="text-2xl font-black">12 <span class="text-sm font-medium">Units</span></p>
+</div>
+<span class="material-symbols-outlined text-zinc-400" data-icon="pending_actions">pending_actions</span>
+</div>
+</div>
+</div>
+<!-- Focus Section: Attention and Team -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Critical Alerts / Needs Attention -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low rounded-xl p-8 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-sm font-black uppercase tracking-widest">Needs Attention</h3>
+<span class="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-black rounded uppercase">3 Critical</span>
+</div>
+<div class="space-y-4 flex-1">
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4 border border-red-50">
+<span class="material-symbols-outlined text-error" data-icon="report">report</span>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface">VIN: 8942-XW</p>
+<p class="text-[10px] text-zinc-500">Brake Sensor Failure - QC Blocked</p>
+</div>
+<span class="material-symbols-outlined text-zinc-300 cursor-pointer" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4 border border-red-50">
+<span class="material-symbols-outlined text-error" data-icon="report">report</span>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface">VIN: 3110-PL</p>
+<p class="text-[10px] text-zinc-500">Documentation Discrepancy</p>
+</div>
+<span class="material-symbols-outlined text-zinc-300 cursor-pointer" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4 opacity-75">
+<span class="material-symbols-outlined text-orange-500" data-icon="warning">warning</span>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface">VIN: 5521-QR</p>
+<p class="text-[10px] text-zinc-500">Battery Low - Prolonged Storage</p>
+</div>
+<span class="material-symbols-outlined text-zinc-300 cursor-pointer" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="mt-6 text-[10px] font-bold text-primary text-center uppercase tracking-widest">View All Alerts</button>
+</div>
+<!-- Technician Status Overview -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-sm font-black uppercase tracking-widest">Technician Status</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[10px] font-bold uppercase text-zinc-500">14 Active</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-zinc-300"></span>
+<span class="text-[10px] font-bold uppercase text-zinc-500">4 Break</span>
+</div>
+</div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="text-[10px] text-zinc-400 uppercase tracking-widest border-b border-zinc-100">
+<th class="pb-4 font-bold">Technician</th>
+<th class="pb-4 font-bold">Assigned Unit</th>
+<th class="pb-4 font-bold">Current Task</th>
+<th class="pb-4 font-bold">Efficiency</th>
+<th class="pb-4 font-bold text-right">Status</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-4 font-bold">Marcus Thorne</td>
+<td class="py-4 text-zinc-500 font-mono">VIN-2209-LX</td>
+<td class="py-4">Multipoint Inspect</td>
+<td class="py-4">
+<div class="w-24 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-[92%]"></div>
+</div>
+</td>
+<td class="py-4 text-right">
+<span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded">ACTIVE</span>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-4 font-bold">Sarah Jenkins</td>
+<td class="py-4 text-zinc-500 font-mono">VIN-4481-ZA</td>
+<td class="py-4">Software Update</td>
+<td class="py-4">
+<div class="w-24 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-[88%]"></div>
+</div>
+</td>
+<td class="py-4 text-right">
+<span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded">ACTIVE</span>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-4 font-bold">David Chen</td>
+<td class="py-4 text-zinc-500 font-mono">—</td>
+<td class="py-4 text-zinc-400">Rest Period</td>
+<td class="py-4 opacity-25">
+<div class="w-24 h-1.5 bg-zinc-100 rounded-full"></div>
+</td>
+<td class="py-4 text-right">
+<span class="px-2 py-1 bg-zinc-100 text-zinc-400 text-[10px] font-bold rounded uppercase">On Break</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Lower Section: Logistics Feed and Map Placeholder -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Recent Job Orders Feed -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<h3 class="text-sm font-black uppercase tracking-widest mb-6">Recent Job Orders</h3>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="mt-1 w-8 h-8 rounded bg-zinc-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-500 text-lg" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-bold">Storage Reassignment</p>
+<span class="text-[10px] text-zinc-400 font-medium">12m ago</span>
+</div>
+<p class="text-xs text-zinc-500 mt-1">Unit VIN-0021 moved from Zone A4 to Prep-Bay 2</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="mt-1 w-8 h-8 rounded bg-red-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="order_approve">order_approve</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-bold">Shipment Released</p>
+<span class="text-[10px] text-zinc-400 font-medium">45m ago</span>
+</div>
+<p class="text-xs text-zinc-500 mt-1">Manifest #MO-882 approved for 12 units (Central Hub)</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="mt-1 w-8 h-8 rounded bg-zinc-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-500 text-lg" data-icon="fact_check">fact_check</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<p class="text-sm font-bold">Inspection Completed</p>
+<span class="text-[10px] text-zinc-400 font-medium">1h ago</span>
+</div>
+<p class="text-xs text-zinc-500 mt-1">Technician Jenkins completed PDI for Range Rover Sport #662</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Logistics Map View -->
+<div class="col-span-12 lg:col-span-5 bg-zinc-900 rounded-xl relative overflow-hidden h-[340px]">
+<div class="absolute inset-0 bg-gradient-to-br from-zinc-800/80 to-zinc-950 p-8 flex flex-col justify-between z-10">
+<div>
+<h3 class="text-xs font-black uppercase tracking-[0.2em] text-zinc-500">Live Yard Visualizer</h3>
+<p class="text-white font-bold mt-1">North Logistics Hub</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase py-2 px-4 rounded border border-white/10">Full Screen View</button>
+<button class="bg-primary text-white text-[10px] font-bold uppercase py-2 px-4 rounded">Filters</button>
+</div>
+</div>
+<!-- Mock Map Image -->
+<img alt="Satellite view of logistics yard" class="absolute inset-0 w-full h-full object-cover opacity-30 grayscale" data-alt="Satellite map of automotive logistics yard" data-location="North Logistics Hub" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGSGpFrxIRCJFxtfYDI9zm61cmKD12OGvXffwxgm0nZWmfGX6yi5cV6IajQ7sorblj1uxJxkmeB_9CzNEq3WpTloLtPpCcDJBuFb3yxUa9tICj8tqa7TeUaWQ80HcWdhMqkaz9hgmHktlc2YjP5OabnoU4iFt9VIukc_FTLqBl6iPwnvFEVtCcHJsqV63xPa8kr02bVlLvx8QRbJfQAWQMwB3Fz75KFP3Ztjh71BgOMP_yob_H9uHklR67ADXWlr2K93XbJtPHiYE"/>
+<!-- Decorative Speed Lines / Data UI Overlay -->
+<div class="absolute top-1/2 left-1/4 w-2 h-2 bg-primary rounded-full shadow-[0_0_15px_#EB0A1D] z-20"></div>
+<div class="absolute top-1/3 right-1/3 w-2 h-2 bg-primary rounded-full shadow-[0_0_15px_#EB0A1D] z-20"></div>
+<div class="absolute bottom-1/4 right-1/4 w-2 h-2 bg-primary rounded-full shadow-[0_0_15px_#EB0A1D] z-20"></div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Technician Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#EB0A1D",
+                        "background": "#F8F5F6",
+                        "on-surface": "#1A1014",
+                        "secondary": "#6B7280",
+                        "inactive": "#9CA3AF",
+                        "border-alpha": "rgba(0,0,0,0.10)"
+                    },
+                    fontFamily: {
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'card': '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 22px;
+        }
+        .nav-icon-active {
+            font-variation-settings: 'FILL' 1;
+        }
+        .pulse-ring {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.2); }
+        }
+        body {
+            width: 390px;
+            margin: 0 auto;
+            background-color: #F8F5F6;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- TopAppBar: 56px height -->
+<header class="bg-white border-b border-border-alpha sticky top-0 z-50 h-[56px] flex items-center">
+<div class="flex justify-between items-center w-full px-4">
+<div class="flex items-center gap-3">
+<div class="w-[44px] h-[44px] rounded-full bg-primary flex items-center justify-center text-white font-bold text-[15px]">
+                JD
+            </div>
+<div class="flex flex-col">
+<h1 class="font-bold text-[18px] leading-tight text-on-surface">Good Morning, Juan</h1>
+<span class="text-[11px] font-medium text-secondary">Senior Technician</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-on-surface" style="font-size: 24px;">notifications</span>
+</button>
+</div>
+</header>
+<main class="px-4 pt-4 pb-24 space-y-4">
+<!-- Pipeline Visualization -->
+<section>
+<h2 class="text-[11px] font-bold uppercase tracking-[1.2px] text-primary mb-2">Current Fleet Velocity</h2>
+<div class="bg-white rounded-[14px] border border-border-alpha shadow-card p-[12px_14px]">
+<div class="flex justify-between items-center relative z-10">
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-secondary"></div>
+<span class="text-[9px] font-bold tracking-tighter">PORT</span>
+</div>
+<div class="h-px bg-zinc-200 flex-1 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-secondary"></div>
+<span class="text-[9px] font-bold tracking-tighter">RECV</span>
+</div>
+<div class="h-px bg-zinc-200 flex-1 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary relative">
+<div class="absolute inset-0 w-3 h-3 rounded-full bg-primary pulse-ring"></div>
+</div>
+<span class="text-[9px] font-bold tracking-tighter text-primary">PDI</span>
+</div>
+<div class="h-px bg-zinc-200 flex-1 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-zinc-200"></div>
+<span class="text-[9px] font-bold tracking-tighter text-secondary">STORE</span>
+</div>
+<div class="h-px bg-zinc-200 flex-1 mx-1"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-zinc-200"></div>
+<span class="text-[9px] font-bold tracking-tighter text-secondary">DONE</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 gap-2.5">
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex justify-between items-center">
+<p class="text-[11px] font-medium text-secondary uppercase tracking-wider">Total Assigned</p>
+<p class="text-[24px] font-bold text-on-surface">12</p>
+</div>
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex justify-between items-center">
+<p class="text-[11px] font-medium text-secondary uppercase tracking-wider">PDI Due Today</p>
+<p class="text-[24px] font-bold text-primary">03</p>
+</div>
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex justify-between items-center">
+<p class="text-[11px] font-medium text-secondary uppercase tracking-wider">Overdue Critical</p>
+<p class="text-[24px] font-bold text-primary">02</p>
+</div>
+</div>
+<!-- Scan VIN Button -->
+<button class="w-full bg-primary py-4 px-4 rounded-[10px] text-white flex items-center justify-center gap-3 active:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" style="font-size: 24px;">barcode_scanner</span>
+<span class="text-[15px] font-bold">SCAN VIN / ADD VEHICLE</span>
+</button>
+<!-- Resources -->
+<section>
+<h2 class="text-[11px] font-bold uppercase tracking-[1.2px] text-primary mb-2">Resources</h2>
+<div class="grid grid-cols-2 gap-2.5">
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex flex-col items-center gap-2 text-center">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">assignment</span>
+</div>
+<span class="font-bold text-[13px] text-on-surface">My Tasks</span>
+</div>
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex flex-col items-center gap-2 text-center">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">fact_check</span>
+</div>
+<span class="font-bold text-[13px] text-on-surface">Checklist</span>
+</div>
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex flex-col items-center gap-2 text-center">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">map</span>
+</div>
+<span class="font-bold text-[13px] text-on-surface">Stockyard Map</span>
+</div>
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex flex-col items-center gap-2 text-center">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<span class="font-bold text-[13px] text-on-surface">Reports</span>
+</div>
+</div>
+</section>
+<!-- Needs Attention -->
+<section>
+<h2 class="text-[11px] font-bold uppercase tracking-[1.2px] text-primary mb-2">Needs Attention</h2>
+<div class="space-y-2.5">
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div>
+<p class="text-[15px] font-bold text-on-surface">PDI Overdue: VIN 9823-LX</p>
+<p class="text-[11px] font-medium text-secondary">Bay 04 • High Priority</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-inactive">chevron_right</span>
+</div>
+<div class="bg-white p-[12px_14px] rounded-[14px] border border-border-alpha shadow-card flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-orange-400"></div>
+<div>
+<p class="text-[15px] font-bold text-on-surface">Buy-off Inspection: VIN 1104-GT</p>
+<p class="text-[11px] font-medium text-secondary">Zone B • Assigned 2h ago</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-inactive">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Recent Activity -->
+<section>
+<h2 class="text-[11px] font-bold uppercase tracking-[1.2px] text-primary mb-2">Recent Activity</h2>
+<div class="bg-white rounded-[14px] border border-border-alpha shadow-card p-[12px_14px] space-y-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-primary mt-2"></div>
+<div>
+<p class="text-[13px] font-medium text-on-surface">PDI Checklist Completed</p>
+<p class="text-[11px] text-secondary">VIN 4421-ZK • Bay 02</p>
+</div>
+</div>
+<span class="text-[11px] font-medium text-secondary uppercase">10 MIN</span>
+</div>
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-zinc-300 mt-2"></div>
+<div>
+<p class="text-[13px] font-medium text-on-surface">Vehicle Logged: RECV</p>
+<p class="text-[11px] text-secondary">VIN 3302-PP • Gate 4</p>
+</div>
+</div>
+<span class="text-[11px] font-medium text-secondary uppercase">45 MIN</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar: 64px height -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[390px] h-[64px] z-50 bg-white border-t border-border-alpha flex items-center shadow-[0_-1px_3px_rgba(0,0,0,0.06)]">
+<div class="flex justify-around items-center w-full px-2"><!-- HOME Tab -->
+<a class="flex flex-col items-center justify-center flex-1 text-primary" href="#">
+<span class="material-symbols-outlined nav-icon-active" style="font-size: 22px;">home</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">HOME</span>
+</a>
+<!-- INSPECT Tab -->
+<a class="flex flex-col items-center justify-center flex-1 text-inactive" href="#">
+<span class="material-symbols-outlined" style="font-size: 22px;">fact_check</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">INSPECT</span>
+</a>
+<!-- ARRIVE Tab (Center Button) -->
+<div class="flex-1 flex flex-col items-center justify-center -mt-8">
+<button class="w-[52px] h-[52px] bg-primary text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 30px; font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1 text-primary">ARRIVE</span>
+</div>
+<!-- STORAGE Tab -->
+<a class="flex flex-col items-center justify-center flex-1 text-inactive" href="#">
+<span class="material-symbols-outlined" style="font-size: 22px;">warehouse</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">STORAGE</span>
+</a>
+<!-- DELIVERY Tab -->
+<a class="flex flex-col items-center justify-center flex-1 text-inactive" href="#">
+<span class="material-symbols-outlined" style="font-size: 22px;">local_shipping</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">DELIVERY</span>
+</a></div>
+</nav>
+</body></html>

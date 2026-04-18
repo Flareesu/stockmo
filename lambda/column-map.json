@@ -1,0 +1,110 @@
+{
+  "vin": {
+    "dbColumn": "vin",
+    "aliases": ["VIN", "Vin", "vin", "CHASSIS", "Chassis", "chassis", "Plate Number", "plate_number"],
+    "required": true
+  },
+  "model": {
+    "dbColumn": "model",
+    "aliases": ["MODEL", "Model", "model", "Vehicle Model", "vehicle_model", "Car Model"],
+    "required": true
+  },
+  "variant": {
+    "dbColumn": "variant",
+    "aliases": ["VARIANT", "Variant", "variant", "Trim", "trim", "Grade"]
+  },
+  "exterior_color": {
+    "dbColumn": "exterior_color",
+    "aliases": ["Exterior COLOR", "Exterior Color", "Exterior", "Color", "color", "COLOR", "Colour", "colour", "COLOUR", "Paint", "paint"]
+  },
+  "interior_color": {
+    "dbColumn": "interior_color",
+    "aliases": ["Interior COLOR", "Interior Color", "Interior", "interior"]
+  },
+  "cs_number": {
+    "dbColumn": "cs_number",
+    "aliases": ["CS No.", "CS No", "CS Number", "cs_number", "CSNo"]
+  },
+  "engine_number": {
+    "dbColumn": "engine_number",
+    "aliases": ["ENGINE NUMBER", "Engine Number", "Engine No", "engine_number"]
+  },
+  "invoice_number": {
+    "dbColumn": "invoice_number",
+    "aliases": ["Invoice #", "Invoice No", "Invoice", "INVOICE", "invoice_number"]
+  },
+  "bl_number": {
+    "dbColumn": "bl_number",
+    "aliases": ["BL", "B/L", "Bill of Lading", "bl_number", "BL Number"]
+  },
+  "contract_no": {
+    "dbColumn": "contract_no",
+    "aliases": ["CONTRACT NO.", "Contract No", "Contract Number", "contract_no"]
+  },
+  "sales_status": {
+    "dbColumn": "sales_status",
+    "aliases": ["Sales Status", "sales_status", "Sale Status"]
+  },
+  "dealer_group": {
+    "dbColumn": "dealer_group",
+    "aliases": ["Dealer Group", "dealer_group", "DealerGroup"]
+  },
+  "region": {
+    "dbColumn": "region",
+    "aliases": ["Region", "region", "REGION"]
+  },
+  "fuel": {
+    "dbColumn": "fuel",
+    "aliases": ["Fuel", "fuel", "FUEL", "Fuel Type", "fuel_type", "Fuel_Type"],
+    "default": "Gasoline"
+  },
+  "lot": {
+    "dbColumn": "lot",
+    "aliases": ["Lot", "lot", "LOT", "Lot Number", "lot_number", "Parking", "parking", "Bay", "bay"]
+  },
+  "year": {
+    "dbColumn": "year",
+    "aliases": ["YEAR", "Year", "year", "Model Year", "model_year"],
+    "type": "int",
+    "default": 2025
+  },
+  "stage": {
+    "dbColumn": "stage",
+    "aliases": ["Inventory Status", "Stage", "stage", "STAGE", "Status", "status", "STATUS"],
+    "default": "port",
+    "stageMap": {
+      "in-transit": "port",
+      "in transit": "port",
+      "in stock": "stock",
+      "available": "stock",
+      "pdi": "pdi",
+      "hold": "hold",
+      "ready": "ready",
+      "released": "released",
+      "delivered": "released"
+    }
+  },
+  "arrival_date": {
+    "dbColumn": "arrival_date",
+    "aliases": ["Port Arrival", "Port Arrival Date", "Arrival Date", "arrival_date"],
+    "type": "excelDate"
+  },
+  "release_date": {
+    "dbColumn": "release_date",
+    "aliases": ["Actual Delivery Date", "Delivery Date", "release_date"],
+    "type": "excelDate"
+  },
+  "make": {
+    "dbColumn": "make",
+    "aliases": ["Make", "make", "MAKE", "Brand", "brand", "Manufacturer"],
+    "default": "GAC"
+  },
+  "dealer": {
+    "dbColumn": "dealer",
+    "aliases": ["Dealer", "dealer", "DEALER", "Dealer Name", "dealer_name"]
+  },
+  "notes": {
+    "dbColumn": "notes",
+    "aliases": ["Remarks", "remarks", "REMARKS", "Notes", "notes", "NOTES", "Comments", "comments"]
+  }
+}

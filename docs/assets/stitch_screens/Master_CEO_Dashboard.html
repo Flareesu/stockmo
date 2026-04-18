@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Executive Dashboard - StockMo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#e2e2e2",
+              "primary-container": "#eb0a1d",
+              "on-primary-fixed-variant": "#93000c",
+              "on-surface-variant": "#5e3f3b",
+              "on-surface": "#1a1c1c",
+              "on-primary-fixed": "#410002",
+              "on-error-container": "#93000a",
+              "on-error": "#ffffff",
+              "on-primary-container": "#fffeff",
+              "surface-bright": "#f9f9f9",
+              "outline": "#936e6a",
+              "inverse-surface": "#2f3131",
+              "secondary-fixed-dim": "#c8c6c6",
+              "secondary": "#5f5e5e",
+              "surface-tint": "#c00013",
+              "on-background": "#1a1c1c",
+              "surface-variant": "#e2e2e2",
+              "inverse-on-surface": "#f1f1f1",
+              "on-secondary-fixed": "#1b1c1c",
+              "secondary-fixed": "#e4e2e1",
+              "primary": "#bd0013",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#ffb4ab",
+              "on-primary": "#ffffff",
+              "surface-container-high": "#e8e8e8",
+              "surface": "#f9f9f9",
+              "primary-fixed-dim": "#ffb4ab",
+              "tertiary-container": "#0079c8",
+              "tertiary": "#0060a0",
+              "on-tertiary-fixed-variant": "#00497c",
+              "on-tertiary": "#ffffff",
+              "surface-container": "#eeeeee",
+              "on-secondary-fixed-variant": "#474747",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#9dcaff",
+              "secondary-container": "#e4e2e1",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#f3f3f3",
+              "on-tertiary-fixed": "#001d36",
+              "primary-fixed": "#ffdad6",
+              "background": "#f9f9f9",
+              "surface-dim": "#dadada",
+              "on-secondary-container": "#656464",
+              "on-tertiary-container": "#fffdff",
+              "tertiary-fixed": "#d1e4ff",
+              "outline-variant": "#e9bcb7"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F5F6;
+        }
+        .luxury-card {
+            border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.10);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            background-color: #FFFFFF;
+        }
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-stone-950/80 backdrop-blur-xl">
+<div class="flex justify-between items-center w-full px-4 h-16 max-w-[390px] mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high ring-1 ring-outline-variant/20">
+<img alt="CEO Profile" class="w-full h-full object-cover" data-alt="Professional portrait of a CEO wearing a suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvMWFAxyLPKDP1_zRHlhQZCfXvk4AhMfE5qm9CPSge71xLcZhLPMfjW4tNzLmWXVevOqmOaXzEP1FkBHRtvK766-zgypD6m8bFvOmdJx5A1ZnwMW4Ma8vRY2-Nc0UAf_p0e1LgD0VvULQ_KNOFO-dnoq4E-5RsBQEeU_cGja7S_4cVgxfdBwwFTGa9BFHwKQZd2Ine9kYUlnI6zaVhkjGzWoz99t29wka43gZ-DPit_XLl91CY7--VCKTJqiZDm4OQLCyz3r-A5iY"/>
+</div>
+<h1 class="text-lg font-black tracking-tighter text-stone-900 dark:text-stone-50 uppercase">EXECUTIVE DASHBOARD</h1>
+</div>
+<div class="flex items-center">
+<button class="p-2 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined text-stone-900 dark:text-stone-50" data-icon="notifications">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-[390px] mx-auto pt-20 pb-24 px-4 space-y-6">
+<!-- Operations Summary -->
+<section>
+<h2 class="text-[11px] font-[700] uppercase text-[#EB0A1D] tracking-widest mb-3 px-1">Operations Summary</h2>
+<div class="luxury-card p-5 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-[#EB0A1D]/5 rounded-full -mr-10 -mt-10 blur-2xl"></div>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-stone-500 text-xs font-semibold mb-1">Active Units in Network</p>
+<p class="text-[32px] font-[800] tracking-tighter text-stone-900 leading-none">478</p>
+</div>
+<div class="text-right">
+<p class="text-stone-500 text-xs font-semibold mb-1">Fleet Health</p>
+<div class="flex items-center justify-end gap-1">
+<span class="text-[32px] font-[800] tracking-tighter text-[#EB0A1D] leading-none">98%</span>
+<span class="material-symbols-outlined text-[#EB0A1D] text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+</div>
+<div class="mt-4 w-full bg-stone-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-[#EB0A1D] h-full w-[98%]"></div>
+</div>
+</div>
+</section>
+<!-- Critical Alerts -->
+<section>
+<h2 class="text-[11px] font-[700] uppercase text-[#EB0A1D] tracking-widest mb-3 px-1">Immediate Attention</h2>
+<div class="luxury-card bg-[#EB0A1D] border-none p-4 flex items-center justify-between text-white">
+<div class="flex items-center gap-3">
+<div class="bg-white/20 p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<p class="text-sm font-[800] leading-tight">3 Bottlenecks in Storage</p>
+<p class="text-[11px] opacity-80 font-semibold uppercase tracking-wider">1 Delayed Delivery</p>
+</div>
+</div>
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</div>
+</section>
+<!-- User Activity & Financials (Asymmetric Layout) -->
+<div class="grid grid-cols-2 gap-4">
+<!-- User Activity -->
+<section class="col-span-1">
+<h2 class="text-[11px] font-[700] uppercase text-[#EB0A1D] tracking-widest mb-3 px-1">Staffing</h2>
+<div class="luxury-card p-4 h-[140px] flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-stone-400 text-lg" data-icon="engineering">engineering</span>
+<span class="text-[15px] font-[800] text-stone-900">Users</span>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<span class="text-xs text-stone-500 font-semibold">Technicians</span>
+<span class="text-xs font-bold">42</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-xs text-stone-500 font-semibold">Admins</span>
+<span class="text-xs font-bold">12</span>
+</div>
+</div>
+</div>
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-stone-200"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-stone-300"></div>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-stone-400 flex items-center justify-center text-[8px] text-white font-bold">+51</div>
+</div>
+</div>
+</section>
+<!-- Financials -->
+<section class="col-span-1">
+<h2 class="text-[11px] font-[700] uppercase text-[#EB0A1D] tracking-widest mb-3 px-1">Revenue</h2>
+<div class="luxury-card p-4 h-[140px] flex flex-col justify-between bg-stone-900 text-white border-none">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-stone-400">MTD Volume</span>
+<p class="text-xl font-[800] tracking-tighter mt-1">$142.8k</p>
+</div>
+<div class="flex items-end gap-1 h-12">
+<div class="flex-1 bg-white/10 h-[30%] rounded-t-sm"></div>
+<div class="flex-1 bg-white/10 h-[50%] rounded-t-sm"></div>
+<div class="flex-1 bg-white/20 h-[45%] rounded-t-sm"></div>
+<div class="flex-1 bg-[#EB0A1D] h-[80%] rounded-t-sm"></div>
+<div class="flex-1 bg-white/40 h-[65%] rounded-t-sm"></div>
+</div>
+</div>
+</section>
+</div>
+<!-- Efficiency Metrics -->
+<section>
+<h2 class="text-[11px] font-[700] uppercase text-[#EB0A1D] tracking-widest mb-3 px-1">Efficiency Metrics</h2>
+<div class="grid grid-cols-3 gap-3">
+<div class="luxury-card p-3 text-center">
+<p class="text-[10px] text-stone-400 font-bold uppercase tracking-tight mb-1">Avg PDI</p>
+<p class="text-[15px] font-[800] text-stone-900">2.4<span class="text-[10px] ml-0.5">d</span></p>
+</div>
+<div class="luxury-card p-3 text-center">
+<p class="text-[10px] text-stone-400 font-bold uppercase tracking-tight mb-1">Success</p>
+<p class="text-[15px] font-[800] text-stone-900">99.2<span class="text-[10px] ml-0.5">%</span></p>
+</div>
+<div class="luxury-card p-3 text-center">
+<p class="text-[10px] text-stone-400 font-bold uppercase tracking-tight mb-1">Up-time</p>
+<p class="text-[15px] font-[800] text-stone-900">100<span class="text-[10px] ml-0.5">%</span></p>
+</div>
+</div>
+</section>
+<!-- Performance Map (Visual Filler for Premium Feel) -->
+<section>
+<h2 class="text-[11px] font-[700] uppercase text-[#EB0A1D] tracking-widest mb-3 px-1">Regional Density</h2>
+<div class="luxury-card h-32 w-full relative overflow-hidden grayscale contrast-125">
+<img alt="Logistics Map" class="w-full h-full object-cover" data-alt="Stylized map showing logistics routes and density" data-location="Chicago" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDWljPTTT2x0iJn2f9UJCpcElCHsZuEwr69bsCnb3aE2IewJHPEnkX88-cV_UXTZQCKtk5Dh8gyz66WsVFVw8ucb5vSTKqCny1xO9XURulLzELVSqz95eoZD1-a0KTMf3QTC5_W9_q8oRTFbT4BnqZQhs4X9Uz98nVxpGC6SEq3mo_E3Z9Xr8ZlYa2FWuN4V26i4dmrdskrovYzTkJdLyEA11soBIIIbaGOSFqtQzzPCVglccz9jGrX_Q5EajIHt-bFHAqnl4zack"/>
+<div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent"></div>
+<div class="absolute top-4 left-4 flex gap-1">
+<div class="w-2 h-2 rounded-full bg-[#EB0A1D] animate-pulse"></div>
+<div class="w-2 h-2 rounded-full bg-[#EB0A1D] opacity-40"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] flex justify-around items-center px-0 pb-safe bg-white/80 dark:bg-stone-950/80 backdrop-blur-xl z-50 border-t-[0.5px] border-stone-200/50 dark:border-stone-800/50 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<!-- Active Tab: OVERVIEW -->
+<a class="flex flex-col items-center justify-center text-red-700 dark:text-red-500 border-l-4 border-red-700 dark:border-red-600 bg-red-50/50 dark:bg-red-950/20 py-2 w-full active:scale-98 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-bold text-[10px] tracking-widest uppercase font-['Inter']">OVERVIEW</span>
+</a>
+<!-- Inactive Tab: USERS -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 py-2 w-full active:scale-98 transition-all duration-200 hover:text-stone-900 dark:hover:text-stone-100" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-bold text-[10px] tracking-widest uppercase font-['Inter']">USERS</span>
+</a>
+<!-- Inactive Tab: LOGISTICS -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 py-2 w-full active:scale-98 transition-all duration-200 hover:text-stone-900 dark:hover:text-stone-100" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-bold text-[10px] tracking-widest uppercase font-['Inter']">LOGISTICS</span>
+</a>
+<!-- Inactive Tab: ANALYTICS -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 py-2 w-full active:scale-98 transition-all duration-200 hover:text-stone-900 dark:hover:text-stone-100" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-bold text-[10px] tracking-widest uppercase font-['Inter']">ANALYTICS</span>
+</a>
+</nav>
+</body></html>

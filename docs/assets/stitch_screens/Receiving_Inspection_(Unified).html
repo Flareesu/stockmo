@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo - Receiving Inspection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#EB0A1D",
+                        "background": "#F8F5F6",
+                        "on-surface": "#1A1014",
+                        "secondary": "#6B7280",
+                        "border-alpha": "rgba(0,0,0,0.10)",
+                        "inactive": "#9CA3AF"
+                    },
+                    fontFamily: {
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'card': '0 1px 3px rgba(0,0,0,0.06)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 22px;
+        }
+        .nav-icon-active {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            width: 390px;
+            margin: 0 auto;
+            background-color: #F8F5F6;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-white border-b border-border-alpha flex items-center w-full px-4 h-[56px]">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="text-[18px] font-[800] leading-none text-on-surface">Receiving Inspection</h1>
+<span class="text-[11px] font-[500] text-secondary">NYK Warehouse · Incoming Units</span>
+</div>
+</div>
+<button class="ml-auto w-10 h-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface" data-icon="settings">settings</span>
+</button>
+</header>
+<main class="px-4 mt-4 space-y-4 pb-24">
+<!-- Incoming Batch Card -->
+<section>
+<div class="bg-white rounded-[14px] border border-border-alpha shadow-card p-[12px_14px]">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h2 class="text-[15px] font-[800]">BATCH #2026-03-019</h2>
+<p class="text-[11px] font-[500] text-secondary">Vessel: MV Pacific Star · Mar 23, 2026</p>
+</div>
+<span class="material-symbols-outlined text-secondary" data-icon="sailing">sailing</span>
+</div>
+<div>
+<div class="flex justify-between items-end mb-1.5">
+<p class="text-[11px] font-[500] text-secondary">8 Units · 3 inspected · 5 pending</p>
+<span class="text-[11px] font-[700] text-primary">37.5%</span>
+</div>
+<div class="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[37.5%] rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Vehicle Inspection Cards -->
+<section class="space-y-2.5">
+<h2 class="text-[11px] font-[700] uppercase text-primary mb-2">Vehicles to Inspect</h2>
+<!-- Card 1 (Completed) -->
+<div class="bg-white rounded-[14px] border border-border-alpha border-l-4 border-l-green-500 shadow-card p-[12px_14px]">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-[800] text-on-surface">SM-0055 · GS3 Emgrand</h3>
+<p class="text-[11px] font-[500] text-secondary">Pearl White · VIN: LGXCE1KL8RE...</p>
+</div>
+<span class="text-[9px] font-[700] text-green-600 bg-green-50 px-1.5 py-0.5 rounded uppercase border border-green-200">INSPECTED</span>
+</div>
+<div class="mt-3 flex items-center gap-4 text-[13px] font-[600]">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-green-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Engine</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-green-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Chassis</span>
+</div>
+</div>
+<div class="mt-3 flex justify-between items-center border-t border-zinc-100 pt-3">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 rounded-full bg-zinc-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="person">person</span>
+</div>
+<span class="text-[11px] font-[500] text-secondary">R. Santos</span>
+</div>
+<span class="text-[11px] font-[500] text-secondary">10:24 AM</span>
+</div>
+</div>
+<!-- Card 2 (In Progress) -->
+<div class="bg-white rounded-[14px] border border-border-alpha border-l-4 border-l-blue-500 shadow-card p-[12px_14px]">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-[800] text-on-surface">SM-0056 · Coolray Pro</h3>
+<p class="text-[11px] font-[500] text-secondary">Aurora Blue</p>
+</div>
+<span class="text-[9px] font-[700] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded uppercase border border-blue-200">IN PROGRESS</span>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-y-2">
+<div class="flex items-center gap-1.5 text-[11px] font-[600]">
+<span class="material-symbols-outlined text-[18px] text-green-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Exterior body</span>
+</div>
+<div class="flex items-center gap-1.5 text-[11px] font-[600]">
+<span class="material-symbols-outlined text-[18px] text-green-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Glass &amp; windsh.</span>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 text-[13px] font-[600] py-2.5 rounded-[10px] border border-border-alpha text-on-surface active:bg-zinc-50 transition-colors">ADD DAMAGE</button>
+<button class="flex-1 text-[13px] font-[600] py-2.5 rounded-[10px] bg-primary text-white active:opacity-90 transition-opacity">CONTINUE</button>
+</div>
+</div>
+<!-- Card 3 (Pending) -->
+<div class="bg-white rounded-[14px] border border-border-alpha border-l-4 border-l-zinc-300 shadow-card p-[12px_14px]">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-[800] text-on-surface">SM-0057 · MG5</h3>
+<p class="text-[11px] font-[500] text-secondary">Oxford White</p>
+</div>
+<span class="text-[9px] font-[700] text-secondary bg-zinc-50 px-1.5 py-0.5 rounded uppercase border border-zinc-200">PENDING</span>
+</div>
+<button class="w-full mt-3 text-[13px] font-[600] py-2.5 rounded-[10px] border border-primary text-primary active:bg-red-50 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="play_circle">play_circle</span>
+                    START INSPECTION
+                </button>
+</div>
+</section>
+<!-- Transport Damage Log -->
+<section>
+<h2 class="text-[11px] font-[700] uppercase text-primary mb-2">Transport Damage Log</h2>
+<div class="bg-white rounded-[14px] border border-border-alpha shadow-card p-[12px_14px]">
+<div class="flex gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-primary mt-1 flex-shrink-0"></div>
+<div class="space-y-1">
+<p class="text-[13px] font-[600] text-on-surface leading-snug">
+                            SM-0055 — Minor scratch on rear bumper found during transit
+                        </p>
+<p class="text-[11px] font-[500] text-secondary">ABC Logistics · GAC Checklist Reference</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[390px] h-[64px] z-50 bg-white border-t border-border-alpha flex items-center shadow-[0_-1px_3px_rgba(0,0,0,0.06)]">
+<div class="flex justify-around items-center w-full px-2">
+<a class="flex flex-col items-center justify-center flex-1 text-inactive" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[9px] font-[700] tracking-[0.6px] uppercase mt-1">HOME</span>
+</a>
+<a class="flex flex-col items-center justify-center flex-1 text-primary" href="#">
+<span class="material-symbols-outlined nav-icon-active">fact_check</span>
+<span class="text-[9px] font-[700] tracking-[0.6px] uppercase mt-1">INSPECT</span>
+</a>
+<div class="flex-1 flex justify-center -mt-8">
+<button class="w-[52px] h-[52px] bg-primary text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 30px; font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center flex-1 text-inactive" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="text-[9px] font-[700] tracking-[0.6px] uppercase mt-1">STORAGE</span>
+</a>
+<a class="flex flex-col items-center justify-center flex-1 text-inactive" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-[9px] font-[700] tracking-[0.6px] uppercase mt-1">DELIVERY</span>
+</a>
+</div>
+</nav>
+</body></html>

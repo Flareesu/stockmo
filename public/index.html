@@ -797,6 +797,88 @@
       </button>
     );
 
+    /* ─── SHARED MODAL + DIALOG MANAGER ─── */
+    // Base Modal: fixed backdrop, Esc-to-close, click-outside-to-close, body scroll lock.
+    // z-50 backdrop / z-60 panel / z-80 toast — keep this ladder consistent.
+    const Modal = ({ open, onClose, children, panelClassName = '', closeOnBackdrop = true, dismissable = true }) => {
+      React.useEffect(() => {
+        if (!open) return;
+        const onKey = (e) => { if (dismissable && e.key === 'Escape') onClose?.(); };
+        document.addEventListener('keydown', onKey);
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+      }, [open, onClose, dismissable]);
+      if (!open) return null;
+      return (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-end lg:items-center justify-center anim-fade-in"
+          role="dialog" aria-modal="true"
+          onClick={(e) => { if (closeOnBackdrop && dismissable && e.target === e.currentTarget) onClose?.(); }}
+        >
+          <div className={`relative bg-white w-full lg:max-w-md rounded-t-[20px] lg:rounded-[20px] shadow-card z-[60] ${panelClassName}`}>
+            {children}
+          </div>
+        </div>
+      );
+    };
+
+    // Imperative dialog API — replaces native alert()/confirm() which are unstyled on mobile
+    // and break the design system. Call pattern:
+    //   const ok = await stockmoDialog.confirm({ title, message, danger: true });
+    //   await stockmoDialog.alert({ title, message });
+    const stockmoDialog = (() => {
+      let nextId = 1;
+      const listeners = new Set();
+      const emit = (dialog) => listeners.forEach(fn => fn(dialog));
+      return {
+        _subscribe(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+        confirm({ title = 'Confirm', message = '', confirmLabel = 'OK', cancelLabel = 'Cancel', danger = false } = {}) {
+          return new Promise(resolve => {
+            emit({ id: nextId++, kind: 'confirm', title, message, confirmLabel, cancelLabel, danger, resolve });
+          });
+        },
+        alert({ title = 'Notice', message = '', confirmLabel = 'OK' } = {}) {
+          return new Promise(resolve => {
+            emit({ id: nextId++, kind: 'alert', title, message, confirmLabel, resolve });
+          });
+        },
+      };
+    })();
+    // Expose globally so any render path (including inline handlers in screens defined
+    // before App) can reach it without prop-drilling.
+    window.stockmoDialog = stockmoDialog;
+
+    const DialogHost = () => {
+      const [dialog, setDialog] = React.useState(null);
+      React.useEffect(() => stockmoDialog._subscribe(setDialog), []);
+      if (!dialog) return null;
+      const close = (value) => { dialog.resolve(value); setDialog(null); };
+      const isConfirm = dialog.kind === 'confirm';
+      return (
+        <Modal open onClose={() => close(false)}>
+          <div className="p-5">
+            <div className="text-[15px] font-black text-navy mb-1">{dialog.title}</div>
+            {dialog.message && <div className="text-[13px] text-muted leading-relaxed whitespace-pre-line">{dialog.message}</div>}
+            <div className="mt-5 flex gap-2 justify-end">
+              {isConfirm && (
+                <button
+                  onClick={() => close(false)}
+                  className="px-4 py-2 rounded-full text-[13px] font-bold text-navy hover:bg-gray-100 transition-colors">
+                  {dialog.cancelLabel}
+                </button>
+              )}
+              <button
+                onClick={() => close(true)}
+                className={`px-4 py-2 rounded-full text-[13px] font-bold text-white transition-colors ${dialog.danger ? 'bg-primary hover:bg-primary/90' : 'bg-navy hover:bg-navy/90'}`}>
+                {dialog.confirmLabel}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      );
+    };
+
     /* ─── ROLE / PERMISSION HELPERS ─── */
     const isAdminRole    = (role) => role === 'admin';
     const isEmployeeRole = (role) => role === 'employee';
@@ -1140,7 +1222,7 @@
                       <button key={v.id} onClick={() => onOpenDetail(v.id)}
                         className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
                         <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                          <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                          <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5">
@@ -1208,7 +1290,7 @@
                 <button key={v.id} onClick={() => onOpenDetail(v.id)}
                   className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
                   <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                    <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -1288,7 +1370,7 @@
                 <button key={v.id} onClick={() => onOpenDetail(v.id)}
                   className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
                   <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                    <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -1338,7 +1420,7 @@
                     <div key={v.id} className="bg-white rounded-[16px] shadow-card p-3">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-16 h-11 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                          <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                          <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                         </div>
                         <div className="flex-1">
                           <span className="text-[10px] font-black text-primary uppercase tracking-wider">{v.label || v.model}</span>
@@ -1370,7 +1452,7 @@
                     <button key={v.id} onClick={() => onOpenDetail(v.id)}
                       className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
                       <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                        <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                        <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
@@ -1661,7 +1743,13 @@
         setEditMode(false);
       };
       const handleDelete = async () => {
-        if (!confirm(`Delete ${v.label||v.model}? This cannot be undone.`)) return;
+        const ok = await stockmoDialog.confirm({
+          title: 'Delete vehicle?',
+          message: `${v.label || v.model} — this cannot be undone.`,
+          confirmLabel: 'Delete',
+          danger: true,
+        });
+        if (!ok) return;
         await sb.from('vehicles').delete().eq('id', v.id);
         if (onDeleteVehicle) onDeleteVehicle(v.id);
         onClose();
@@ -1843,7 +1931,7 @@
             checks[idx] = { ...checks[idx], image_url: url };
             return { ...car, [field]: checks };
           });
-        } catch (err) { console.error(err); alert('Photo upload failed: ' + (err.message || err)); }
+        } catch (err) { console.error(err); stockmoDialog.alert({ title: 'Photo upload failed', message: err.message || String(err) }); }
         e.target.value = '';
         setImgCheckInfo(null);
       };
@@ -1871,7 +1959,7 @@
             checks[idx] = { ...checks[idx], image_url: url };
             return { ...car, [field]: checks };
           });
-        } catch (err) { console.error(err); alert('Photo upload failed: ' + (err.message || err)); }
+        } catch (err) { console.error(err); stockmoDialog.alert({ title: 'Photo upload failed', message: err.message || String(err) }); }
         setImgCheckInfo(null);
       };
 
@@ -1957,7 +2045,7 @@
                                 })()}
                               </div>
                               {item.image_url && (
-                                <img src={item.image_url} alt="Evidence photo" className={`w-full max-h-36 object-cover rounded-lg border ${st === 'issue' ? 'border-red-200' : 'border-gray-200'}`} />
+                                <img loading="lazy" src={item.image_url} alt="Evidence photo" className={`w-full max-h-36 object-cover rounded-lg border ${st === 'issue' ? 'border-red-200' : 'border-gray-200'}`} />
                               )}
                             </div>
                           )}
@@ -1967,7 +2055,7 @@
                                 ? <div className="px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-[11px] text-red-700 italic">{item.note}</div>
                                 : <div className="flex items-center gap-1.5 px-2 py-1 text-[10px] text-red-500 font-bold"><Icon name="warning" fill className="text-[14px]" /> Issue flagged — no note added</div>
                               }
-                              {item.image_url && <img src={item.image_url} alt="Issue photo" className="w-full max-h-36 object-cover rounded-lg border border-red-200" />}
+                              {item.image_url && <img loading="lazy" src={item.image_url} alt="Issue photo" className="w-full max-h-36 object-cover rounded-lg border border-red-200" />}
                             </div>
                           )}
                         </div>
@@ -2070,7 +2158,7 @@
                       <div className="flex-1 min-w-0">
                         <div className="text-[11px] font-semibold text-navy">{c.name} <span className="text-[9px] font-bold bg-gray-100 text-muted px-1 rounded">{c._src}</span></div>
                         {c.note && <div className="text-[10px] text-red-600 italic mt-0.5">{c.note}</div>}
-                        {c.image_url && <img src={c.image_url} alt="" className="mt-1 w-full max-h-24 object-cover rounded-lg border border-red-200"/>}
+                        {c.image_url && <img loading="lazy" src={c.image_url} alt="" className="mt-1 w-full max-h-24 object-cover rounded-lg border border-red-200"/>}
                       </div>
                     </div>
                   ))}
@@ -2152,7 +2240,7 @@
               {/* Vehicle image + quick-info */}
               <div className="bg-white px-5 py-3 flex items-center gap-4 border-b border-gray-100 flex-shrink-0">
                 <div className="relative w-24 h-16 lg:w-28 lg:h-20 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0 group cursor-pointer" onClick={() => vehicleImgRef.current?.click()}>
-                  <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                  <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                   {uploading ? (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center"><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /></div>
                   ) : (
@@ -2452,42 +2540,49 @@
     /* ─── AdminDashboard ─── */
     function AdminDashboard({ navigate, vehicles, technicians, onNotificationClick, onAddVehicle, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role }) {
       const all = vehicles;
-      const pipeline = [
-        { label:'PORT',     count:all.filter(v => v.stage==='port').length,     color:'bg-orange-500' },
-        { label:'PDI',      count:all.filter(v => v.stage==='pdi').length,      color:'bg-green-500'  },
-        { label:'HOLD',     count:all.filter(v => v.stage==='hold').length,     color:'bg-red-500'    },
-        { label:'STOCK',    count:all.filter(v => v.stage==='stock').length,    color:'bg-blue-500'   },
-        { label:'READY',    count:all.filter(v => v.stage==='ready').length,    color:'bg-purple-500' },
-        { label:'RELEASED', count:all.filter(v => v.stage==='released').length, color:'bg-emerald-500'},
-      ];
-      const holdVehicles = all.filter(v => v.stage === 'hold').map(v => {
-        const issues = [
-          ...(v.pdiChecks  || []).filter(c => c.state === 'issue').map(c => ({ ...c, _src: 'PDI'   })),
-          ...(v.finalChecks || []).filter(c => c.state === 'issue').map(c => ({ ...c, _src: 'Final' })),
-        ];
-        const holdEntry = (v.historyRaw || []).find(h => h.stage_to === 'hold');
-        const daysHeld  = holdEntry
-          ? Math.floor((Date.now() - new Date(holdEntry.created_at).getTime()) / 86400000)
-          : null;
-        return { ...v, issues, daysHeld };
-      });
-      const recent = [];
-      all.forEach(v => v.history.slice(0, 2).forEach(h => recent.push({ vid: v.label || v.model, text:h })));
-      recent.sort((a, b) => b.text.localeCompare(a.text));
-
-      // Group active (non-released) vehicles by model for the pipeline breakdown
-      const modelsInPipeline = (() => {
+      const { pipeline, holdVehicles, recent, modelsInPipeline } = React.useMemo(() => {
+        const counts = { port: 0, pdi: 0, hold: 0, stock: 0, ready: 0, released: 0 };
+        const holds = [];
+        const recentList = [];
         const STAGES = ['port','pdi','hold','stock','ready'];
         const STAGE_COLOR = { port:'bg-amber-500', pdi:'bg-green-500', hold:'bg-red-500', stock:'bg-blue-500', ready:'bg-purple-500' };
-        const map = {};
-        all.filter(v => STAGES.includes(v.stage)).forEach(v => {
-          const key = (v.model || 'Unknown') + (v.variant ? ` · ${v.variant}` : '');
-          if (!map[key]) map[key] = { name: key, total: 0, byStage: {} };
-          map[key].total += 1;
-          map[key].byStage[v.stage] = (map[key].byStage[v.stage] || 0) + 1;
+        const modelMap = {};
+        all.forEach(v => {
+          if (counts[v.stage] !== undefined) counts[v.stage] += 1;
+          if (v.stage === 'hold') {
+            const issues = [
+              ...(v.pdiChecks  || []).filter(c => c.state === 'issue').map(c => ({ ...c, _src: 'PDI'   })),
+              ...(v.finalChecks || []).filter(c => c.state === 'issue').map(c => ({ ...c, _src: 'Final' })),
+            ];
+            const holdEntry = (v.historyRaw || []).find(h => h.stage_to === 'hold');
+            const daysHeld  = holdEntry
+              ? Math.floor((Date.now() - new Date(holdEntry.created_at).getTime()) / 86400000)
+              : null;
+            holds.push({ ...v, issues, daysHeld });
+          }
+          if (STAGES.includes(v.stage)) {
+            const key = (v.model || 'Unknown') + (v.variant ? ` · ${v.variant}` : '');
+            if (!modelMap[key]) modelMap[key] = { name: key, total: 0, byStage: {} };
+            modelMap[key].total += 1;
+            modelMap[key].byStage[v.stage] = (modelMap[key].byStage[v.stage] || 0) + 1;
+          }
+          v.history.slice(0, 2).forEach(h => recentList.push({ vid: v.label || v.model, text: h }));
         });
-        return { rows: Object.values(map).sort((a,b) => b.total - a.total), stages: STAGES, colors: STAGE_COLOR };
-      })();
+        recentList.sort((a, b) => b.text.localeCompare(a.text));
+        return {
+          pipeline: [
+            { label:'PORT',     count: counts.port,     color:'bg-orange-500'  },
+            { label:'PDI',      count: counts.pdi,      color:'bg-green-500'   },
+            { label:'HOLD',     count: counts.hold,     color:'bg-red-500'     },
+            { label:'STOCK',    count: counts.stock,    color:'bg-blue-500'    },
+            { label:'READY',    count: counts.ready,    color:'bg-purple-500'  },
+            { label:'RELEASED', count: counts.released, color:'bg-emerald-500' },
+          ],
+          holdVehicles: holds,
+          recent: recentList,
+          modelsInPipeline: { rows: Object.values(modelMap).sort((a,b) => b.total - a.total), stages: STAGES, colors: STAGE_COLOR },
+        };
+      }, [all]);
 
       return (
         <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
@@ -2617,7 +2712,7 @@
                         className="w-full bg-red-50 border border-red-200 rounded-[16px] p-3 text-left hover:brightness-95 transition-all">
                         <div className="flex items-center gap-3 mb-2">
                           {hv.img
-                            ? <img src={hv.img} className="w-10 h-10 rounded-xl object-cover flex-shrink-0 border border-red-200" />
+                            ? <img loading="lazy" src={hv.img} className="w-10 h-10 rounded-xl object-cover flex-shrink-0 border border-red-200" />
                             : <div className="w-10 h-10 rounded-xl bg-red-100 flex-shrink-0 flex items-center justify-center">
                                 <Icon name="directions_car" fill className="text-red-400 text-[20px]" />
                               </div>
@@ -3062,7 +3157,7 @@
                   <button key={vehicle.id} onClick={() => onOpenDetail(vehicle.id)}
                     className="w-full bg-white rounded-[16px] shadow-card p-3 flex items-center gap-3 text-left hover:shadow-card-hover active:scale-[0.99] transition-all">
                     <div className="w-20 h-14 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex-shrink-0">
-                      <img src={vehicle.img} alt={vehicle.model} className="w-full h-full object-contain p-1" />
+                      <img loading="lazy" src={vehicle.img} alt={vehicle.model} className="w-full h-full object-contain p-1" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 mb-0.5">
@@ -3140,10 +3235,13 @@
       React.useEffect(() => {
         if (teamTab !== 'employees') return;
         setLoadingEmps(true);
-        sb.from('user_profiles').select('*').eq('role', 'employee').then(({ data }) => {
-          setEmployees(data || []);
-          setLoadingEmps(false);
-        });
+        sb.from('user_profiles').select('*').eq('role', 'employee')
+          .then(({ data, error }) => {
+            if (error) console.error('load employees', error);
+            setEmployees(data || []);
+            setLoadingEmps(false);
+          })
+          .catch((err) => { console.error('load employees', err); setLoadingEmps(false); });
       }, [teamTab]);
 
       const togglePerm = async (emp, key) => {
@@ -3470,7 +3568,7 @@
                                       ${isThisTech
                                         ? 'bg-primary/10 border border-primary/30'
                                         : 'bg-gray-50 hover:bg-gray-100 border border-transparent'}`}>
-                                    <img src={v.img} alt="" className="w-12 h-8 object-cover rounded-lg flex-shrink-0" />
+                                    <img loading="lazy" src={v.img} alt="" className="w-12 h-8 object-cover rounded-lg flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
                                       <div className="text-[12px] font-black text-navy truncate">{v.label || v.model}</div>
                                       <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
@@ -3580,7 +3678,7 @@
       URL.revokeObjectURL(a.href);
     };
     const exportToXLSX = (rows, filename) => {
-      if (typeof XLSX === 'undefined') { alert('Excel library not loaded yet. Try again.'); return; }
+      if (typeof XLSX === 'undefined') { stockmoDialog.alert({ title: 'Not ready', message: 'Excel library not loaded yet. Try again.' }); return; }
       const ws = XLSX.utils.json_to_sheet(rows.map(v => ({
         'Vehicle':      v.label||v.model,
         'VIN':          v.vin||'',
@@ -3886,7 +3984,7 @@
                       {/* Header row */}
                       <div className="flex items-center gap-3 p-4 border-b border-gray-100">
                         <div className="w-16 h-12 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0">
-                          <img src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
+                          <img loading="lazy" src={v.img} alt={v.model} className="w-full h-full object-contain p-1" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -3910,7 +4008,7 @@
                                   <span className="text-[12px] text-navy font-semibold">{c.name}</span>
                                   {c.priority && <span className="ml-2 text-[9px] font-bold uppercase text-muted">{c.priority}</span>}
                                   {c.note && <div className="text-[11px] text-muted italic mt-0.5">{c.note}</div>}
-                                  {c.image_url && <img src={c.image_url} alt="Issue" className="mt-1 w-full max-h-28 object-cover rounded-lg border border-red-200" />}
+                                  {c.image_url && <img loading="lazy" src={c.image_url} alt="Issue" className="mt-1 w-full max-h-28 object-cover rounded-lg border border-red-200" />}
                                 </div>
                               </div>
                             ))}
@@ -4299,9 +4397,12 @@
       const [saving, setSaving] = useState(false);
 
       useEffect(() => {
-        sb.from('pipeline_stages').select('*').order('ord').then(({ data }) => {
-          setStages(data || []); setLoading(false);
-        });
+        sb.from('pipeline_stages').select('*').order('ord')
+          .then(({ data, error }) => {
+            if (error) console.error('load pipeline_stages', error);
+            setStages(data || []); setLoading(false);
+          })
+          .catch((err) => { console.error('load pipeline_stages', err); setLoading(false); });
       }, []);
 
       const startEdit = (s) => { setEditId(s.id); setEditName(s.name); setEditColor(s.color || '#6b7280'); };
@@ -4325,7 +4426,13 @@
       };
 
       const deleteStage = async (id) => {
-        if (!confirm('Delete this stage? Vehicles in this stage will need reassignment.')) return;
+        const ok = await stockmoDialog.confirm({
+          title: 'Delete stage?',
+          message: 'Vehicles in this stage will need reassignment.',
+          confirmLabel: 'Delete',
+          danger: true,
+        });
+        if (!ok) return;
         await sb.from('pipeline_stages').delete().eq('id', id);
         setStages(prev => prev.filter(s => s.id !== id));
       };
@@ -4451,7 +4558,13 @@
       };
 
       const deleteItem = async (item) => {
-        if (!confirm(`Delete "${item.name}"?`)) return;
+        const ok = await stockmoDialog.confirm({
+          title: 'Delete item?',
+          message: `"${item.name}" will be removed.`,
+          confirmLabel: 'Delete',
+          danger: true,
+        });
+        if (!ok) return;
         await sb.from(table).delete().eq('id', item.id);
         setItems(prev => prev.filter(i => i.id !== item.id));
       };
@@ -4618,11 +4731,13 @@
       const [editColorInput, setEditColorInput] = useState('');
 
       useEffect(() => {
-        sb.from('vehicle_models').select('*').order('name').then(({ data }) => {
-          const dbModels = data || [];
-          const merged = dbModels.length > 0 ? dbModels : [];
-          setModels(merged); setLoading(false);
-        });
+        sb.from('vehicle_models').select('*').order('name')
+          .then(({ data, error }) => {
+            if (error) console.error('load vehicle_models', error);
+            const dbModels = data || [];
+            setModels(dbModels); setLoading(false);
+          })
+          .catch((err) => { console.error('load vehicle_models', err); setLoading(false); });
       }, []);
 
       /* ── new model form helpers ── */
@@ -4651,7 +4766,13 @@
       };
 
       const deleteModel = async (id) => {
-        if (!confirm('Remove this model?')) return;
+        const ok = await stockmoDialog.confirm({
+          title: 'Remove model?',
+          message: 'This will remove the model from the catalog.',
+          confirmLabel: 'Remove',
+          danger: true,
+        });
+        if (!ok) return;
         await sb.from('vehicle_models').delete().eq('id', id);
         setModels(prev => prev.filter(m => m.id !== id));
       };
@@ -4821,13 +4942,16 @@
       const [saving, setSaving] = useState(false);
 
       useEffect(() => {
-        sb.from('vehicle_models').select('*').order('name').then(({ data }) => {
-          const dbModels = (data || []).length > 0 ? data : [];
-          setModels(dbModels);
-          const firstColors = dbModels[0]?.color_options || [];
-          setColor(firstColors[0] || '');
-          setLoadingModels(false);
-        });
+        sb.from('vehicle_models').select('*').order('name')
+          .then(({ data, error }) => {
+            if (error) console.error('load vehicle_models', error);
+            const dbModels = (data || []).length > 0 ? data : [];
+            setModels(dbModels);
+            const firstColors = dbModels[0]?.color_options || [];
+            setColor(firstColors[0] || '');
+            setLoadingModels(false);
+          })
+          .catch((err) => { console.error('load vehicle_models', err); setLoadingModels(false); });
       }, []);
 
       const gm = models[selIdx] || {};
@@ -4971,12 +5095,15 @@
       const parseSheet = (ws) => {
         try {
           const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-          if (raw.length < 2) { alert('Sheet appears empty or has no data rows.'); return; }
+          if (raw.length < 2) { stockmoDialog.alert({ title: 'Empty sheet', message: 'This sheet has no data rows.' }); return; }
           const headers = raw[0].map(h => String(h).trim());
             const ci = {};
             for (const k of Object.keys(ALIASES)) ci[k] = findCol(headers, k);
             if (ci.vin < 0 || ci.model < 0) {
-              alert('Could not detect a VIN column or Model column.\n\nMake sure row 1 has headers named "VIN" and "Model".');
+              stockmoDialog.alert({
+                title: 'Missing columns',
+                message: 'Could not detect a VIN column or Model column.\nMake sure row 1 has headers named "VIN" and "Model".',
+              });
               return;
             }
 
@@ -5036,22 +5163,23 @@
               });
             }
           setRows(valid); setSkipped(skip); setStep('preview');
-        } catch (err) { alert('Failed to parse sheet: ' + err.message); }
+        } catch (err) { stockmoDialog.alert({ title: 'Parse failed', message: 'Failed to parse sheet: ' + err.message }); }
       };
 
       const parseFile = (file) => {
         if (!file) return;
-        if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { alert('Please upload an .xlsx, .xls, or .csv file.'); return; }
-        if (file.size > 10 * 1024 * 1024) { alert('File is too large. Maximum size is 10 MB.'); return; }
+        if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { stockmoDialog.alert({ title: 'Wrong file type', message: 'Please upload an .xlsx, .xls, or .csv file.' }); return; }
+        if (file.size > 10 * 1024 * 1024) { stockmoDialog.alert({ title: 'File too large', message: 'Maximum size is 10 MB.' }); return; }
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
             const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-            if (!wb.SheetNames.length) { alert('No sheets found in workbook.'); return; }
+            if (!wb.SheetNames.length) { stockmoDialog.alert({ title: 'Empty workbook', message: 'No sheets found in workbook.' }); return; }
             if (wb.SheetNames.length === 1) {
               parseSheet(wb.Sheets[wb.SheetNames[0]]);
               return;
             }
+            // Multiple sheets — build options with VIN counts
             const opts = wb.SheetNames.map(name => {
               const ws = wb.Sheets[name];
               const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
@@ -5067,12 +5195,13 @@
               }
               return { name, rows: raw.length - 1, vinCount };
             });
+            // Default-select sheet with most VINs (fallback: most rows)
             const best = [...opts].sort((a, b) => (b.vinCount - a.vinCount) || (b.rows - a.rows))[0];
             setWorkbook(wb);
             setSheetOptions(opts);
             setSelectedSheet(best?.name || wb.SheetNames[0]);
             setStep('sheet');
-          } catch (err) { alert('Failed to parse file: ' + err.message); }
+          } catch (err) { stockmoDialog.alert({ title: 'Parse failed', message: 'Failed to parse file: ' + err.message }); }
         };
         reader.readAsArrayBuffer(file);
       };
@@ -5088,7 +5217,7 @@
           const count = await onBulkAdd(rows, p => setProgress(p));
           setImported(count); setStep('done');
         } catch (err) {
-          alert('Import failed: ' + (err.message || String(err)));
+          stockmoDialog.alert({ title: 'Import failed', message: err.message || String(err) });
           setStep('preview');
         }
       };
@@ -5358,7 +5487,12 @@
       const [notifications,  setNotifications]    = useState([]);
       const [detailVehicleId,setDetailVehicleId]  = useState(null);
       const [toast,          setToast]            = useState('');
-      const [lang,           setLang]             = useState('en');
+      const [lang,           setLang]             = useState(() => {
+        try { return localStorage.getItem('stockmo_lang') || 'en'; } catch { return 'en'; }
+      });
+      React.useEffect(() => {
+        try { localStorage.setItem('stockmo_lang', lang); } catch {}
+      }, [lang]);
       const [dataReady,      setDataReady]        = useState(false);
 
       const t = (key, vars) => {
@@ -5387,7 +5521,8 @@
       const loadVehicles = async () => {
         const { data, error } = await sb.from('vehicles')
           .select(VEHICLE_Q)
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(10000);
         if (error) { console.error('loadVehicles', error); return; }
         const transformed = (data || []).map(transformVehicle);
         setVehicles(transformed);
@@ -6110,10 +6245,11 @@
             />
           )}
           {toast && (
-            <div className="fixed bottom-20 lg:bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white px-5 py-2.5 rounded-full text-[12px] font-bold shadow-lg z-[60] anim-slide-up whitespace-nowrap">
+            <div className="fixed bottom-20 lg:bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white px-5 py-2.5 rounded-full text-[12px] font-bold shadow-lg z-[80] anim-slide-up whitespace-nowrap">
               {toast}
             </div>
           )}
+          <DialogHost />
         </div>
       );
     }

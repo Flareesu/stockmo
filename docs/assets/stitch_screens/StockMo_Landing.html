@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo | Premium Automotive Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-fixed": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "inverse-primary": "#ffb4ab",
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-primary": "#ffffff",
+              "secondary": "#5f5e5e",
+              "error-container": "#ffdad6",
+              "inverse-on-surface": "#f1f1f1",
+              "surface-container-low": "#f3f3f3",
+              "tertiary": "#0060a0",
+              "surface-container": "#eeeeee",
+              "on-error-container": "#93000a",
+              "on-primary-fixed-variant": "#93000c",
+              "surface-container-high": "#e8e8e8",
+              "on-tertiary-fixed-variant": "#00497c",
+              "surface-variant": "#e2e2e2",
+              "on-surface-variant": "#5e3f3b",
+              "primary-container": "#eb0a1d",
+              "surface": "#f9f9f9",
+              "outline": "#936e6a",
+              "outline-variant": "#e9bcb7",
+              "on-tertiary-fixed": "#001d36",
+              "on-secondary-fixed": "#1b1c1c",
+              "error": "#ba1a1a",
+              "secondary-fixed": "#e4e2e1",
+              "on-tertiary-container": "#fffdff",
+              "primary-fixed-dim": "#ffb4ab",
+              "on-secondary": "#ffffff",
+              "on-secondary-container": "#656464",
+              "on-secondary-fixed-variant": "#474747",
+              "secondary-container": "#e4e2e1",
+              "surface-container-lowest": "#ffffff",
+              "on-surface": "#1a1c1c",
+              "tertiary-container": "#0079c8",
+              "on-error": "#ffffff",
+              "surface-container-highest": "#e2e2e2",
+              "surface-bright": "#f9f9f9",
+              "background": "#f9f9f9",
+              "on-primary-fixed": "#410002",
+              "surface-dim": "#dadada",
+              "tertiary-fixed-dim": "#9dcaff",
+              "on-primary-container": "#fffeff",
+              "on-background": "#1a1c1c",
+              "primary": "#bd0013",
+              "tertiary-fixed": "#d1e4ff",
+              "surface-tint": "#c00013",
+              "inverse-surface": "#2f3131"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-role-card {
+            background-color: rgba(189, 0, 19, 0.05);
+        }
+        .active-role-indicator {
+            height: 4px;
+            background-color: #bd0013;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest font-body text-on-surface antialiased">
+<!-- Top Navigation Anchor (Suppressed for focused landing but using logic for brand) -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl flex items-center justify-between px-6 py-8">
+<div class="flex flex-col items-center mx-auto">
+<div class="relative mb-2">
+<!-- GAC Logo Arcs Representation -->
+<div class="flex items-center justify-center space-x-1">
+<div class="w-8 h-1 bg-primary rounded-full rotate-[-45deg] translate-y-2"></div>
+<span class="text-2xl font-black tracking-tighter text-on-surface">StockMo</span>
+<div class="w-8 h-1 bg-primary rounded-full rotate-[45deg] translate-y-2"></div>
+</div>
+</div>
+<span class="font-label text-[10px] font-bold tracking-[0.2em] text-secondary uppercase">INVENTORY CONTROL</span>
+</div>
+</header>
+<main class="min-h-screen flex flex-col px-8 pt-40 pb-32 max-w-md mx-auto">
+<!-- Hero Section -->
+<section class="mb-12">
+<h1 class="font-headline text-5xl font-extrabold tracking-tighter text-on-surface mb-2">Welcome.</h1>
+<p class="text-secondary font-body text-lg leading-relaxed">Please select your role to proceed.</p>
+</section>
+<!-- Role Selection Grid -->
+<div class="grid grid-cols-1 gap-6 mb-12">
+<!-- Technician Card -->
+<button class="relative group flex flex-col items-start p-8 bg-surface-container-low rounded-xl text-left transition-all duration-300 active:scale-[0.98] overflow-hidden">
+<div class="flex space-x-4 mb-6 text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="car_repair">car_repair</span>
+<span class="material-symbols-outlined text-3xl" data-icon="build">build</span>
+<span class="material-symbols-outlined text-3xl" data-icon="local_shipping">local_shipping</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-1">Technician</h3>
+<p class="text-sm text-secondary leading-tight">PDI, Maintenance, and Delivery Operations</p>
+<!-- Bottom Indicator Line (Active State Simulation) -->
+<div class="absolute bottom-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+</button>
+<!-- Administrator Card -->
+<button class="relative group flex flex-col items-start p-8 bg-surface-container-low rounded-xl text-left transition-all duration-300 active:scale-[0.98] overflow-hidden">
+<div class="flex space-x-4 mb-6 text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="fleet_management">network_manage</span>
+<span class="material-symbols-outlined text-3xl" data-icon="assignment">assignment</span>
+<span class="material-symbols-outlined text-3xl" data-icon="analytics">analytics</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-1">Administrator</h3>
+<p class="text-sm text-secondary leading-tight">Fleet, Assignments, and Performance Reports</p>
+<!-- Bottom Indicator Line -->
+<div class="absolute bottom-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+</button>
+</div>
+<!-- Action Area -->
+<div class="mt-auto">
+<button class="w-full bg-primary-container text-on-primary font-headline font-bold py-5 rounded-md tracking-widest text-sm hover:bg-primary transition-colors shadow-xl shadow-primary/10 active:scale-95 duration-200">
+                GET STARTED
+            </button>
+<footer class="mt-8 text-center">
+<a class="text-xs font-label tracking-widest text-secondary uppercase hover:text-primary transition-colors" href="#">
+                    Need assistance? <span class="text-on-surface font-bold">Contact support</span>
+</a>
+</footer>
+</div>
+</main>
+<!-- Decorative Background Element -->
+<div class="fixed top-0 right-0 -z-10 opacity-5 pointer-events-none">
+<svg fill="none" height="600" viewbox="0 0 400 600" width="400" xmlns="http://www.w3.org/2000/svg">
+<path d="M400 0L0 600H400V0Z" fill="url(#paint0_linear)"></path>
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="paint0_linear" x1="400" x2="200" y1="0" y2="300">
+<stop stop-color="#BD0013"></stop>
+<stop offset="1" stop-color="white" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</body></html>

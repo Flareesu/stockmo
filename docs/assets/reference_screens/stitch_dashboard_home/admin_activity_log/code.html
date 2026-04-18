@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>StockMo Admin - Activity Log</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 justify-between">
+<div class="flex items-center gap-3">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Activity Log</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">filter_list</span>
+</button>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">download</span>
+</button>
+</div>
+</header>
+<!-- Search & Quick Filters -->
+<div class="bg-white dark:bg-slate-900 px-4 pb-4 pt-2 shadow-sm border-b border-slate-200 dark:border-slate-800">
+<div class="mb-4">
+<label class="flex items-center h-12 w-full bg-slate-100 dark:bg-slate-800 rounded-xl px-4 border border-transparent focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-slate-400 mr-2">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400" placeholder="Search VIN, user, or action type..." type="text"/>
+</label>
+</div>
+<div class="flex gap-2 overflow-x-auto no-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-primary text-white px-4 text-sm font-medium">
+                    All
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Vehicle Arrival
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    PDI Status
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Assignments
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Stage Change
+                </button>
+</div>
+</div>
+<!-- Main Content: Activity Feed -->
+<main class="flex-1 overflow-y-auto px-4 py-6 bg-white dark:bg-slate-900">
+<!-- Date Group -->
+<div class="mb-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">Today</h3>
+<div class="space-y-0">
+<!-- Entry 1 -->
+<div class="relative grid grid-cols-[48px_1fr] group">
+<div class="flex flex-col items-center">
+<div class="z-10 flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-xl">local_shipping</span>
+</div>
+<div class="h-full w-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="pb-8 pt-1 pl-2">
+<div class="flex items-center justify-between mb-1">
+<p class="font-bold text-slate-900 dark:text-slate-100">New Vehicle Arrival: VIN 7892</p>
+<span class="text-xs text-slate-400">10:45 AM</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Toyota Camry (Black) registered into inventory.</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-xs font-medium text-slate-500">Admin Sarah Jenkins</span>
+</div>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="relative grid grid-cols-[48px_1fr] group">
+<div class="flex flex-col items-center">
+<div class="z-10 flex size-8 items-center justify-center rounded-full bg-green-100 text-green-600">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</div>
+<div class="h-full w-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="pb-8 pt-1 pl-2">
+<div class="flex items-center justify-between mb-1">
+<p class="font-bold text-slate-900 dark:text-slate-100">PDI Pass: Honda Civic 2024</p>
+<span class="text-xs text-slate-400">09:30 AM</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Pre-Delivery Inspection completed. All checks cleared.</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="size-6 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-primary text-xs">robot_2</span>
+</div>
+<span class="text-xs font-medium text-slate-500">System (Automated Task)</span>
+</div>
+</div>
+</div>
+<!-- Entry 3 -->
+<div class="relative grid grid-cols-[48px_1fr] group">
+<div class="flex flex-col items-center">
+<div class="z-10 flex size-8 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+<span class="material-symbols-outlined text-xl">sync_alt</span>
+</div>
+<div class="h-full w-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="pb-8 pt-1 pl-2">
+<div class="flex items-center justify-between mb-1">
+<p class="font-bold text-slate-900 dark:text-slate-100">Stage Change: Prep → Inspection</p>
+<span class="text-xs text-slate-400">08:15 AM</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">VIN 4421 moved to Inspection workflow.</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-xs text-slate-500">person</span>
+</div>
+<span class="text-xs font-medium text-slate-500">Manager Mike Ross</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Yesterday Group -->
+<div class="mb-8">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">Yesterday</h3>
+<div class="space-y-0">
+<!-- Entry 4 -->
+<div class="relative grid grid-cols-[48px_1fr] group">
+<div class="flex flex-col items-center">
+<div class="z-10 flex size-8 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+<span class="material-symbols-outlined text-xl">assignment_ind</span>
+</div>
+<div class="h-full w-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="pb-8 pt-1 pl-2">
+<div class="flex items-center justify-between mb-1">
+<p class="font-bold text-slate-900 dark:text-slate-100">Technician Assigned: John Doe</p>
+<span class="text-xs text-slate-400">04:50 PM</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Assigned to Detailed Wash &amp; Interior Prep for VIN 9901.</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+<span class="text-xs font-medium text-slate-500">Admin Sarah Jenkins</span>
+</div>
+</div>
+</div>
+<!-- Entry 5 -->
+<div class="relative grid grid-cols-[48px_1fr] group">
+<div class="flex flex-col items-center">
+<div class="z-10 flex size-8 items-center justify-center rounded-full bg-red-100 text-red-600">
+<span class="material-symbols-outlined text-xl">cancel</span>
+</div>
+<div class="h-full w-px bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="pb-8 pt-1 pl-2">
+<div class="flex items-center justify-between mb-1">
+<p class="font-bold text-slate-900 dark:text-slate-100">PDI Fail: Ford Explorer</p>
+<span class="text-xs text-slate-400">02:15 PM</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Failed check: Exterior paint defect on rear bumper.</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="size-6 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-primary text-xs">robot_2</span>
+</div>
+<span class="text-xs font-medium text-slate-500">System</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Loading More -->
+<div class="flex justify-center pb-8">
+<button class="flex items-center gap-2 text-primary font-bold text-sm hover:underline">
+<span>Load older activity</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 z-20 flex items-center justify-around bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 pb-6 pt-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium leading-none">Dashboard</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium leading-none">Inventory</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">history</span>
+<span class="text-[10px] font-medium leading-none">Activity</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] font-medium leading-none">Teams</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium leading-none">Settings</span>
+</a>
+</nav>
+</div>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo - Receiving Inspection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#fffdff",
+              "surface-variant": "#e2e2e2",
+              "on-tertiary-fixed-variant": "#00497c",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9f9",
+              "primary-container": "#eb0a1d",
+              "on-error": "#ffffff",
+              "primary-fixed-dim": "#ffb4ab",
+              "primary-fixed": "#ffdad6",
+              "inverse-on-surface": "#f1f1f1",
+              "tertiary-fixed": "#d1e4ff",
+              "on-secondary-fixed-variant": "#474747",
+              "background": "#f9f9f9",
+              "secondary-container": "#e4e2e1",
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-error-container": "#93000a",
+              "on-background": "#1a1c1c",
+              "tertiary-fixed-dim": "#9dcaff",
+              "on-surface": "#1a1c1c",
+              "surface-container-highest": "#e2e2e2",
+              "primary": "#bd0013",
+              "on-primary-fixed": "#410002",
+              "surface-container": "#eeeeee",
+              "outline": "#936e6a",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-surface-variant": "#5e3f3b",
+              "inverse-primary": "#ffb4ab",
+              "on-tertiary-fixed": "#001d36",
+              "surface-container-high": "#e8e8e8",
+              "on-primary-fixed-variant": "#93000c",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "tertiary": "#0060a0",
+              "on-secondary-fixed": "#1b1c1c",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#656464",
+              "surface-container-low": "#f3f3f3",
+              "tertiary-container": "#0079c8",
+              "surface": "#f9f9f9",
+              "surface-tint": "#c00013",
+              "outline-variant": "#e9bcb7",
+              "surface-dim": "#dadada",
+              "secondary": "#5f5e5e",
+              "on-primary-container": "#fffeff",
+              "inverse-surface": "#2f3131",
+              "secondary-fixed": "#e4e2e1"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F8F5F6;
+      }
+      .custom-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(24px);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex justify-center items-start min-h-screen">
+<!-- Mobile Container (390px) -->
+<div class="w-[390px] bg-[#F8F5F6] min-h-screen relative shadow-2xl overflow-hidden pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-[#F9F9F9] flex items-center justify-between w-full px-4 py-4 pt-safe h-[56px]">
+<div class="flex items-center gap-3">
+<button class="hover:bg-[#F3F3F3] transition-colors p-1 rounded-full scale-95 active:opacity-80 duration-200">
+<span class="material-symbols-outlined text-[#BD0013]" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="text-[11px] font-bold tracking-[0.1em] text-[#BD0013] uppercase leading-none">RECEIVING INSPECTION</h1>
+<span class="text-[11px] font-medium text-[#6B7280]">NYK Warehouse · Incoming Units</span>
+</div>
+</div>
+<button class="hover:bg-[#F3F3F3] transition-colors p-1 rounded-full scale-95 active:opacity-80 duration-200">
+<span class="material-symbols-outlined text-[#1A1C1C]" data-icon="settings">settings</span>
+</button>
+</header>
+<main class="px-4 mt-4 space-y-6">
+<!-- Incoming Batch Card -->
+<section class="relative overflow-hidden rounded-[14px] p-[12px_14px] text-white shadow-lg" style="background: linear-gradient(135deg, #1A1014 0%, #2D1520 100%);">
+<div class="flex justify-between items-start mb-2">
+<div>
+<h2 class="text-[15px] font-bold">BATCH #2026-03-019</h2>
+<p class="text-[11px] font-medium text-[#9CA3AF]">Vessel: MV Pacific Star · Arrived: Mar 23, 2026</p>
+</div>
+<span class="material-symbols-outlined text-[18px] opacity-60" data-icon="ship">sailing</span>
+</div>
+<div class="mt-4">
+<div class="flex justify-between items-end mb-1.5">
+<p class="text-[11px] font-bold">8 Units in batch · 3 inspected · 5 pending</p>
+<span class="text-[11px] font-bold">37.5%</span>
+</div>
+<div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+<div class="h-full bg-[#EB0A1D] w-[37.5%] rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Vehicle Inspection Cards -->
+<section class="space-y-[10px]">
+<!-- Card 1 (Completed) -->
+<div class="bg-white rounded-[14px] border-l-4 border-[#22C55E] p-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-bold text-[#1A1014]">SM-0055 · GS3 Emgrand · Pearl White</h3>
+<p class="text-[11px] font-medium text-[#6B7280]">VIN: LGXCE1KL8RE...</p>
+</div>
+<span class="text-[9px] font-bold text-[#22C55E] border border-[#22C55E] px-1.5 py-0.5 rounded-sm bg-[#22C55E]/5 uppercase">INSPECTED ✓</span>
+</div>
+<div class="mt-3 flex items-center gap-4 text-[13px] font-medium text-[#1A1C1C]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-[#22C55E]" data-icon="check_circle">check_circle</span>
+<span>Engine</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-[#22C55E]" data-icon="check_circle">check_circle</span>
+<span>Chassis</span>
+</div>
+</div>
+<div class="mt-4 flex justify-between items-center border-t border-[#F3F3F3] pt-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-[#F3F3F3] flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-[14px] text-[#6B7280]" data-icon="person">person</span>
+</div>
+<span class="text-[11px] font-medium text-[#6B7280]">NYK — R. Santos</span>
+</div>
+<span class="text-[11px] font-medium text-[#6B7280]">10:24 AM</span>
+</div>
+<p class="text-[11px] font-medium text-[#6B7280] mt-2 italic">No transport damages found</p>
+</div>
+<!-- Card 2 (In Progress) -->
+<div class="bg-white rounded-[14px] border-l-4 border-[#3B82F6] p-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-bold text-[#1A1014]">SM-0056 · Coolray Pro · Aurora Blue</h3>
+</div>
+<span class="text-[9px] font-bold text-[#3B82F6] border border-[#3B82F6] px-1.5 py-0.5 rounded-sm bg-[#3B82F6]/5 uppercase">IN PROGRESS</span>
+</div>
+<div class="mt-3 grid grid-cols-2 gap-y-2">
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-[#1A1C1C]">
+<span class="material-symbols-outlined text-[16px] text-[#22C55E]" data-icon="check_box" data-weight="fill">check_box</span>
+<span>Exterior body</span>
+</div>
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-[#1A1C1C]">
+<span class="material-symbols-outlined text-[16px] text-[#22C55E]" data-icon="check_box" data-weight="fill">check_box</span>
+<span>Glass &amp; windsh.</span>
+</div>
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-[#6B7280]">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_box_outline_blank">check_box_outline_blank</span>
+<span>Undercarriage</span>
+</div>
+<div class="flex items-center gap-1.5 text-[11px] font-medium text-[#6B7280]">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_box_outline_blank">check_box_outline_blank</span>
+<span>Interior</span>
+</div>
+</div>
+<p class="text-[11px] font-bold text-[#EB0A1D] mt-3">2/5 items checked</p>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 text-[11px] font-bold py-2.5 rounded-lg border border-[#F3F3F3] text-[#1A1C1C] hover:bg-[#F3F3F3] transition-all active:scale-95">ADD DAMAGE NOTE</button>
+<button class="flex-1 text-[11px] font-bold py-2.5 rounded-lg bg-[#EB0A1D] text-white hover:opacity-90 transition-all active:scale-95">CONTINUE</button>
+</div>
+</div>
+<!-- Card 3 (Pending) -->
+<div class="bg-white rounded-[14px] border-l-4 border-[#9CA3AF] p-4 shadow-sm">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-bold text-[#1A1014]">SM-0057 · MG5 · Oxford White</h3>
+<p class="text-[11px] font-medium text-[#6B7280] mt-1">Awaiting inspection</p>
+</div>
+<span class="text-[9px] font-bold text-[#9CA3AF] border border-[#9CA3AF] px-1.5 py-0.5 rounded-sm bg-[#9CA3AF]/5 uppercase">PENDING</span>
+</div>
+<div class="mt-4">
+<button class="w-full text-[11px] font-bold py-2.5 rounded-lg border border-[#EB0A1D] text-[#EB0A1D] hover:bg-[#EB0A1D]/5 transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_circle">play_circle</span>
+                            START INSPECTION
+                        </button>
+</div>
+</div>
+</section>
+<!-- Transport Damage Log -->
+<section class="space-y-3 pb-8">
+<h2 class="text-[11px] font-bold text-[#BD0013] uppercase tracking-[0.1em]">TRANSPORT DAMAGE LOG</h2>
+<div class="bg-white rounded-[14px] p-4 shadow-sm relative overflow-hidden">
+<div class="flex gap-3">
+<div class="mt-1">
+<div class="w-2 h-2 rounded-full bg-[#EB0A1D]"></div>
+</div>
+<div class="space-y-1">
+<p class="text-[13px] font-medium text-[#1A1014] leading-tight">
+<span class="font-bold">SM-0055</span> — Minor scratch on rear bumper · Found during transport from port
+                            </p>
+<p class="text-[11px] font-medium text-[#6B7280]">Logged against: Car Carrier — ABC Logistics</p>
+<a class="inline-block text-[11px] font-bold text-[#EB0A1D] mt-2 underline decoration-2 underline-offset-4" href="#">GAC Checklist reference attached</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 rounded-t-xl bg-white/80 dark:bg-[#1A1C1C]/80 backdrop-blur-xl border-t border-[#1A1C1C]/10 flex justify-around items-center px-4 pb-safe h-20 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<button class="flex flex-col items-center justify-center text-[#1A1C1C]/60 transition-all hover:text-[#BD0013] duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="text-[10px] uppercase tracking-[0.1em] font-bold">HOME</span>
+</button>
+<!-- Active: INSPECT -->
+<button class="flex flex-col items-center justify-center text-[#BD0013] relative after:content-[''] after:absolute after:left-0 after:top-2 after:h-8 after:w-1 after:bg-[#BD0013] rounded-lg bg-[#BD0013]/5 transition-all scale-105 duration-200 px-4">
+<span class="material-symbols-outlined mb-1" data-icon="fact_check">fact_check</span>
+<span class="text-[10px] uppercase tracking-[0.1em] font-bold">INSPECT</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#1A1C1C]/60 transition-all hover:text-[#BD0013] duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="directions_car">directions_car</span>
+<span class="text-[10px] uppercase tracking-[0.1em] font-bold">ARRIVE</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#1A1C1C]/60 transition-all hover:text-[#BD0013] duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="inventory_2">inventory_2</span>
+<span class="text-[10px] uppercase tracking-[0.1em] font-bold">STORAGE</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#1A1C1C]/60 transition-all hover:text-[#BD0013] duration-200">
+<span class="material-symbols-outlined mb-1" data-icon="local_shipping">local_shipping</span>
+<span class="text-[10px] uppercase tracking-[0.1em] font-bold">DELIVERY</span>
+</button>
+</nav>
+</div>
+</body></html>

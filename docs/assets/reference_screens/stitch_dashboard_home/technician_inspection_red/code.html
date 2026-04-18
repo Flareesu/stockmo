@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inspection &amp; Move</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#eb0a1d",
+              "background-light": "#f8f5f6",
+              "background-dark": "#221011",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; }
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #eb0a1d33; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl">
+<!-- Header -->
+<header class="flex items-center bg-white dark:bg-slate-900 p-4 sticky top-0 z-10 border-b border-primary/10">
+<button class="text-primary p-2 hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="ml-2">
+<h1 class="text-lg font-bold leading-tight tracking-tight">Inspection &amp; Move</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400">Unit ID: #V-90421</p>
+</div>
+<div class="ml-auto">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Inspection Section -->
+<section class="p-4">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Vehicle Checklist</h2>
+<span class="text-xs font-semibold bg-primary/10 text-primary px-2 py-1 rounded-full uppercase">Step 1 of 2</span>
+</div>
+<div class="space-y-4">
+<!-- Checklist Item 1 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-primary/5 shadow-sm">
+<p class="text-base font-medium mb-3">Brake System &amp; Fluids</p>
+<div class="grid grid-cols-3 gap-2">
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input checked="" class="peer hidden" name="brakes" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-green-500 peer-checked:bg-green-50 dark:peer-checked:bg-green-900/20 text-slate-400 peer-checked:text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Pass</span>
+</label>
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input class="peer hidden" name="brakes" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary/5 text-slate-400 peer-checked:text-primary">
+<span class="material-symbols-outlined">report</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Issue</span>
+</label>
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input class="peer hidden" name="brakes" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary text-slate-400 peer-checked:text-white">
+<span class="material-symbols-outlined">dangerous</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Defect</span>
+</label>
+</div>
+</div>
+<!-- Checklist Item 2 -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-primary/5 shadow-sm">
+<p class="text-base font-medium mb-3">Tire Pressure &amp; Exterior</p>
+<div class="grid grid-cols-3 gap-2">
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input class="peer hidden" name="tires" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-green-500 peer-checked:bg-green-50 dark:peer-checked:bg-green-900/20 text-slate-400 peer-checked:text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Pass</span>
+</label>
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input checked="" class="peer hidden" name="tires" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-primary border-primary/5 text-primary">
+<span class="material-symbols-outlined">report</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-primary">Issue</span>
+</label>
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input class="peer hidden" name="tires" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary text-slate-400 peer-checked:text-white">
+<span class="material-symbols-outlined">dangerous</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Defect</span>
+</label>
+</div>
+</div>
+<!-- Checklist Item 3 (Defect Example) -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border-2 border-primary shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<p class="text-base font-bold text-primary">Lighting &amp; Indicators</p>
+<span class="text-[10px] bg-primary text-white px-2 py-0.5 rounded-full font-bold">URGENT</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input class="peer hidden" name="lights" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-green-500 peer-checked:bg-green-50 dark:peer-checked:bg-green-900/20 text-slate-400 peer-checked:text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Pass</span>
+</label>
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input class="peer hidden" name="lights" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-slate-100 dark:border-slate-800 peer-checked:border-primary peer-checked:bg-primary/5 text-slate-400 peer-checked:text-primary">
+<span class="material-symbols-outlined">report</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-slate-500">Issue</span>
+</label>
+<label class="flex flex-col items-center gap-1 cursor-pointer group">
+<input checked="" class="peer hidden" name="lights" type="radio"/>
+<div class="w-full py-2 flex items-center justify-center rounded-lg border-2 border-primary bg-primary text-white">
+<span class="material-symbols-outlined">dangerous</span>
+</div>
+<span class="text-[10px] font-bold uppercase text-primary">Defect</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- Unlisted Problems -->
+<section class="px-4 pb-4">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-slate-400">edit_note</span>
+<h3 class="font-bold">Unlisted Problems</h3>
+</div>
+<textarea class="w-full min-h-[100px] bg-background-light dark:bg-background-dark border-slate-200 dark:border-slate-800 rounded-lg text-sm focus:ring-primary focus:border-primary p-3" placeholder="Describe any other issues found..."></textarea>
+</div>
+</section>
+<!-- Move to Stockyard Section -->
+<section class="p-4 bg-primary/5 border-y border-primary/10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold">Move to Stockyard</h2>
+<span class="text-xs font-semibold bg-primary text-white px-2 py-1 rounded-full uppercase">Step 2 of 2</span>
+</div>
+<div class="space-y-4">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-primary/5 shadow-sm">
+<p class="text-sm font-semibold mb-2">Select Destination Lane</p>
+<div class="relative">
+<select class="w-full appearance-none bg-background-light dark:bg-background-dark border-slate-200 dark:border-slate-800 rounded-lg py-3 px-4 pr-10 text-sm focus:ring-primary focus:border-primary outline-none">
+<option>Stockyard A - Lane 14 (Available)</option>
+<option>Stockyard A - Lane 15 (Maintenance)</option>
+<option>Stockyard B - General Hold</option>
+<option>Repair Bay 03 - Urgent Defect</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 h-40 relative group">
+<img alt="Aerial view of industrial parking and stockyard grid" class="w-full h-full object-cover" data-alt="Aerial view of vehicle stockyard layout" data-location="Atlanta Stockyard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLtL08yCRHg-ZhznmjVa3VGcQe1CMgxNIxI-Q2Eofv1wWMNJhUZ8vGQWOnC6awUal6vK4rYMkx3aKbsy1SzC1X6t_B1hpoSvOUojtJp2be7MzouaQohBco0g4nd-bzAMpRCnuXSOQA6qSRAzUgv_-W4DXETnIeGr_JW7ipTPtYDnoKU1XTfgEZGOTZOkvir3MLrxi9qfupcD-A7EaOGZoN3VS6uLjburZFfdavEm5MnMd-V0iThdk7QhTUCsPu6mCqFS8np3dtNw-J"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-xs font-medium">Atlanta Central Yard Map</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="h-24"></div> <!-- Spacer for fixed footer -->
+</main>
+<!-- Footer Actions -->
+<footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-4 border-t border-primary/10">
+<div class="flex gap-3">
+<button class="flex-1 py-3 px-4 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary/5 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">save</span>
+                    Save Draft
+                </button>
+<button class="flex-[2] py-3 px-4 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">rocket_launch</span>
+                    Submit &amp; Move
+                </button>
+</div>
+</footer>
+<!-- Bottom Navigation Tabs (Minimal) -->
+<nav class="flex border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pb-safe">
+<a class="flex-1 flex flex-col items-center py-2 text-primary" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-bold uppercase">Work</span>
+</a>
+<a class="flex-1 flex flex-col items-center py-2 text-slate-400" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-bold uppercase">Stock</span>
+</a>
+<a class="flex-1 flex flex-col items-center py-2 text-slate-400" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-bold uppercase">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

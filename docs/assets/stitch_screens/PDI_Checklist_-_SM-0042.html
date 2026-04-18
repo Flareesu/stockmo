@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mobile PDI Checklist - StockMo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#00497c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#1a1c1c",
+                        "surface-variant": "#e2e2e2",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "primary-fixed": "#ffdad6",
+                        "primary-fixed-dim": "#ffb4ab",
+                        "primary-container": "#eb0a1d",
+                        "surface-tint": "#c00013",
+                        "surface-dim": "#dadada",
+                        "inverse-primary": "#ffb4ab",
+                        "secondary-container": "#e4e2e1",
+                        "outline": "#936e6a",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "tertiary-fixed-dim": "#9dcaff",
+                        "tertiary-container": "#0079c8",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#e4e2e1",
+                        "inverse-surface": "#2f3131",
+                        "on-tertiary-fixed": "#001d36",
+                        "tertiary": "#0060a0",
+                        "outline-variant": "#e9bcb7",
+                        "on-primary-fixed": "#410002",
+                        "secondary": "#5f5e5e",
+                        "surface-container": "#eeeeee",
+                        "background": "#f9f9f9",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#d1e4ff",
+                        "on-primary-fixed-variant": "#93000c",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#656464",
+                        "on-primary-container": "#fffeff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface": "#f9f9f9",
+                        "on-tertiary-container": "#fffdff",
+                        "on-background": "#1a1c1c",
+                        "on-surface-variant": "#5e3f3b",
+                        "on-secondary-fixed-variant": "#474747",
+                        "on-error": "#ffffff",
+                        "primary": "#bd0013",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-bright": "#f9f9f9"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased mb-40">
+<!-- Top Navigation Anchor (Manual Implementation based on JSON for specific VIN view) -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl shadow-[0_32px_32px_rgba(26,28,28,0.04)] h-16 flex justify-between items-center px-6">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-zinc-500 active:scale-95 transition-transform" data-icon="arrow_back">arrow_back</button>
+<div class="flex flex-col">
+<span class="text-[10px] font-bold tracking-[0.1em] text-zinc-400 uppercase">INSPECTION UNIT</span>
+<span class="text-red-700 dark:text-red-500 font-bold tracking-[-0.02em] uppercase">SM-0042</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="bg-primary text-on-primary text-[10px] font-bold px-3 py-1 rounded-sm tracking-widest">PDI</span>
+<button class="material-symbols-outlined text-zinc-500" data-icon="history">history</button>
+</div>
+</header>
+<main class="pt-20 px-4 max-w-md mx-auto">
+<!-- Vehicle Info Plinth -->
+<section class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-primary shadow-sm mb-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h1 class="text-xl font-bold tracking-tight text-on-surface">GS3 Emgrand</h1>
+<p class="text-zinc-500 text-sm">2025 · Pearl White</p>
+</div>
+<div class="text-right">
+<span class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase block">LOT</span>
+<span class="text-lg font-bold text-on-surface">B-04</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-md">
+<span class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase block mb-1">VIN NUMBER</span>
+<span class="font-mono text-sm tracking-wider font-semibold text-on-surface">LGXCE1KL8RE123456</span>
+</div>
+</section>
+<!-- Progress Metrics -->
+<section class="mb-8">
+<div class="flex justify-between items-end mb-2">
+<span class="text-[11px] font-bold tracking-widest text-zinc-400 uppercase">Inspection Progress</span>
+<span class="text-[11px] font-bold text-red-700">72% Complete · 13/18 done</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[72%]"></div>
+</div>
+</section>
+<!-- Checklist Groups -->
+<div class="space-y-10">
+<!-- 1. EXTERIOR -->
+<section>
+<div class="flex justify-between items-center mb-4 border-b border-surface-container-high pb-2">
+<h2 class="text-xs font-bold tracking-[0.2em] text-zinc-400 uppercase">01 EXTERIOR</h2>
+<span class="text-[10px] font-bold text-zinc-500">5/6 Done</span>
+</div>
+<div class="space-y-3">
+<!-- Item: Done -->
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-emerald-500">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium text-on-surface flex-1">Body panel alignment</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Item: Done -->
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-emerald-500">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium text-on-surface flex-1">Paint condition</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Item: Issue -->
+<div class="bg-surface-container-lowest rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-amber-500 overflow-hidden">
+<div class="flex items-center gap-4 p-4">
+<span class="material-symbols-outlined text-amber-500" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-sm font-bold text-on-surface flex-1">Windshield &amp; glass</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="keyboard_arrow_up">keyboard_arrow_up</span>
+</div>
+<div class="bg-amber-50 px-4 py-3 mx-4 mb-4 rounded border border-amber-100">
+<p class="text-[11px] leading-relaxed text-amber-800 font-medium">
+<span class="uppercase font-bold block mb-1">Issue Reported:</span>
+                                "Hairline crack found on passenger side windshield"
+                            </p>
+</div>
+</div>
+<!-- Item: Pending -->
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-transparent">
+<span class="w-6 h-6 border-2 border-zinc-200 rounded-sm"></span>
+<span class="text-sm font-medium text-zinc-500 flex-1">Wheel condition</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="mt-4 w-full py-3 border-2 border-dashed border-zinc-200 rounded-lg text-[10px] font-bold tracking-widest text-zinc-400 hover:bg-zinc-50 transition-colors uppercase">
+                    + Add Custom Issue
+                </button>
+</section>
+<!-- 2. INTERIOR -->
+<section>
+<div class="flex justify-between items-center mb-4 border-b border-surface-container-high pb-2">
+<h2 class="text-xs font-bold tracking-[0.2em] text-zinc-400 uppercase">02 INTERIOR</h2>
+<span class="text-[10px] font-bold text-zinc-500">4/5 Done</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-emerald-500">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium text-on-surface flex-1">Seats &amp; upholstery</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-transparent">
+<span class="w-6 h-6 border-2 border-zinc-200 rounded-sm"></span>
+<span class="text-sm font-medium text-zinc-500 flex-1">A/C system test</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="mt-4 w-full py-3 border-2 border-dashed border-zinc-200 rounded-lg text-[10px] font-bold tracking-widest text-zinc-400 hover:bg-zinc-50 transition-colors uppercase">
+                    + Add Custom Issue
+                </button>
+</section>
+<!-- 3. MECHANICAL -->
+<section>
+<div class="flex justify-between items-center mb-4 border-b border-surface-container-high pb-2">
+<h2 class="text-xs font-bold tracking-[0.2em] text-zinc-400 uppercase">03 MECHANICAL</h2>
+<span class="text-[10px] font-bold text-zinc-500">3/4 Done</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-emerald-500">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium text-on-surface flex-1">Engine start &amp; idle</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="mt-4 w-full py-3 border-2 border-dashed border-zinc-200 rounded-lg text-[10px] font-bold tracking-widest text-zinc-400 hover:bg-zinc-50 transition-colors uppercase">
+                    + Add Custom Issue
+                </button>
+</section>
+<!-- 4. DOCUMENTATION -->
+<section class="pb-10">
+<div class="flex justify-between items-center mb-4 border-b border-surface-container-high pb-2">
+<h2 class="text-xs font-bold tracking-[0.2em] text-zinc-400 uppercase">04 DOCUMENTATION</h2>
+<span class="text-[10px] font-bold text-zinc-500">2/3 Done</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-emerald-500">
+<span class="material-symbols-outlined text-emerald-500" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium text-on-surface flex-1">Owner's manual</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.02)] border-l-2 border-transparent">
+<span class="w-6 h-6 border-2 border-zinc-200 rounded-sm"></span>
+<span class="text-sm font-medium text-zinc-500 flex-1">Tool kit &amp; spare tire</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="mt-4 w-full py-3 border-2 border-dashed border-zinc-200 rounded-lg text-[10px] font-bold tracking-widest text-zinc-400 hover:bg-zinc-50 transition-colors uppercase">
+                    + Add Custom Issue
+                </button>
+</section>
+</div>
+</main>
+<!-- Fixed Bottom Actions -->
+<footer class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl px-6 py-6 border-t border-zinc-100 flex flex-col gap-3 z-50">
+<div class="flex gap-3">
+<button class="flex-1 py-4 border-2 border-zinc-200 rounded text-[11px] font-extrabold tracking-widest text-zinc-500 uppercase active:scale-95 transition-transform">
+                PUT ON HOLD
+            </button>
+<button class="flex-[2] py-4 bg-emerald-600 rounded text-[11px] font-extrabold tracking-widest text-white uppercase shadow-lg shadow-emerald-200 active:scale-95 transition-transform">
+                COMPLETE PDI — MOVE TO STOCKYARD
+            </button>
+</div>
+<div class="h-1 w-1/3 bg-zinc-200 rounded-full mx-auto mt-2"></div>
+</footer>
+<!-- Predicted BottomNavBar Shell (Suppressed due to task-focused journey but structure kept for reference) -->
+</body></html>

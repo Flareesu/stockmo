@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Admin Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-background-dark shadow-xl">
+<!-- Header -->
+<div class="flex items-center p-4 border-b border-primary/10 sticky top-0 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md z-10">
+<div class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-primary/10 rounded-full transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight flex-1 text-center pr-10">Admin Settings</h2>
+</div>
+<!-- Profile Section -->
+<div class="flex p-6 flex-col items-center border-b border-primary/5">
+<div class="relative group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-28 w-28 border-4 border-primary/10" data-alt="Professional headshot of a male system administrator" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAd_Pa2RmpHWuLGPRWDosc3yqD6o_KF5rW5YsC60uuk_NTFtSyAdvsLRSM7quKdNHxtsJG-Il9IeLE3d5lvb1PWd_ZpMoK6jofeKnIaC44PdoQQUb0tXr7DWNUAgN518kJX8mhTpXlZ-rnea1MfWB4LEhG62zgnqlg_tik__Pq11zdOMre1ZdOXCMTSfncx4i_RYO_h_jv9I41HeZhPueb8wT1K45pgEBLBR-1glmGMlu0JJrQUly26GzAfuKH2FS2UIBIUPAw9NJn");'>
+</div>
+<div class="absolute bottom-0 right-0 bg-primary p-1.5 rounded-full text-white border-2 border-white dark:border-background-dark">
+<span class="material-symbols-outlined text-sm">edit</span>
+</div>
+</div>
+<div class="flex flex-col items-center mt-4">
+<p class="text-slate-900 dark:text-slate-100 text-xl font-bold">Admin User</p>
+<p class="text-primary text-sm font-semibold tracking-wide uppercase">System Administrator</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">admin@stockmo.com</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto">
+<!-- Account Security Section -->
+<div class="px-4 pt-6 pb-2">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest">Account Security</h3>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-primary/5 cursor-pointer transition-colors group">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium">Change Password</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Last changed 3 months ago</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-primary/5 cursor-pointer transition-colors group">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium">Two-Factor Authentication</p>
+<p class="text-emerald-600 dark:text-emerald-500 text-xs font-semibold">Enabled</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+<!-- App Preferences Section -->
+<div class="px-4 pt-6 pb-2">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest">App Preferences</h3>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-4 px-4 py-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">language</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium">App Language</p>
+</div>
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+<button class="px-3 py-1 text-xs font-bold bg-white dark:bg-slate-700 rounded shadow-sm">EN</button>
+<button class="px-3 py-1 text-xs font-bold text-slate-500">TL</button>
+</div>
+</div>
+<div class="flex items-center gap-4 px-4 py-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">dark_mode</span>
+</div>
+<div class="flex-1">
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium">Dark Mode</p>
+</div>
+<div class="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-200 dark:bg-primary cursor-pointer">
+<span class="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-1 dark:translate-x-6"></span>
+</div>
+</div>
+</div>
+<!-- Admin Tools Section -->
+<div class="px-4 pt-6 pb-2">
+<h3 class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest">Admin Tools</h3>
+</div>
+<div class="flex flex-col pb-24">
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-primary/5 cursor-pointer transition-colors group">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">list_alt</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium flex-1">System Logs</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-primary/5 cursor-pointer transition-colors group">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">ios_share</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium flex-1">Data Export</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-primary/5 cursor-pointer transition-colors group">
+<div class="text-primary flex items-center justify-center rounded-lg bg-primary/10 shrink-0 size-10">
+<span class="material-symbols-outlined">group</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-medium flex-1">Manage Roster</p>
+<span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="px-4 mt-4">
+<button class="w-full flex items-center justify-center gap-2 py-3 border-2 border-primary/20 text-primary font-bold rounded-xl hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">logout</span>
+                        Sign Out
+                    </button>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto flex gap-2 border-t border-primary/10 bg-white/95 dark:bg-background-dark/95 backdrop-blur-md px-4 pb-6 pt-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-[10px] font-bold uppercase tracking-tight">Inventory</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<p class="text-[10px] font-bold uppercase tracking-tight">Orders</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<p class="text-[10px] font-bold uppercase tracking-tight">Logs</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">settings</span>
+<p class="text-[10px] font-bold uppercase tracking-tight">Settings</p>
+</a>
+</div>
+</div>
+</body></html>

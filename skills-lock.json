@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "language-expertise": {
+      "source": "hack23/riksdagsmonitor",
+      "sourceType": "github",
+      "computedHash": "5f9f6527b93af01cd2361d5e2c0dd6ef27057e99fae5dd902d86cf1b1777563c"
+    }
+  }
+}

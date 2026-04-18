@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Precision | PDI Checklist SM-0042</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-tertiary-fixed": "#001d36",
+              "on-primary-fixed-variant": "#93000c",
+              "tertiary-fixed-dim": "#9dcaff",
+              "surface": "#f9f9f9",
+              "inverse-primary": "#ffb4ab",
+              "surface-container-highest": "#e2e2e2",
+              "secondary-container": "#e4e2e1",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "primary-container": "#eb0a1d",
+              "outline-variant": "#e9bcb7",
+              "on-secondary-container": "#656464",
+              "surface-container-low": "#f3f3f3",
+              "secondary": "#5f5e5e",
+              "outline": "#936e6a",
+              "background": "#f9f9f9",
+              "on-tertiary-fixed-variant": "#00497c",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed-variant": "#474747",
+              "on-secondary-fixed": "#1b1c1c",
+              "on-error-container": "#93000a",
+              "on-background": "#1a1c1c",
+              "on-surface-variant": "#5e3f3b",
+              "on-primary-fixed": "#410002",
+              "inverse-on-surface": "#f1f1f1",
+              "primary-fixed": "#ffdad6",
+              "surface-container": "#eeeeee",
+              "surface-tint": "#c00013",
+              "on-tertiary-container": "#fffdff",
+              "tertiary-fixed": "#d1e4ff",
+              "tertiary": "#0060a0",
+              "surface-variant": "#e2e2e2",
+              "surface-container-high": "#e8e8e8",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#0079c8",
+              "inverse-surface": "#2f3131",
+              "primary": "#bd0013",
+              "on-surface": "#1a1c1c",
+              "surface-dim": "#dadada",
+              "secondary-fixed": "#e4e2e1",
+              "primary-fixed-dim": "#ffb4ab",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9f9",
+              "on-primary-container": "#fffeff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Authority: JSON - SideNavBar rail) -->
+<aside class="flex flex-col h-full sticky top-0 left-0 h-screen w-64 bg-slate-50 dark:bg-zinc-900 font-['Inter'] antialiased tracking-tight">
+<div class="p-6">
+<div class="text-xl font-black tracking-tighter text-zinc-900 dark:text-white">StockMo</div>
+<div class="text-[10px] uppercase tracking-[0.1em] text-zinc-500 mt-1 font-bold">Precision Logistics</div>
+</div>
+<nav class="flex-1 mt-4 px-3 space-y-1">
+<!-- Home -->
+<div class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02] cursor-pointer rounded-xl">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-sm font-medium">Home</span>
+</div>
+<!-- Inspect (ACTIVE) -->
+<div class="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-500 font-bold border-l-4 border-red-600 bg-red-50/50 dark:bg-red-900/10 transition-transform duration-200 hover:scale-[1.02] cursor-pointer rounded-r-xl">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="text-sm">Inspect</span>
+</div>
+<!-- Arrive -->
+<div class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02] cursor-pointer rounded-xl">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="text-sm font-medium">Arrive</span>
+</div>
+<!-- Storage -->
+<div class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02] cursor-pointer rounded-xl">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-medium">Storage</span>
+</div>
+<!-- Delivery -->
+<div class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02] cursor-pointer rounded-xl">
+<span class="material-symbols-outlined" data-icon="order_approve">order_approve</span>
+<span class="text-sm font-medium">Delivery</span>
+</div>
+</nav>
+<div class="p-6 mt-auto">
+<div class="flex items-center gap-3 p-3 bg-zinc-100 dark:bg-zinc-800 rounded-xl">
+<img class="w-10 h-10 rounded-lg object-cover" data-alt="Technician Profile Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ3bRpWsmf8Hp4O1h_3opc-gA1AbSE-YnPnRANbE4zep9A1VagPw23KVJ-PZ8tWTxOqBp-UBlQWEp9A91XAIKJaKNNNwqEnw2bgdN5rfjg4P2B-Mjt2TnYFVnQnnEddwD5I2y5XQoCIIcQxowYhFLO-10vhuTEeeX3NEBhevKbyx6kjZmRNhxM42QCZSXjoYCJegd1vYzt29aJCxuJPelFk3gJ_fmNzsAhuKKSByQhV3e8Yv7jfDYuVhzWlhv66OfCSb1L0vKENGk"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">Marcus Chen</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Lead Tech</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col min-w-0 bg-surface">
+<!-- TopNavBar (Authority: JSON - TopNavBar) -->
+<header class="flex items-center justify-between px-8 w-full border-b border-zinc-100 dark:border-zinc-800 w-full h-16 sticky top-0 z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl">
+<div class="flex items-center gap-8">
+<div class="hidden md:block text-lg font-black text-red-600">StockMo Precision</div>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-2 pl-10 pr-4 text-xs focus:ring-1 focus:ring-primary transition-all" placeholder="Search VIN, Lot or Status..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-zinc-600 dark:text-zinc-400 cursor-pointer active:scale-95" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-zinc-600 dark:text-zinc-400 cursor-pointer active:scale-95" data-icon="settings">settings</span>
+<span class="material-symbols-outlined text-zinc-600 dark:text-zinc-400 cursor-pointer active:scale-95" data-icon="help_outline">help_outline</span>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
+<!-- Header Info Bar -->
+<div class="flex justify-between items-end">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary bg-primary/10 px-2 py-1 rounded">Pre-Delivery Inspection</span>
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Job #77241</span>
+</div>
+<h1 class="text-4xl font-black -tracking-widest text-on-surface">SM-0042</h1>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-[10px] font-bold uppercase bg-surface-container-low px-3 py-1 rounded text-zinc-600">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                Est. 45m
+                             </span>
+<span class="flex items-center gap-1 text-[10px] font-bold uppercase bg-surface-container-low px-3 py-1 rounded text-zinc-600">
+<span class="material-symbols-outlined text-[14px]">thermostat</span>
+                                24°C Warehouse
+                             </span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Left Panel: Vehicle Specs (Design System: Tonal Nesting) -->
+<div class="col-span-12 lg:col-span-3 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="h-48 relative">
+<img class="w-full h-full object-cover" data-alt="Modern white compact SUV side profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_ND7ceg710xKV2eugI3PWp8n8Tz4ibf_hiLJbBXkqTwc7wXykCZbU9o_WlyAZNUqo5o0btRksVlXOCmpy9uAR7oM0lhNsf-Mi0jJREpIyQvkUK3ZqstDTgK2Tb8Gm0z_p5bGUzvjI7ahP0-rwM0If2vnwNYlx3ViZUr4_Gd3b73D5DnL9mxw9gDc2RO2xm82O5VHITlhkWizS4fFe45IQzV-bQwRb0wT-hxAjAM4m8xVDxMtZv8Vf7EJEkwIfQpfINwGzGU0yuDA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+<h2 class="text-white font-bold text-lg">GS3 Emgrand</h2>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div>
+<label class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block mb-1">Location</label>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="font-bold text-sm">Lot B-04 / Zone A</span>
+</div>
+</div>
+<div>
+<label class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block mb-1">Color / Trim</label>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-white border border-zinc-200"></div>
+<span class="font-bold text-sm">Polar White / Elite</span>
+</div>
+</div>
+<div class="pt-4 border-t border-zinc-100 grid grid-cols-2 gap-4">
+<div>
+<label class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block mb-1">Engine</label>
+<span class="font-bold text-xs uppercase">1.5T Turbo</span>
+</div>
+<div>
+<label class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 block mb-1">Trans</label>
+<span class="font-bold text-xs uppercase">7-DCT</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Map / Warehouse Location (Design System: Layering) -->
+<div class="bg-surface-container-low rounded-xl p-4">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-[10px] font-black uppercase tracking-widest">Facility Map</h3>
+<span class="material-symbols-outlined text-sm">open_in_full</span>
+</div>
+<div class="aspect-square bg-zinc-200 rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-50 grayscale" data-alt="Architectural warehouse floor plan visualization" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCka7a_TCJ7-nOZq2PjRFvuQ7ZdjhRd8Kynu83E1v1zlGQnwLZrAEKtreblTQjtS5iJz67urfcsSou3u0e3xA3-aDIZJ7qTpaegwDm0KrbeoR1eAuRJ20LPLf2wKTshQSck5cUUwRg3WvU2YW1RIzmAQP_MTOVKJTqB_oVXo1rFvbBb_Yc7ivrVsCVWGn6S6eO_9TCTM0_iKisJI4hZudC6pGCl30r0Frb17M1gz-CG8bktk15HviWOOwsE14Q2n55jNghzHAxGblg"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-4 h-4 bg-primary rounded-full animate-pulse border-4 border-white"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Panel: Checklist (Design System: Editorial Intent) -->
+<div class="col-span-12 lg:col-span-9 space-y-6 pb-24">
+<!-- Category: Exterior (Design System: Plinths) -->
+<section>
+<div class="flex justify-between items-end mb-4 px-2">
+<h3 class="text-xl font-black -tracking-tight">Exterior Inspection</h3>
+<button class="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add_circle</span> Add Issue
+                                </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm divide-y divide-zinc-100 overflow-hidden">
+<div class="flex items-center justify-between p-4 hover:bg-zinc-50 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-300 group-hover:text-primary transition-colors">check_circle</span>
+<div>
+<p class="font-bold text-sm">Paint finish &amp; Clear coat</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Verify no chips or transport swirl marks</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold uppercase bg-green-100 text-green-700 px-2 py-0.5 rounded">Pass</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm">more_vert</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-zinc-50 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-300">check_circle</span>
+<div>
+<p class="font-bold text-sm">Wheel alignment &amp; Tyre pressure</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Check 32 PSI cold / No curb rash</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold uppercase bg-zinc-100 text-zinc-400 px-2 py-0.5 rounded">Pending</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm">more_vert</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-red-50/30 group border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">error</span>
+<div>
+<p class="font-bold text-sm">Panel Gaps &amp; Seal Integrity</p>
+<p class="text-[10px] text-red-600 font-bold uppercase tracking-widest">Discrepancy: Rear Quarter (Left)</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold uppercase bg-primary text-white px-2 py-0.5 rounded">Failed</span>
+<span class="material-symbols-outlined text-zinc-400 text-sm">photo_camera</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Interior -->
+<section>
+<div class="flex justify-between items-end mb-4 px-2">
+<h3 class="text-xl font-black -tracking-tight">Interior Systems</h3>
+<button class="text-[10px] font-bold uppercase tracking-widest text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add_circle</span> Add Issue
+                                </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm divide-y divide-zinc-100 overflow-hidden">
+<div class="flex items-center justify-between p-4 hover:bg-zinc-50 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-300">check_circle</span>
+<div>
+<p class="font-bold text-sm">Infotainment &amp; Navigation Calibration</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Firmware V2.1.4 / Map region update</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold uppercase bg-zinc-100 text-zinc-400 px-2 py-0.5 rounded">Pending</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm">more_vert</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-zinc-50 transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-300">check_circle</span>
+<div>
+<p class="font-bold text-sm">Seat Adjustment &amp; Heating</p>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">All 6-way motors functional</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold uppercase bg-zinc-100 text-zinc-400 px-2 py-0.5 rounded">Pending</span>
+<span class="material-symbols-outlined text-zinc-300 text-sm">more_vert</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Mechanical & Docs (Asymmetric layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<section>
+<h3 class="text-xs font-black uppercase tracking-widest mb-4 px-2 text-zinc-500">Mechanical Health</h3>
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm space-y-4">
+<div class="flex justify-between items-center pb-3 border-b border-zinc-50">
+<span class="text-sm font-medium">Fluid Levels</span>
+<span class="text-[10px] font-bold text-green-600">OPTIMAL</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-zinc-50">
+<span class="text-sm font-medium">Battery Voltage</span>
+<span class="text-[10px] font-bold text-zinc-900">12.6 V</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-medium">OBD-II Scan</span>
+<span class="text-[10px] font-bold text-zinc-400">NOT STARTED</span>
+</div>
+</div>
+</section>
+<section>
+<h3 class="text-xs font-black uppercase tracking-widest mb-4 px-2 text-zinc-500">Documentation</h3>
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="text-sm font-medium">Warranty Manual</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">description</span>
+<span class="text-sm font-medium">Factory Build Sheet</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-zinc-300">description</span>
+<span class="text-sm font-medium italic text-zinc-400">Keys / Fobs (Awaiting)</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Sticky Bar (Authority: Task Requirement) -->
+<footer class="h-20 bg-white border-t border-zinc-100 flex items-center justify-between px-8 z-50 fixed bottom-0 left-64 right-0 shadow-[0_-8px_30px_rgb(0,0,0,0.04)]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-12 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-primary"></div>
+</div>
+<span class="text-[10px] font-black uppercase tracking-widest">35% Complete</span>
+</div>
+<div class="h-8 w-px bg-zinc-100"></div>
+<div class="flex items-center gap-2 text-zinc-400">
+<span class="material-symbols-outlined text-sm">history</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Last Sync: 2m ago</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2.5 bg-surface-container-low text-zinc-900 text-xs font-bold uppercase tracking-widest rounded transition-all active:scale-95 hover:bg-zinc-200">
+                        Put on Hold
+                    </button>
+<button class="px-8 py-2.5 bg-primary text-on-primary text-xs font-bold uppercase tracking-widest rounded transition-all active:scale-95 shadow-lg shadow-primary/20 hover:bg-primary-container">
+                        Complete PDI
+                    </button>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

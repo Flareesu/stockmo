@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Admin - Technician Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#EC0A1E",
+                        "brand-dark": "#1a1a1a",
+                        "brand-gray": "#6b7280",
+                        "background-light": "#FFFFFF",
+                        "surface": "#F9FAFB",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #FFFFFF;
+            color: #1a1a1a;
+        }
+        .sidebar-item-active {
+            background-color: #EC0A1E;
+            color: white !important;
+        }
+        .sidebar-item-active span {
+            color: white !important;
+        }
+    </style>
+</head>
+<body class="font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-72 flex flex-col bg-white border-r border-slate-100">
+<div class="p-8 border-b border-slate-100">
+<div class="flex items-center gap-4">
+<div class="bg-primary rounded-lg p-2 text-white flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-2xl">warehouse</span>
+</div>
+<div>
+<h1 class="text-xl font-bold leading-none tracking-tight">StockMo</h1>
+<p class="text-[10px] text-brand-gray mt-1.5 uppercase tracking-widest font-bold">GAC Logistics</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-8 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-brand-gray hover:bg-slate-50 rounded-lg transition-all group" href="#">
+<span class="material-symbols-outlined text-[22px]">dashboard</span>
+<span class="text-sm font-semibold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-brand-gray hover:bg-slate-50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">inventory_2</span>
+<span class="text-sm font-semibold">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 sidebar-item-active rounded-lg shadow-md shadow-primary/20" href="#">
+<span class="material-symbols-outlined text-[22px]">engineering</span>
+<span class="text-sm font-bold">Technicians</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-brand-gray hover:bg-slate-50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">build</span>
+<span class="text-sm font-semibold">Work Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-brand-gray hover:bg-slate-50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">map</span>
+<span class="text-sm font-semibold">Yard Map</span>
+</a>
+<div class="pt-8 pb-4 px-4">
+<p class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">Management</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-brand-gray hover:bg-slate-50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-[22px]">settings</span>
+<span class="text-sm font-semibold">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-slate-100">
+<div class="bg-slate-50 rounded-xl p-5 border border-slate-100">
+<div class="flex items-center gap-2 mb-2">
+<div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-bold text-brand-dark uppercase tracking-wider">System Live</span>
+</div>
+<p class="text-xs text-brand-gray leading-relaxed">Network status is nominal. 42 technicians active in the field.</p>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Header -->
+<header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10">
+<div class="flex items-center gap-10 flex-1">
+<h2 class="text-2xl font-extrabold tracking-tight">Technician Management</h2>
+<div class="max-w-md w-full relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-50 border border-slate-100 rounded-xl pl-12 pr-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all outline-none" placeholder="Search technicians, IDs, or assignments..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-red-700 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Add Technician
+                </button>
+<div class="h-8 w-[1px] bg-slate-200"></div>
+<button class="relative p-2.5 text-brand-gray hover:bg-slate-50 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-primary rounded-full border-2 border-white"></span>
+</button>
+<div class="size-11 rounded-full bg-slate-100 overflow-hidden ring-2 ring-slate-100 hover:ring-primary/20 transition-all cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="Corporate professional headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnGc3N1DVAVyTLznzlM-An9ulucmcaQ1iE__1NbKj9FrVaPGK1WqN9Haw-GHdYy7KnTd-Rb_lhQpSGTsmQFhwm0iMn-WHHlTvtMeUOgFD6Y6Jz376k2tLfqV_Sd30f8VdaNBy0KRAKTScTJQIQYOc_I6xdC6FeSqci3j_7GT802I1ezlnYH_8BieQWgmmGhLhyB7tx_URHIvT5dadkQYJ0z0rg0ChTKEccPqk8TwkmumTQrvAhmfnWHxsKLVQLPvFm-T-260UeymXf"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Body -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Roster Section -->
+<div class="flex-1 overflow-y-auto p-10 bg-slate-50/30">
+<!-- Metrics Cards -->
+<div class="grid grid-cols-4 gap-8 mb-10">
+<div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+<p class="text-[11px] font-bold text-brand-gray uppercase tracking-[0.15em]">Total Staff</p>
+<div class="flex items-baseline justify-between mt-3">
+<h3 class="text-4xl font-extrabold tracking-tight">42</h3>
+<span class="text-green-600 text-xs font-bold flex items-center gap-1 px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm font-bold">trending_up</span>
+                                +2%
+                            </span>
+</div>
+</div>
+<div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+<p class="text-[11px] font-bold text-brand-gray uppercase tracking-[0.15em]">Active Now</p>
+<div class="flex items-baseline justify-between mt-3">
+<h3 class="text-4xl font-extrabold tracking-tight">28</h3>
+<div class="flex -space-x-3">
+<div class="size-7 rounded-full border-2 border-white bg-slate-200"></div>
+<div class="size-7 rounded-full border-2 border-white bg-slate-300"></div>
+<div class="size-7 rounded-full border-2 border-white bg-slate-400"></div>
+</div>
+</div>
+</div>
+<div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+<p class="text-[11px] font-bold text-brand-gray uppercase tracking-[0.15em]">Efficiency</p>
+<div class="flex items-baseline justify-between mt-3">
+<h3 class="text-4xl font-extrabold tracking-tight">94%</h3>
+<span class="text-primary text-[10px] font-bold uppercase border border-primary/20 px-2 py-0.5 rounded">Target 90%</span>
+</div>
+</div>
+<div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+<p class="text-[11px] font-bold text-brand-gray uppercase tracking-[0.15em]">Avg Response</p>
+<div class="flex items-baseline justify-between mt-3">
+<h3 class="text-4xl font-extrabold tracking-tight">12m</h3>
+<span class="text-slate-400 text-xs font-medium">Standard</span>
+</div>
+</div>
+</div>
+<!-- Tech Table -->
+<div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+<div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center">
+<h4 class="font-bold text-brand-dark">Technician Roster</h4>
+<button class="text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+                            Export List <span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<table class="w-full text-left">
+<thead class="bg-slate-50/50">
+<tr>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Technician</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Status</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Current Assignment</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Efficiency</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<!-- Tech Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-full bg-slate-100 overflow-hidden border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Male technician profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0XMjucLGt-gdxb7aVeFO0PyzCCFK7GyAVpvPiVS4fMSbauHQMj6TzZ1jxSx46ewuaDa4i__aKHQOzR8KuW7tYlBdxxsbZ2T15YG64uXPOmf0cfvoyLnyRaPBJpA0mDoRq4wx1jIP-AbINH6EceIqgLr-3SKynfZGW04EHZ-wD8PZPPfNu3OQ91ZuBPYC5fRhck1T-y0r1bmtrlIITJCZw8Hn8VGhXRJRoqMF3MnNwnVe1glytiK-GD3BFk5-N9Y5HrjI1XrPshFFM"/>
+</div>
+<div>
+<p class="text-sm font-bold text-brand-dark">Ahmed Hassan</p>
+<p class="text-xs text-brand-gray">ID-9921 • Senior Tech</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-100">
+<span class="size-1.5 rounded-full bg-green-600"></span> ACTIVE
+                                </span>
+</td>
+<td class="px-8 py-6">
+<div class="flex flex-col">
+<p class="text-sm text-brand-dark font-medium">PDI on #V-1234</p>
+<p class="text-[10px] text-brand-gray uppercase font-bold tracking-tight">Started 14m ago</p>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-2 w-28 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 88%"></div>
+</div>
+<span class="text-sm font-bold text-brand-dark">88%</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="text-primary hover:text-red-700 font-bold text-xs uppercase tracking-wider transition-colors">Manage</button>
+</td>
+</tr>
+<!-- Tech Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-full bg-slate-100 overflow-hidden border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Female technician profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuB3mJ7CRlUn1ur0oo5X90w8CFB8SMG-jXgFQ2NIJORee2SiPr3TdHqjFabmts5QP6qzeuyve4LywW7taVJU4TMycqu1B15d_5GFMThQWN71iBvWdzBykjaffHY2GBNjIe9TZ8qc_-NJurc5nJ9__f-uaMY95l9J2RKTtHsQmT9GYjwOKXGjIclkzVkcC22WfnMqh4ml50nWxu596ZrcdbpjUU03kMq37SwuhawEcYwUbWzKwtVQtOFAinhUt4ZI-Mp-ZwzpZPqhfp"/>
+</div>
+<div>
+<p class="text-sm font-bold text-brand-dark">Sarah Chen</p>
+<p class="text-xs text-brand-gray">ID-9844 • Yard Specialist</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100">
+<span class="size-1.5 rounded-full bg-amber-600"></span> ON BREAK
+                                </span>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm text-slate-400 italic">Idle</p>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-2 w-28 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 92%"></div>
+</div>
+<span class="text-sm font-bold text-brand-dark">92%</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="text-primary hover:text-red-700 font-bold text-xs uppercase tracking-wider transition-colors">Manage</button>
+</td>
+</tr>
+<!-- Tech Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-full bg-slate-100 overflow-hidden border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Male technician profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFNYWQV1mR_faGD9Z-FENfie5lz2v33GQpggPBRyME4Nrc2q23lFgP0TxrCliQv1zCPWRT8tOM4xax0wI1Fxna209kmxZ0hgfzIZpDibYlp3uZJTMRQkRFH9fDXGZ2iRowYWPdTrgOBacWXCztWShNlrzo3XgCLcg9xX_plvVnFb2o2kSAdYQiexGUeAGAgW1C71EQHjcrR7SgxmLAvThKHQRY4LRyBxokbSsupr3y3bTSYIYZizkD9aXcYaLLLuA1QPufiIkTNxwM"/>
+</div>
+<div>
+<p class="text-sm font-bold text-brand-dark">Marcus Johnson</p>
+<p class="text-xs text-brand-gray">ID-9755 • Inspector</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-green-50 text-green-700 border border-green-100">
+<span class="size-1.5 rounded-full bg-green-600"></span> ACTIVE
+                                </span>
+</td>
+<td class="px-8 py-6">
+<div class="flex flex-col">
+<p class="text-sm text-brand-dark font-medium">Wash on #V-5562</p>
+<p class="text-[10px] text-brand-gray uppercase font-bold tracking-tight">Started 3m ago</p>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-2 w-28 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 96%"></div>
+</div>
+<span class="text-sm font-bold text-brand-dark">96%</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="text-primary hover:text-red-700 font-bold text-xs uppercase tracking-wider transition-colors">Manage</button>
+</td>
+</tr>
+<!-- Tech Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors opacity-75">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="size-11 rounded-full bg-slate-100 overflow-hidden grayscale">
+<img class="w-full h-full object-cover" data-alt="Male technician profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8LHzIkNKSaslQkAQjJl-Y2gSt1WRZGPYunMiIx559-jA72OkYWh_ig2lRbdRh9h_F5ibr1lPudEeQ7otAcC1S-NH_cida8GID1bCn-BY2BOtI0ewxhAPZJHong9faVs5uM0Jhq1UDDXv5yn_I05BZU8xu9LC5cnZBgXuJtzG3xogJ5MUWFvhGyU9lvCUH8K6ABGoUXEw6hvKbA3EiG8w1MSkkYovqzsLG4J05a79EUpxxOuRFUd6h63Ve0L0WG3o_H-PQG6m9b_d-"/>
+</div>
+<div>
+<p class="text-sm font-bold text-brand-dark">Omar Bakri</p>
+<p class="text-xs text-brand-gray">ID-9612 • Junior Tech</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200">
+<span class="size-1.5 rounded-full bg-slate-400"></span> OFF-DUTY
+                                </span>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm text-slate-400">None</p>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-2 w-28 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-slate-300" style="width: 0%"></div>
+</div>
+<span class="text-sm font-bold text-slate-400">--</span>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="text-primary hover:text-red-700 font-bold text-xs uppercase tracking-wider transition-colors">Manage</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Assignment Panel & Sidebar Logs -->
+<aside class="w-96 bg-white border-l border-slate-100 flex flex-col overflow-hidden">
+<!-- Assign Panel -->
+<div class="p-8 border-b border-slate-100">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-xs uppercase tracking-[0.2em] text-slate-400">Assign Vehicle</h3>
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors">more_horiz</button>
+</div>
+<div class="space-y-5">
+<div class="p-5 bg-primary/[0.03] border-l-4 border-primary rounded-r-xl cursor-grab active:cursor-grabbing hover:bg-primary/[0.06] transition-all">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold bg-primary text-white px-2 py-0.5 rounded tracking-wider uppercase">#V-8821</span>
+<span class="text-[10px] font-extrabold text-primary uppercase tracking-widest">Urgent PDI</span>
+</div>
+<p class="text-sm font-bold text-brand-dark">2024 Toyota Land Cruiser</p>
+<p class="text-xs text-brand-gray mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                                Staging Area A-12
+                            </p>
+</div>
+<div class="p-5 bg-slate-50 border-l-4 border-slate-200 rounded-r-xl cursor-grab active:cursor-grabbing hover:bg-slate-100 transition-all">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2 py-0.5 rounded tracking-wider uppercase">#V-4432</span>
+<span class="text-[10px] font-extrabold text-brand-gray uppercase tracking-widest">Recall Check</span>
+</div>
+<p class="text-sm font-bold text-brand-dark">2023 Nissan Patrol</p>
+<p class="text-xs text-brand-gray mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                                Bay 4
+                            </p>
+</div>
+<div class="p-8 border-2 border-dashed border-slate-100 rounded-2xl flex flex-col items-center justify-center bg-slate-50/50">
+<span class="material-symbols-outlined text-slate-300 text-4xl mb-3">drag_pan</span>
+<p class="text-xs text-brand-gray font-bold text-center px-6 leading-relaxed">DRAG TECHNICIAN HERE TO ASSIGN</p>
+</div>
+</div>
+</div>
+<!-- Activity Log -->
+<div class="flex-1 overflow-y-auto p-8">
+<h3 class="font-bold text-xs uppercase tracking-[0.2em] text-slate-400 mb-8">Live Feed</h3>
+<div class="space-y-8 relative before:absolute before:left-4 before:top-2 before:bottom-2 before:w-[1px] before:bg-slate-100">
+<!-- Log Item 1 -->
+<div class="relative pl-12">
+<div class="absolute left-0 size-8 bg-green-50 text-green-600 rounded-full flex items-center justify-center ring-4 ring-white border border-green-100 shadow-sm">
+<span class="material-symbols-outlined text-base font-bold">check_circle</span>
+</div>
+<div class="flex flex-col">
+<p class="text-xs font-bold leading-normal"><span class="text-primary">Ahmed Hassan</span> completed PDI</p>
+<p class="text-[10px] text-brand-gray mt-0.5">Vehicle #V-9901 • 2m ago</p>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="relative pl-12">
+<div class="absolute left-0 size-8 bg-primary/5 text-primary rounded-full flex items-center justify-center ring-4 ring-white border border-primary/10 shadow-sm">
+<span class="material-symbols-outlined text-base font-bold">person</span>
+</div>
+<div class="flex flex-col">
+<p class="text-xs font-bold leading-normal"><span class="text-primary">Sarah Chen</span> back from break</p>
+<p class="text-[10px] text-brand-gray mt-0.5">Status updated to Active • 12m ago</p>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="relative pl-12">
+<div class="absolute left-0 size-8 bg-slate-50 text-brand-gray rounded-full flex items-center justify-center ring-4 ring-white border border-slate-200 shadow-sm">
+<span class="material-symbols-outlined text-base font-bold">location_on</span>
+</div>
+<div class="flex flex-col">
+<p class="text-xs font-bold leading-normal"><span class="text-primary">Marcus Johnson</span> moved #V-5562</p>
+<p class="text-[10px] text-brand-gray mt-0.5">To Wash Bay 2 • 25m ago</p>
+</div>
+</div>
+<!-- Log Item 4 -->
+<div class="relative pl-12">
+<div class="absolute left-0 size-8 bg-primary/5 text-primary rounded-full flex items-center justify-center ring-4 ring-white border border-primary/10 shadow-sm">
+<span class="material-symbols-outlined text-base font-bold">add_task</span>
+</div>
+<div class="flex flex-col">
+<p class="text-xs font-bold leading-normal">New: <span class="text-primary">Omar Bakri</span></p>
+<p class="text-[10px] text-brand-gray mt-0.5">Assigned Inspection #V-2210 • 40m ago</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</body></html>

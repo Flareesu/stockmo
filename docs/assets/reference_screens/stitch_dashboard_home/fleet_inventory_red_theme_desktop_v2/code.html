@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo - Fleet Inventory</title>
+<!-- Tailwind CSS with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d", // Updated to brand signature red from THEME_2
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+<div class="flex flex-col min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl">inventory_2</span>
+</div>
+<h2 class="text-xl font-extrabold tracking-tight">StockMo</h2>
+</div>
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Fleet Inventory</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Technicians</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Reports</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-semibold transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/50" placeholder="Global search..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:border-slate-700 mx-1"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold leading-none">Alex Rivera</p>
+<p class="text-[10px] text-slate-500 font-medium">Operations Lead</p>
+</div>
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 bg-cover bg-center ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all" data-alt="User profile avatar of Alex Rivera" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC1eDNtzcAxm44kLnRgtqOLQ78CWnCqr_3355hlt0FG0N0qGW4s5H93wee2SzmRQENLujnvojj4hPmecQxk7ULw1njoxtckn42aXg2MJCkugm1agawj0vjl862dEhJuwmYohXXu08oREL2IPF4AhFOGpN6TWNMag9C0KQByWkWnt-vCwvb4426wthCgcGbUspuAsaHSIBGnzLSXkeYdZCmNwPP9DvQHZGZ-eGw9X3OwOv8sBFUtbYbnu2R6QrCNn-FzOqVKRRhDU-7P')"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 max-w-[1600px] mx-auto w-full p-6 space-y-6">
+<!-- Inventory Header & Filter Bar -->
+<div class="space-y-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Fleet Inventory</h1>
+<p class="text-slate-500 dark:text-slate-400 font-medium mt-1">Managing 450 active units across 4 stages</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2.5 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 transition-all">
+<span class="material-symbols-outlined text-lg">file_download</span>
+                            Export CSV
+                        </button>
+<button class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                            Register New Vehicle
+                        </button>
+</div>
+</div>
+<!-- Advanced Filters Section -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+<div class="flex flex-col xl:flex-row gap-4">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg py-3 pl-12 pr-4 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search by VIN, Model, or assigned technician name..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 hidden xl:block mx-2"></div>
+<!-- Filter Chips -->
+<button class="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-bold border border-primary/20">
+                                Stage: All
+                                <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700">
+                                Model: All
+                                <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700">
+                                Year: 2024
+                                <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700">
+                                Technician: Any
+                                <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="text-primary text-xs font-bold hover:underline ml-2">Clear All</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Grid/Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Vehicle Detail</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Lifecycle Stage</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Last Activity</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Assigned Tech</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Table Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-14 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-700">
+<div class="w-full h-full bg-cover bg-center" data-alt="Blue compact SUV vehicle side view" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBlCn2sOCO1iC1RT-fvgVDg8J8gP0NtvAVdk8a7goz2ft7211oYjr7CWBajn4WWX8yZHahyNwpTZQLKC_yt25_pqHW5apD1DCm8jEKx8fvb4-P_oZSH0NRPc0yq0nnZ0JI7P22Gzf5GdTtGYV1l_3N__WpUbhy9q-d4EO3EwIF1LKA9lnbt4xdZ1U7lR1Ou6BnvTHZm4PE7kBtXoCFzHz_VlsiXAQapGQtL5XqQI0ksKEITtbeGz7KKlXQL85CFPc2_MpJdNrxJNje0')"></div>
+</div>
+<div>
+<p class="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase">GAC-24-X49920</p>
+<p class="text-xs text-slate-500 font-medium">2024 Emkoo GL Performance • Silver Metallic</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 uppercase">
+<span class="size-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+                                        Port Inspection
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-700 dark:text-slate-300 font-medium">Arrival at Port Alpha</p>
+<p class="text-[11px] text-slate-500">2 hours ago</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" data-alt="Portrait of technician John Doe" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAxZMeofhNToHbFJINovMopJmtiRakb7_9eIrFk7k3VqFMNPjtcN105A24gCU_V-lQ3ZFXoQbNZ9rBVACA-mg9FE04KzvLVDy_uTkcCwqlNzQwkeUugji72QkOgFIPpZZ-ghV6e81WCf6yWUfCLLGMqcTEH3K67rnPfbdgvssCu-VPnhfif7I2UkeE1eVAN8fnY9szjR3L_kU9bV0kM_WRiFYHugajqKPv62H7XuKJXujpQNmCRDZ_05FGtIh7HyLAfS8CvjAVJZmII')"></div>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="View Details">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit Status">
+<span class="material-symbols-outlined text-xl">edit_note</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Assign Technician">
+<span class="material-symbols-outlined text-xl">person_add</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 2 (Updated status indicator to brand red theme variant) -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-14 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-700">
+<div class="w-full h-full bg-cover bg-center" data-alt="White sedan luxury car" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB6p3W8bf1mfuyJ3z2qj4XBMexVYekmOWvMrLFNsXBccU0U0UyU-bQ2v-xiYbKHTQPuIwEwa1NvsxJ0AqudZ47b37qh7v4ESsGdKCfYoOIMqLLb1SQOyMdOl3lTO5tYFS3sXXlxcNU6xxX9s-Q6XLCeEQTpeetTmoY_3qlS6-nrVCr2_eq6cjPeaiZx7rFS8NE_01uUTun8EE8a2uObH8JqxTxgX7MyjOnp8xpvWnX_lv5J8CuhCPjXPGUJLBrTVjdXUyFv86IwrM0V')"></div>
+</div>
+<div>
+<p class="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase">GAC-24-X49921</p>
+<p class="text-xs text-slate-500 font-medium">2024 Empow S Turbo • Arctic White</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary border border-primary/20 dark:border-primary/30 uppercase">
+<span class="size-1.5 rounded-full bg-primary mr-1.5"></span>
+                                        PDI Process
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-700 dark:text-slate-300 font-medium">Brake System Check</p>
+<p class="text-[11px] text-slate-500">45 mins ago</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" data-alt="Portrait of technician Sarah Chen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDbyfvPUa9f_SbUcGJNDR09cPoXc1D8iwMrPbDLiNU9pQu7xxca7UerJG74OLbL-Tr95d4cTa6Cw0CSEwOWMa9lItuSTjFbOIlfmvzdmeKhHnyCVe2ZeN1N-W0Q681CAHRGCUoejszaldYQ32Vr94yZD4Xg-GixcVCncXBf3boBcvyStwnFhpETbXAiAEMSVdtmzP6jxNMRZixYjUXHw_667G7V7Z0me-fFZazBwW9izAlJbn8EfiaqIt2Ff09a-3Mv0RVhR0r6Mf2H')"></div>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="View Details">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit Status">
+<span class="material-symbols-outlined text-xl">edit_note</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Assign Technician">
+<span class="material-symbols-outlined text-xl">person_add</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-14 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-700">
+<div class="w-full h-full bg-cover bg-center" data-alt="Black luxury SUV" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB7hvXniLWjP6v_y_nd60PIhEu6Wns4xLGHZ8ttrFHLIrnLFlG7HLSKcYMfCKncSTZo8eFJQsoDlwfbEY4C--3H3p-B1MmdFWWk3G4PCndmYZhBtI1ITT_wCnFNhz8j4NR8a7VQ1UH-3xCQIDbOSQ6EV4BWyq3M2Bw1Atjbuer59l0UTfFsnUrFNxK_NI18ef-cOqeksUpMom2uesJCTDIMNZ_S9MSiKuwIHG_-JKnRfhAHCkZUSECxHjq2YTqLp4BjG9fqgscGmCoE')"></div>
+</div>
+<div>
+<p class="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase">GAC-24-Z11054</p>
+<p class="text-xs text-slate-500 font-medium">2024 GS8 Luxury 4WD • Phantom Black</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800/50 uppercase">
+<span class="size-1.5 rounded-full bg-green-500 mr-1.5"></span>
+                                        Ready for Sale
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-700 dark:text-slate-300 font-medium">Final Detailing Finished</p>
+<p class="text-[11px] text-slate-500">1 day ago</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-xs font-bold text-slate-400 uppercase italic">Unassigned</span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="View Details">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit Status">
+<span class="material-symbols-outlined text-xl">edit_note</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Assign Technician">
+<span class="material-symbols-outlined text-xl">person_add</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-14 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-700">
+<div class="w-full h-full bg-cover bg-center" data-alt="Red sports coupe car" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBeEUsoSmqvcVjNikGzKPmUwoqnuHoxgVB-QFJpxi7LFUtFSAPCGYc5UkYFkhL3CohQgRaAms6OnDM2OXYOgsfVCqtl5gIdH_PNYFFSlNDNlPtLscvTUdIg5O1NLCM4B9J7NmLsFuYKKryZ9USXxkKPAUdsVDkPH1dTjddIftzyvOYOd-uj7L3O0Bca0_hYcGGFh6Z_0DlhppzeDw8qaXmnf_OZ0V81IAKy_ymoODyfifgrH3t2MMLcWJ7s1sg_2jYYIu2foWP6GUje')"></div>
+</div>
+<div>
+<p class="text-sm font-black tracking-tight text-slate-900 dark:text-white uppercase">GAC-24-V22819</p>
+<p class="text-xs text-slate-500 font-medium">2024 Emzoom R-Style • Flame Red</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 uppercase">
+<span class="size-1.5 rounded-full bg-slate-500 mr-1.5"></span>
+                                        Stockyard
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-slate-700 dark:text-slate-300 font-medium">Internal Transfer</p>
+<p class="text-[11px] text-slate-500">3 hours ago</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-7 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center" data-alt="Portrait of technician Marcus Wright" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCYY_16EPJ1QkTuKXhw4jupslFAh8tjYaxmw2d75X-9WpEHSDmJ89x8fcDiqqKIT0jcqUfYwJwu4TZkE03OFQ7vmZrkiXLorzHqaFv-wrUvLbWCRnR_-hkKqW2ENWUoToKKpNrr-QpcEGnQKVkRrZ1TWbfOt3she543aD23uCfRG1bElHMT3ng-osT9zX7HVPejkwfM3ZCNpWX0Ok97CKWikFQQ04j-fKgfqDV9OoZJKSgi6OqZ7gMCfe6l5CX18HwS98K2Et3x0Y_-')"></div>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Marcus Wright</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="View Details">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit Status">
+<span class="material-symbols-outlined text-xl">edit_note</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Assign Technician">
+<span class="material-symbols-outlined text-xl">person_add</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Stats Footer -->
+<div class="bg-slate-50 dark:bg-slate-800/30 px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-sm text-slate-500 font-medium">
+                        Showing <span class="text-slate-900 dark:text-white font-bold">1-25</span> of <span class="text-slate-900 dark:text-white font-bold">450</span> units
+                    </p>
+<div class="flex items-center gap-2">
+<button class="size-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="size-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">2</button>
+<button class="size-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">3</button>
+<span class="text-slate-400 text-xs font-bold px-1">...</span>
+<button class="size-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800">18</button>
+<button class="size-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-primary hover:border-primary transition-all">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Stats Overview Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Port Stock</span>
+<span class="text-amber-500 material-symbols-outlined">anchor</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black text-slate-900 dark:text-white">128</span>
+<span class="text-[10px] font-bold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded">+4.2%</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-slate-500 text-xs font-bold uppercase tracking-wider">In PDI</span>
+<span class="text-primary material-symbols-outlined">settings_suggest</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black text-slate-900 dark:text-white">64</span>
+<span class="text-[10px] font-bold text-slate-400">Stable</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Ready for Sale</span>
+<span class="text-green-500 material-symbols-outlined">verified</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black text-slate-900 dark:text-white">215</span>
+<span class="text-[10px] font-bold text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded">-12.5%</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Storage Capacity</span>
+<span class="text-primary material-symbols-outlined">data_usage</span>
+</div>
+<div class="mt-2 space-y-2">
+<div class="flex justify-between text-[10px] font-bold">
+<span>84% Full</span>
+<span>378/450</span>
+</div>
+<div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[84%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="text-xs text-slate-400 font-medium">
+                © 2024 StockMo Fleet Management. All rights reserved.
+            </div>
+<div class="flex items-center gap-6">
+<a class="text-xs text-slate-400 hover:text-primary transition-colors" href="#">Documentation</a>
+<a class="text-xs text-slate-400 hover:text-primary transition-colors" href="#">Support Portal</a>
+<a class="text-xs text-slate-400 hover:text-primary transition-colors" href="#">System Status</a>
+</div>
+</footer>
+</div>
+</body></html>

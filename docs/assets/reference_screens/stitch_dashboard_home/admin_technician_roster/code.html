@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>StockMo Admin - Technician Roster</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-background-dark shadow-xl overflow-x-hidden">
+<header class="sticky top-0 z-20 bg-white dark:bg-background-dark border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center p-4 justify-between">
+<div class="text-slate-900 dark:text-slate-100 flex size-10 items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 px-2">Technician Roster</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-transparent text-slate-900 dark:text-slate-100">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<div class="px-4 pb-3">
+<label class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-lg h-11 bg-slate-100 dark:bg-slate-800">
+<div class="text-slate-500 dark:text-slate-400 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full border-none bg-transparent focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 px-3 text-sm font-medium" placeholder="Search technicians by name or ID" value=""/>
+</div>
+</label>
+</div>
+<div class="flex px-4 gap-6 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-3 pt-2" href="#">
+<p class="text-xs font-bold uppercase tracking-wider">All</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2" href="#">
+<p class="text-xs font-bold uppercase tracking-wider">Active</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2" href="#">
+<p class="text-xs font-bold uppercase tracking-wider">Break</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2" href="#">
+<p class="text-xs font-bold uppercase tracking-wider">Off-duty</p>
+</a>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto">
+<div class="divide-y divide-slate-100 dark:divide-slate-800">
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="relative shrink-0">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Professional headshot of Robert Fox technician" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChNjWHsgUZVJlKT3h4tHAqe7go7PRPE2Av0g1rx03OyGwamyhJQeyfubUAmQfrOywakr4ZhKrq1yYAynb8QxVQWMvYQz-QCp-i8Yc-ZYXWY_VzzN28iZp-KAViHDjfmnTNz4p78NDNKusWwP2cuyurdPPY_5PdQHFpgsfxu7FGI71yNO3cHEFkp53hLmxrDmPk_q-lJRi2ucH0v53HjCtfrN7-DbdfNgaS0oKo8T5qH7UF_OaHC9ZtjrCaRvom8__cXE_0cxiN9GXq");'></div>
+<div class="absolute bottom-0 right-0 size-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800"></div>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Robert Fox</p>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 uppercase tracking-tighter">Active</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Lot A - Section 4
+                        </p>
+<p class="text-primary text-xs font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">assignment_turned_in</span> PDI #4421
+                        </p>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="relative shrink-0">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Professional headshot of Jane Cooper technician" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA5a-2V46WN45tcAxPGOx27Uscx1Qr8G0xSl3nzEis4UVMF3pgIMormbeciLR_KZDf3X8LUos1t9EXKQ-ieLcUXFAzfsTQ1Aaxuk42u8FHvAVJw_EtcfAlOAAcWTXikByoW6QkegPaRDMKrf2cG5LCK4CgB4YaMtoTiuYTiFvHBhYHzFe7SYpJPM_KO0B9FMY49B2optkOtDjljniz62IkAZsu8HX2lHEkPVBEAK3nqJlTUJvG5zupmdIysTgzyFdylEj1uXErjS6xm");'></div>
+<div class="absolute bottom-0 right-0 size-4 rounded-full bg-amber-500 border-2 border-white dark:border-slate-800"></div>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Jane Cooper</p>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 uppercase tracking-tighter">Break</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Main Building - Bay 2
+                        </p>
+<p class="text-slate-400 dark:text-slate-600 text-xs font-medium mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timer</span> Next task in 12m
+                        </p>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="relative shrink-0">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Professional headshot of Cody Fisher technician" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDnHI52R0POxBiE0fw-ZXOrbgi0cjFPFO7b4bsmcpr2g28tz0yBu-Pn2irtxEDTmzUzZb2pnWJ0y3AC0u1Qduuhrk4Uu2hsxCJA3mkU3F9jivrwVtd2WR0iYa8nKMwKQucG_IxpfB8noW9rpPeR831u3t_VXz3WOCVrunnmuqVvfDM_wXE7HojJXaiDZgh2_BbuYW4396rL4aBjb7wsscI6NtiEjbLb6YoHg7Xe6ldsMtr79NpsdifzzTy6wDL4goaGb_cEkZE0Drxs");'></div>
+<div class="absolute bottom-0 right-0 size-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800"></div>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Cody Fisher</p>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 uppercase tracking-tighter">Active</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Lot C - Overflow
+                        </p>
+<p class="text-primary text-xs font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">assignment_turned_in</span> Repair #9021
+                        </p>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors opacity-60">
+<div class="relative shrink-0">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Professional headshot of Esther Howard technician" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_aA6HQBH0b_cVcOx4xBGZRTljVXtOWVQQGrX0Tu7DcYxfi9jTiGZkP-k421aDZUX-I9YBo62lCdYb3NTuwlnDMQtSbfLwdsqSYx09zijrgmrRPU0O29HXpbT-bnq4D7CwTlvnc_gCVq5bO9ea-ph_Ys2fYg1cHAhkjoCG-EWBioaPVjzCf7lpggWgA5QSyWWwtShqOlbVczYUjJUva95DQWdwh7CXwd8bQB3AKvuNA2f2szRsct3wTX_QdJ4Z3X6NNKQ-a_IOTJsS");'></div>
+<div class="absolute bottom-0 right-0 size-4 rounded-full bg-slate-300 border-2 border-white dark:border-slate-800"></div>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Esther Howard</p>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase tracking-tighter">Off-duty</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Starts 08:00 AM
+                        </p>
+<p class="text-slate-400 dark:text-slate-600 text-xs font-medium mt-1">No active task</p>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="relative shrink-0">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14 border-2 border-white dark:border-slate-700 shadow-sm" data-alt="Professional headshot of Guy Hawkins technician" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC1cKninUqaJcWIqWI4Sic1oHtMtzHDTei2RLoE1P1c93Qfot3n7m9T1XvHwxN5OsuMsY24n2oyixTXQG5uFLR-5ryRQNUFM7furgZX_XX2XmsD_Z9evSNsMu9Lznde4tDdjgFqCS0jgzHndrLMsUDk6GaSSYMKoQpTGh7q4m2O3qVQopgULhIY002qn0zOzjn8KUaiYmCOTkz5vK6F0D62vnSc09UuBVC2Oz3o4r---LKKpBEBAweSTQW55FonquIr2j-BVKmMunEB");'></div>
+<div class="absolute bottom-0 right-0 size-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800"></div>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between">
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Guy Hawkins</p>
+<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 uppercase tracking-tighter">Active</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Transport Zone
+                        </p>
+<p class="text-primary text-xs font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">assignment_turned_in</span> Relocation #112
+                        </p>
+</div>
+<span class="material-symbols-outlined text-slate-300">chevron_right</span>
+</div>
+</div>
+</main>
+<nav class="sticky bottom-0 z-20 flex gap-2 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-background-dark px-4 pb-6 pt-3">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Stock</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">assignment_ind</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Tasks</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">history</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">History</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-[10px] font-bold uppercase tracking-tighter">Settings</p>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>STORAGE &amp; PDI - StockMo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#936e6a",
+              "error-container": "#ffdad6",
+              "error": "#ba1a1a",
+              "surface-dim": "#dadada",
+              "on-secondary-fixed-variant": "#474747",
+              "surface-container-highest": "#e2e2e2",
+              "on-tertiary-container": "#fffdff",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#5e3f3b",
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-secondary": "#ffffff",
+              "surface-container": "#eeeeee",
+              "on-tertiary-fixed-variant": "#00497c",
+              "on-background": "#1a1c1c",
+              "surface-container-high": "#e8e8e8",
+              "on-surface": "#1a1c1c",
+              "tertiary": "#0060a0",
+              "on-secondary-container": "#656464",
+              "on-tertiary-fixed": "#001d36",
+              "surface-tint": "#c00013",
+              "primary-container": "#eb0a1d",
+              "on-primary-fixed": "#410002",
+              "tertiary-fixed": "#d1e4ff",
+              "surface-container-lowest": "#ffffff",
+              "on-error": "#ffffff",
+              "surface-container-low": "#f3f3f3",
+              "background": "#f9f9f9",
+              "on-primary": "#ffffff",
+              "primary": "#bd0013",
+              "tertiary-fixed-dim": "#9dcaff",
+              "surface-bright": "#f9f9f9",
+              "on-secondary-fixed": "#1b1c1c",
+              "on-primary-container": "#fffeff",
+              "secondary-container": "#e4e2e1",
+              "secondary": "#5f5e5e",
+              "primary-fixed": "#ffdad6",
+              "outline-variant": "#e9bcb7",
+              "tertiary-container": "#0079c8",
+              "on-error-container": "#93000a",
+              "inverse-on-surface": "#f1f1f1",
+              "inverse-primary": "#ffb4ab",
+              "primary-fixed-dim": "#ffb4ab",
+              "on-primary-fixed-variant": "#93000c",
+              "surface": "#f9f9f9",
+              "inverse-surface": "#2f3131",
+              "surface-variant": "#e2e2e2",
+              "secondary-fixed": "#e4e2e1"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F5F6; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .step-active { background-color: #EB0A1D; border-color: #EB0A1D; color: white; }
+        .glass-nav { backdrop-filter: blur(24px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface antialiased pb-24">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky z-50 bg-[#F9F9F9] dark:bg-slate-950 flex items-center justify-between px-6 py-4 shadow-sm">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-['Inter'] font-bold tracking-tight uppercase text-sm text-[#1A1014]">STORAGE &amp; PDI</h1>
+<span class="text-[10px] font-medium text-secondary uppercase tracking-wider">NYK Warehouse Operations</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-secondary">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQfH5Y6Frt-_uRxXYhYI2W3NLu5NZqt9u-pKo45Bk5-wDIAG6DM96nAcPpzrDHK8--CoB-nqyJUSUtd99H9wB_0X5C50d0_vqxFOHLanvk0vtPp-SzNcHVqljVbRumURHtuZaFq3bPCm7hWpTP7IlNpCyqLyBFDBT7dXr_89EghX0tLK-OnfUnT4Tq-uHOtgko2fvhQ2_dBsoWrN_hQZdrdQBFMrd_1XVssQGe_0AMRVnN0vrKTNmjL7mbDTrwetK2bFth6yGaWdk"/>
+</div>
+</div>
+</header>
+<main class="px-4 py-6 space-y-8">
+<!-- Stage Progress Tracker -->
+<section class="overflow-x-auto no-scrollbar py-2">
+<div class="flex items-center min-w-[600px] px-2">
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-2 flex-1 relative">
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant bg-white flex items-center justify-center text-[10px] font-bold">1</div>
+<span class="text-[9px] font-bold text-secondary tracking-tighter uppercase">STENCIL</span>
+<div class="absolute top-3 left-[50%] w-full h-[2px] bg-outline-variant -z-10"></div>
+</div>
+<!-- Step 2 (Active) -->
+<div class="flex flex-col items-center gap-2 flex-1 relative">
+<div class="w-6 h-6 rounded-full border-2 border-[#EB0A1D] bg-[#EB0A1D] flex items-center justify-center text-[10px] font-bold text-white shadow-lg shadow-primary/20">2</div>
+<span class="text-[9px] font-bold text-primary tracking-tighter uppercase">PDI</span>
+<div class="absolute top-3 left-[50%] w-full h-[2px] bg-outline-variant -z-10"></div>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-2 flex-1 relative">
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant bg-white flex items-center justify-center text-[10px] font-bold">3</div>
+<span class="text-[9px] font-bold text-secondary tracking-tighter uppercase">IIR</span>
+<div class="absolute top-3 left-[50%] w-full h-[2px] bg-outline-variant -z-10"></div>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-2 flex-1 relative">
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant bg-white flex items-center justify-center text-[10px] font-bold">4</div>
+<span class="text-[9px] font-bold text-secondary tracking-tighter uppercase">QAS EVAL</span>
+<div class="absolute top-3 left-[50%] w-full h-[2px] bg-outline-variant -z-10"></div>
+</div>
+<!-- Step 5 -->
+<div class="flex flex-col items-center gap-2 flex-1 relative">
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant bg-white flex items-center justify-center text-[10px] font-bold">5</div>
+<span class="text-[9px] font-bold text-secondary tracking-tighter uppercase">REPAIR</span>
+<div class="absolute top-3 left-[50%] w-full h-[2px] bg-outline-variant -z-10"></div>
+</div>
+<!-- Step 6 -->
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant bg-white flex items-center justify-center text-[10px] font-bold">6</div>
+<span class="text-[9px] font-bold text-secondary tracking-tighter uppercase">CLEARED</span>
+</div>
+</div>
+</section>
+<!-- Summary Stats -->
+<section class="grid grid-cols-3 gap-3">
+<div class="bg-tertiary-container/10 p-4 rounded-xl border border-tertiary/10">
+<p class="text-[20px] font-bold text-tertiary">18</p>
+<p class="text-[9px] font-bold uppercase tracking-wide text-tertiary/80 leading-tight">In Storage</p>
+</div>
+<div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+<p class="text-[20px] font-bold text-amber-600">6</p>
+<p class="text-[9px] font-bold uppercase tracking-wide text-amber-600/80 leading-tight">Awaiting PDI</p>
+</div>
+<div class="bg-primary-container/5 p-4 rounded-xl border border-primary/10">
+<p class="text-[20px] font-bold text-primary">3</p>
+<p class="text-[9px] font-bold uppercase tracking-wide text-primary/80 leading-tight">Pending QAS</p>
+</div>
+</section>
+<!-- STENCILING SECTION -->
+<section class="space-y-3">
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[0.15em] px-1">STENCILING</h2>
+<div class="space-y-2">
+<!-- Vehicle Row 1 -->
+<div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<h3 class="text-[15px] font-bold text-on-surface">SM-0055 · GS3 Emgrand</h3>
+<div class="flex gap-4 mt-1">
+<span class="text-[11px] text-secondary flex items-center gap-1">Engine: <span class="text-green-600 font-bold">✓</span></span>
+<span class="text-[11px] text-secondary flex items-center gap-1">Chassis: <span class="text-green-600 font-bold">✓</span></span>
+</div>
+</div>
+<span class="text-[10px] font-bold text-green-600 uppercase">Ready for PDI</span>
+</div>
+<!-- Vehicle Row 2 -->
+<div class="bg-white p-4 rounded-xl shadow-sm flex items-center justify-between">
+<div>
+<h3 class="text-[15px] font-bold text-on-surface">SM-0058 · Emgrand GL</h3>
+<div class="flex gap-4 mt-1">
+<span class="text-[11px] text-secondary flex items-center gap-1">Engine: <span class="text-green-600 font-bold">✓</span></span>
+<span class="text-[11px] text-secondary flex items-center gap-1">Chassis: <span class="text-outline-variant font-bold">⬜</span> <span class="text-[10px]">pending</span></span>
+</div>
+</div>
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-[10px] font-bold uppercase tracking-wider text-secondary active:scale-95 transition-all">RECORD STENCIL</button>
+</div>
+</div>
+</section>
+<!-- PDI IN PROGRESS SECTION -->
+<section class="space-y-3">
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[0.15em] px-1">PDI IN PROGRESS</h2>
+<div class="space-y-3">
+<!-- PDI Card 1 -->
+<div class="bg-white p-5 rounded-xl border border-outline-variant/30 shadow-sm space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-bold text-on-surface">SM-0042 · GS3 Emgrand</h3>
+<p class="text-[11px] text-primary font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">warning</span> 1 issue found
+                            </p>
+</div>
+<span class="text-[12px] font-bold text-on-surface">72%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 72%"></div>
+</div>
+<button class="w-full py-3 bg-primary text-white text-[11px] font-bold uppercase tracking-widest rounded-lg active:scale-[0.98] transition-transform">CONTINUE PDI</button>
+</div>
+<!-- PDI Card 2 -->
+<div class="bg-white p-5 rounded-xl border border-outline-variant/30 shadow-sm space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-bold text-on-surface">SM-0056 · Coolray Pro</h3>
+<p class="text-[11px] text-green-600 font-bold mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> No issues
+                            </p>
+</div>
+<span class="text-[12px] font-bold text-on-surface">44%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 44%"></div>
+</div>
+<button class="w-full py-3 bg-primary text-white text-[11px] font-bold uppercase tracking-widest rounded-lg active:scale-[0.98] transition-transform">CONTINUE PDI</button>
+</div>
+</div>
+</section>
+<!-- INITIAL INSPECTION REPORT SECTION -->
+<section class="space-y-3">
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[0.15em] px-1">INITIAL INSPECTION REPORT</h2>
+<div class="bg-white rounded-xl shadow-sm border-l-4 border-tertiary flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">article</span>
+</div>
+<div>
+<h3 class="text-[14px] font-bold text-on-surface">IIR #2026-03-019</h3>
+<p class="text-[11px] text-secondary">5 vehicles · 2 with defects</p>
+</div>
+</div>
+<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded uppercase">SUBMITTED</span>
+</div>
+</section>
+<!-- QAS EVALUATION QUEUE SECTION -->
+<section class="space-y-3">
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[0.15em] px-1">QAS EVALUATION QUEUE</h2>
+<div class="space-y-3">
+<!-- QAS Card 1 -->
+<div class="bg-white rounded-xl shadow-sm border-l-4 border-primary p-4 space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[14px] font-bold text-on-surface">SM-0042</h3>
+<p class="text-[11px] text-secondary italic">Defect: Hairline crack</p>
+</div>
+<span class="bg-amber-100 text-amber-700 text-[9px] font-bold px-2 py-1 rounded uppercase">AWAITING QAS DECISION</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[10px] text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 1 day SLA
+                        </span>
+</div>
+</div>
+<!-- QAS Card 2 -->
+<div class="bg-white rounded-xl shadow-sm border-l-4 border-green-600 p-4 space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[14px] font-bold text-on-surface">SM-0039</h3>
+<span class="bg-green-100 text-green-700 text-[9px] font-bold px-2 py-1 rounded uppercase mt-1 inline-block">Decision: APPROVE REPAIR</span>
+</div>
+<button class="px-3 py-1.5 border border-outline-variant rounded-lg text-[10px] font-bold uppercase tracking-wider text-secondary active:scale-95 transition-all">VIEW JOB ORDER</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ACTIVE REPAIRS SECTION -->
+<section class="space-y-3">
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[0.15em] px-1">ACTIVE REPAIRS</h2>
+<div class="bg-white p-5 rounded-xl shadow-sm space-y-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-amber-600">build</span>
+</div>
+<div>
+<h3 class="text-[14px] font-bold text-on-surface uppercase">J.O. #NYK-2026-0187</h3>
+<p class="text-[11px] text-secondary">Paint repair - hood</p>
+</div>
+</div>
+<span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-1 rounded uppercase">IN REPAIR</span>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[11px] font-medium">
+<span class="text-secondary">Progress</span>
+<span class="text-on-surface">40%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5">
+<div class="bg-amber-500 h-1.5 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-stretch h-16 px-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 border-t border-[#1A1C1C]/10 dark:border-white/10 shadow-[0_-4px_24px_rgba(0,0,0,0.04)]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 flex-1 hover:text-[#BD0013] transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] text-[10px] font-bold tracking-[0.1em] uppercase mt-1">HOME</span>
+</a>
+<!-- Inspect -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 flex-1 hover:text-[#BD0013] transition-colors" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-['Inter'] text-[10px] font-bold tracking-[0.1em] uppercase mt-1">INSPECT</span>
+</a>
+<!-- Arrive -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 flex-1 hover:text-[#BD0013] transition-colors" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-['Inter'] text-[10px] font-bold tracking-[0.1em] uppercase mt-1">ARRIVE</span>
+</a>
+<!-- Storage (Active) -->
+<a class="flex flex-col items-center justify-center text-[#BD0013] dark:text-red-500 border-l-4 border-[#BD0013] bg-[#BD0013]/5 flex-1 scale-102 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-['Inter'] text-[10px] font-bold tracking-[0.1em] uppercase mt-1">STORAGE</span>
+</a>
+<!-- Delivery -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 flex-1 hover:text-[#BD0013] transition-colors" href="#">
+<span class="material-symbols-outlined">water_pump</span>
+<span class="font-['Inter'] text-[10px] font-bold tracking-[0.1em] uppercase mt-1">DELIVERY</span>
+</a>
+</nav>
+</body></html>

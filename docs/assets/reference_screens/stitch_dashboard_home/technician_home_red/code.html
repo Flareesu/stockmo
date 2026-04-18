@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Technician Home</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header Section -->
+<header class="flex items-center bg-white dark:bg-slate-900 p-4 justify-between border-b border-slate-200 dark:border-slate-800">
+<div class="flex size-10 shrink-0 items-center overflow-hidden rounded-full border border-slate-200">
+<img class="object-cover w-full h-full" data-alt="Profile picture of a professional technician" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPJeoPgyMfedhbm4VtHyya5ZbvWSdOL2EFRwuBfMLyRVOZJdI5FGzNLYZq5EwdsLk6ttkHF3Y5Y9_vQTHmdjWih6bRUzpPcaAbbO_8Y50bScvYfKPp07cuI__hMCoahpMKhmFN91WHO7qa0MmoY26XGKSr6Hyf3YXoUzGxUnFr82QXVL1K3__zGd3u_9xRNqxc72HhNcbmwY2420bExB_ZzggiLFmMtOUDM3e3J9PkhAZI_HR1221zPgVvJq1oz34HLbOBmy8plw3A"/>
+</div>
+<div class="flex flex-col flex-1 px-3">
+<span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Welcome back,</span>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Alex Rivera</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Search & Quick Action -->
+<div class="bg-white dark:bg-slate-900 px-4 pt-4 pb-6 space-y-4">
+<label class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-xl bg-slate-100 dark:bg-slate-800 h-12">
+<div class="flex items-center justify-center pl-4 text-slate-500">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full border-none bg-transparent focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-500 px-3 text-base font-normal" placeholder="Search tasks, units, or VINs"/>
+</div>
+</label>
+<button class="flex w-full items-center justify-center gap-3 bg-primary text-white rounded-xl h-14 font-bold text-lg shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span>Scan VIN</span>
+</button>
+</div>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 py-6 space-y-6">
+<!-- Summary Stats -->
+<section>
+<h3 class="text-slate-900 dark:text-white text-xl font-bold mb-4">Today's Summary</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary">assignment</span>
+<span class="text-xs font-bold text-slate-400">TASKS</span>
+</div>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">12</p>
+<p class="text-xs text-slate-500 mt-1">4 remaining</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+<span class="text-xs font-bold text-slate-400">ACTIVE</span>
+</div>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">08</p>
+<p class="text-xs text-slate-500 mt-1">Units on floor</p>
+</div>
+</div>
+</section>
+<!-- Active Units List -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-slate-900 dark:text-white text-xl font-bold">Priority Units</h3>
+<button class="text-primary text-sm font-semibold">View All</button>
+</div>
+<!-- Unit Card 1 -->
+<div class="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+<div class="size-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up image of heavy machinery component" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo8SLEPBtF_k9g6DCek9KFUyhCwoh7Gc6y0zgJIOAfkls2OJYEuZaQfdLoGRsCxv0EzoMarXDlFfm95tA2mHa9rjgvsU7y-ZhCW-Eh78pig82RrPfvMhh4q5dKAPhKLwL6aUiJhgBDuBTnpbx81odEGJ3v_1yMly-mGiR-M_rOxWzNb8J49YbWpFFvfdnSvXdP88F4Z5pGa4iu2AfFuq2WW_4bOn9RWyGrJNZGEcxdg1Iq7OcGeXuteNYauNLIHmSwYsoZVIDB6mEA"/>
+</div>
+<div class="flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-slate-900 dark:text-white">Unit #A489-02</h4>
+<span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase">High Priority</span>
+</div>
+<p class="text-sm text-slate-500 leading-tight mt-1">Engine Diagnostic - Overheating Issue</p>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-xs text-slate-400">schedule</span>
+<span class="text-xs text-slate-500">Due in 2h</span>
+</div>
+</div>
+</div>
+<!-- Unit Card 2 -->
+<div class="flex gap-4 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+<div class="size-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Technical illustration of hydraulic system" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRy28nzF_pZWJxPzguGzOQKdUXP6Q6I4y2krc6jcdmuJraA7RSSysAQje_UU83ZboL17dbDoWT8HJJA7d6radJDt505HOSySTbInZ_PzTkevBN2l-rxca5cJvvLEcEibJRKw5Xm6FUMD8vsJGKHP7e_eb_5MAwV9d5Rt7pvuOLAlkuNxwPDsCHn3GW82N4kaTlphvj4mSJChAEUzH3bcEzxxEPRPHYtirbSw5oWQTMp7B_9zpqsYxw49fSLw7OiKVltawz2YRdQ5DB"/>
+</div>
+<div class="flex flex-col justify-between flex-1">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="font-bold text-slate-900 dark:text-white">Unit #B112-98</h4>
+<span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase">Scheduled</span>
+</div>
+<p class="text-sm text-slate-500 leading-tight mt-1">Routine Maintenance - 500h Service</p>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-xs text-slate-400">schedule</span>
+<span class="text-xs text-slate-500">Starts 2:00 PM</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Resource Quick Links -->
+<section class="pb-20">
+<h3 class="text-slate-900 dark:text-white text-xl font-bold mb-4">Quick Resources</h3>
+<div class="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar">
+<button class="flex flex-col items-center justify-center min-w-[100px] h-24 bg-primary/10 rounded-xl gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary">book</span>
+<span class="text-xs font-bold text-primary">Manuals</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[100px] h-24 bg-primary/10 rounded-xl gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary">contact_support</span>
+<span class="text-xs font-bold text-primary">Support</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[100px] h-24 bg-primary/10 rounded-xl gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary">construction</span>
+<span class="text-xs font-bold text-primary">Tools</span>
+</button>
+<button class="flex flex-col items-center justify-center min-w-[100px] h-24 bg-primary/10 rounded-xl gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary">report</span>
+<span class="text-xs font-bold text-primary">Logs</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pb-4 pt-2 shadow-2xl">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-[1]">home</span>
+<p class="text-[10px] font-bold leading-normal uppercase">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-[10px] font-bold leading-normal uppercase">Stock</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<p class="text-[10px] font-bold leading-normal uppercase">Tasks</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">history</span>
+<p class="text-[10px] font-bold leading-normal uppercase">History</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-[10px] font-bold leading-normal uppercase">Settings</p>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><title>StockMo - Delivery Pipeline</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#EB0A1D",
+              "background": "#F8F5F6",
+              "surface": "#FFFFFF",
+              "on-surface": "#1A1014",
+              "secondary": "#6B7280",
+              "inactive": "#9CA3AF",
+              "success": "#22C55E",
+              "warning": "#F59E0B"
+            },
+            fontFamily: {
+              "inter": ["Inter", "sans-serif"]
+            },
+            borderRadius: {
+              "card": "14px",
+              "btn": "10px"
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 22px;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #F8F5F6; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-on-surface antialiased min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="w-[390px] mx-auto h-[56px] sticky top-0 z-50 bg-[#F8F5F6]/80 backdrop-blur-md">
+<div class="flex items-center justify-between px-4 h-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="menu">menu</span>
+<h1 class="text-[18px] font-bold text-on-surface">DELIVERY PIPELINE</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="tune">tune</span>
+</div>
+</div>
+</header>
+<main class="w-[390px] mx-auto px-4 pt-4 space-y-4">
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+<button class="flex-shrink-0 px-4 py-2 bg-primary text-white text-[9px] font-bold tracking-[0.6px] uppercase rounded-lg">ALL</button>
+<button class="flex-shrink-0 px-4 py-2 bg-white border border-black/10 text-secondary text-[9px] font-bold tracking-[0.6px] uppercase rounded-lg">BUYOFF</button>
+<button class="flex-shrink-0 px-4 py-2 bg-white border border-black/10 text-secondary text-[9px] font-bold tracking-[0.6px] uppercase rounded-lg">ATR PENDING</button>
+<button class="flex-shrink-0 px-4 py-2 bg-white border border-black/10 text-secondary text-[9px] font-bold tracking-[0.6px] uppercase rounded-lg">IN TRANSIT</button>
+</div>
+<!-- Vehicle Cards Container -->
+<div class="space-y-[10px]">
+<!-- Card 1: Buy-Off -->
+<div class="bg-surface rounded-card border border-black/10 shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
+<div class="p-[12px_14px]">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-[15px] font-bold text-on-surface leading-tight">SM-0038 · GS8 · 2025 · Titanium Gray</h3>
+<span class="bg-blue-50 text-[#2563eb] text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">BUY-OFF</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-blue-500 !text-[18px]" data-icon="pending_actions">pending_actions</span>
+<p class="text-[13px] font-medium text-secondary">Buy-off inspection in progress</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-black/5">
+<div class="flex items-center gap-3">
+<div class="w-[44px] h-[44px] bg-[#F1F5F9] rounded-full flex items-center justify-center text-[15px] font-bold text-secondary">MR</div>
+<span class="text-[13px] text-on-surface font-medium">Marco Reyes</span>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-2 text-[9px] font-bold tracking-wider text-secondary uppercase hover:bg-black/5 rounded-btn">VIEW CHECKLIST</button>
+<button class="px-4 py-2 text-[10px] font-bold tracking-wider text-white bg-success uppercase rounded-btn shadow-sm">PASS BUY-OFF</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: ATR Pending -->
+<div class="bg-surface rounded-card border border-black/10 shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
+<div class="p-[12px_14px]">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-[15px] font-bold text-on-surface leading-tight">SM-0045 · Coolray Pro · 2025 · Aurora Blue</h3>
+<span class="bg-amber-50 text-warning text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">ATR PENDING</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-warning !text-[18px]" data-icon="hourglass_top">hourglass_top</span>
+<p class="text-[13px] font-medium text-secondary uppercase tracking-wide">Awaiting Authority to Release</p>
+</div>
+<div class="bg-[#F8F5F6] rounded-btn p-3 mb-4 space-y-2">
+<div class="flex justify-between text-[11px]">
+<span class="text-secondary font-medium">Invoice Status</span>
+<span class="font-bold text-on-surface">Paid ✓</span>
+</div>
+<div class="flex justify-between text-[11px]">
+<span class="text-secondary font-medium">Dealer</span>
+<span class="font-bold text-on-surface">Metro Cars Inc.</span>
+</div>
+</div>
+<button class="w-full h-[44px] bg-primary text-white text-[11px] font-bold tracking-[1.2px] uppercase rounded-btn shadow-md shadow-primary/20">
+                        ISSUE ATR
+                    </button>
+</div>
+</div>
+<!-- Section Heading -->
+<div class="pt-2 pb-1">
+<h2 class="text-[11px] font-bold uppercase tracking-[1.2px] text-primary mb-[8px]">Ready for Release</h2>
+</div>
+<!-- Card 3: Ready for Delivery -->
+<div class="bg-surface rounded-card border border-black/10 shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
+<div class="p-[12px_14px]">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-[15px] font-bold text-on-surface leading-tight">SM-0033 · MG5 · 2024 · Oxford White</h3>
+<span class="bg-green-50 text-success text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">READY</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-success !text-[18px]" data-icon="check_circle">check_circle</span>
+<p class="text-[13px] font-medium text-secondary">ATR issued — Ready for carrier loading</p>
+</div>
+<p class="text-[11px] font-mono text-secondary mb-4 px-2 py-1 bg-[#F8F5F6] rounded-md inline-block">ATR #: ATR-2026-0234</p>
+<!-- DIS Section -->
+<div class="border-t border-black/5 pt-4 space-y-4">
+<p class="text-[11px] font-bold text-on-surface tracking-[1.2px] uppercase opacity-60">Delivery Inspection Sheet (DIS)</p>
+<div class="grid grid-cols-2 gap-3">
+<div class="space-y-1">
+<label class="text-[9px] font-bold text-secondary tracking-widest uppercase">Carrier</label>
+<div class="relative">
+<select class="w-full appearance-none bg-[#F8F5F6] border-none text-[11px] font-bold p-2.5 rounded-btn focus:ring-1 focus:ring-primary">
+<option>Select Carrier</option>
+<option>SwiftLogistics</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-[14px] pointer-events-none text-secondary" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-[9px] font-bold text-secondary tracking-widest uppercase">Dealer Rep</label>
+<input class="w-full bg-[#F8F5F6] border-none text-[11px] font-bold p-2.5 rounded-btn focus:ring-1 focus:ring-primary placeholder:text-secondary/40" placeholder="Full Name" type="text"/>
+</div>
+</div>
+<div class="flex justify-between items-center text-[11px] py-1">
+<span class="text-secondary font-medium">DIS Date</span>
+<span class="font-bold text-on-surface">March 23, 2026</span>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-2">
+<button class="h-[40px] border border-black/10 text-[10px] font-bold tracking-widest text-secondary uppercase rounded-btn hover:bg-black/5">RECORD DIS</button>
+<button class="h-[40px] bg-success text-white text-[10px] font-bold tracking-widest uppercase rounded-btn shadow-sm">RELEASE TO DEALER</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] h-[64px] bg-white border-t border-black/5 flex items-center justify-around px-2 z-50 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+<!-- Home -->
+<div class="flex flex-col items-center justify-center text-secondary cursor-pointer gap-1">
+<span class="material-symbols-outlined !text-[22px]">home</span>
+<span class="text-[9px] font-bold font-inter tracking-wider uppercase">HOME</span>
+</div>
+<!-- Inspect -->
+<div class="flex flex-col items-center justify-center text-secondary cursor-pointer gap-1">
+<span class="material-symbols-outlined !text-[22px]">directions_car</span>
+<span class="text-[9px] font-bold font-inter tracking-wider uppercase">INSPECT</span>
+</div>
+<!-- Arrive (FAB) -->
+<div class="relative flex flex-col items-center justify-center -mt-6">
+<div class="w-14 h-14 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/30 border-4 border-[#F8F5F6]">
+<span class="material-symbols-outlined text-white !text-[32px]" style="font-variation-settings: 'FILL' 1;">adjust</span>
+</div>
+<span class="text-[9px] font-bold font-inter tracking-wider uppercase text-primary mt-1">ARRIVE</span>
+</div>
+<!-- Storage -->
+<div class="flex flex-col items-center justify-center text-secondary cursor-pointer gap-1">
+<span class="material-symbols-outlined !text-[22px]">warehouse</span>
+<span class="text-[9px] font-bold font-inter tracking-wider uppercase">STORAGE</span>
+</div>
+<!-- Delivery (Active) -->
+<div class="flex flex-col items-center justify-center text-primary cursor-pointer gap-1">
+<span class="material-symbols-outlined !text-[22px]">local_shipping</span>
+<span class="text-[9px] font-bold font-inter tracking-wider uppercase">DELIVERY</span>
+<div class="absolute bottom-0 w-4 h-0.5 bg-primary rounded-full"></div>
+</div>
+</nav>
+</body></html>

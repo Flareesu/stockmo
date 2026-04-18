@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Admin - GAC Group Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#EC0A1E",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-active { border-left: 4px solid #EC0A1E; background-color: rgba(236, 10, 30, 0.05); }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex min-h-screen">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary rounded-lg p-1.5">
+<span class="material-symbols-outlined text-white text-2xl">grid_view</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">StockMo</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mt-1">GAC Admin</p>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1 mt-4">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg sidebar-active text-primary font-semibold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+<span>Fleet Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span>Technician Roster</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>Activity Log</span>
+</a>
+<div class="pt-4 pb-2 px-3 text-[11px] font-bold text-slate-400 uppercase">System</div>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+<div class="size-10 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User Profile" data-alt="Corporate headshot of a male admin operator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhNApP-UYAzWmt4VAavCt3Li2riVQiK2rYqDa5ILxAjhAGSTjHzUXenKzYqKf2Y05tH_p99gSysfk68_idKHUma204_41k3PqgPVVPXWpaeqQjkdXsNAhPgxK4My_2xzVZY-RTTJg8NEV9hj7uV1Hw-ZID4BDZBDlRIM01mSoqx2hJPg49Ov-J7L_IQmS0ZnI4cH_-_1iO4NaPbdwB83wXPj1RWVWkDY6_Uy_szSHsHwEkjcdGV-yyAB42WEhZKvN-xrXuUh2cR4S0"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-sm font-semibold truncate">Marcus Chen</p>
+<p class="text-xs text-slate-500 truncate">Senior Coordinator</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 flex flex-col">
+<!-- Header -->
+<header class="h-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-10">
+<div class="flex items-center gap-8 flex-1">
+<h2 class="text-xl font-bold text-slate-800 dark:text-white">Operations Dashboard</h2>
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm" placeholder="Search VIN, Model or Technician ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>Register Unit</span>
+</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 space-y-8">
+<!-- Executive Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-600">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">+3.2%</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Total Units in Yard</p>
+<h3 class="text-3xl font-bold mt-1">1,428</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg text-primary">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Action Needed</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Critical Alerts</p>
+<h3 class="text-3xl font-bold mt-1">14</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-600">
+<span class="material-symbols-outlined">build</span>
+</div>
+<span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">Active</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Active PDIs</p>
+<h3 class="text-3xl font-bold mt-1">64</h3>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg text-amber-600">
+<span class="material-symbols-outlined">engineering</span>
+</div>
+<span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">92% Cap</span>
+</div>
+<p class="text-slate-500 text-sm font-medium">Techs on Duty</p>
+<h3 class="text-3xl font-bold mt-1">38</h3>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Fleet Status Pipeline -->
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-8">
+<h4 class="font-bold text-lg">Fleet Status Pipeline</h4>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-semibold bg-slate-100 dark:bg-slate-800 rounded-md">Last 24h</button>
+<button class="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md">Weekly</button>
+</div>
+</div>
+<div class="relative flex items-center justify-between py-10 px-4">
+<!-- Connecting Line -->
+<div class="absolute top-1/2 left-0 right-0 h-1 bg-slate-100 dark:bg-slate-800 -translate-y-1/2 z-0"></div>
+<!-- Pipeline Stages -->
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="size-14 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 dark:shadow-none">
+<span class="material-symbols-outlined text-2xl">dock</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold uppercase tracking-wider text-slate-400">At Port</p>
+<p class="text-xl font-bold">245</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="size-14 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-200 dark:shadow-none">
+<span class="material-symbols-outlined text-2xl">fact_check</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold uppercase tracking-wider text-slate-400">PDI Stage</p>
+<p class="text-xl font-bold">112</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="size-14 rounded-full bg-amber-500 text-white flex items-center justify-center shadow-lg shadow-amber-200 dark:shadow-none">
+<span class="material-symbols-outlined text-2xl">warehouse</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold uppercase tracking-wider text-slate-400">Stockyard</p>
+<p class="text-xl font-bold">870</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="size-14 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-200 dark:shadow-none">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold uppercase tracking-wider text-slate-400">Ready</p>
+<p class="text-xl font-bold">201</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Activity Feed -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<h4 class="font-bold text-lg mb-6">Live Activity</h4>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="mt-1 size-2 rounded-full bg-blue-500 ring-4 ring-blue-50 dark:ring-blue-900/20 shrink-0"></div>
+<div>
+<p class="text-sm font-medium"><span class="font-bold">VIN 82910</span> cleared Port Clearance</p>
+<p class="text-xs text-slate-500 mt-1">2 minutes ago • Port Terminal 4</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="mt-1 size-2 rounded-full bg-purple-500 ring-4 ring-purple-50 dark:ring-purple-900/20 shrink-0"></div>
+<div>
+<p class="text-sm font-medium"><span class="font-bold">GS8 - Tech R. Walsh</span> started PDI Inspection</p>
+<p class="text-xs text-slate-500 mt-1">14 minutes ago • Bay 08</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="mt-1 size-2 rounded-full bg-primary ring-4 ring-red-50 dark:ring-red-900/20 shrink-0"></div>
+<div>
+<p class="text-sm font-medium"><span class="font-bold">Maintenance Overdue</span> for Unit 44102</p>
+<p class="text-xs text-slate-500 mt-1">45 minutes ago • Stockyard B</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="mt-1 size-2 rounded-full bg-emerald-500 ring-4 ring-emerald-50 dark:ring-emerald-900/20 shrink-0"></div>
+<div>
+<p class="text-sm font-medium"><span class="font-bold">12 New Units</span> released to Showroom</p>
+<p class="text-xs text-slate-500 mt-1">1 hour ago • Ready Zone</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-sm font-semibold text-primary border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors">View All Logs</button>
+</div>
+</div>
+<!-- Modern Data Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+<div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<h4 class="font-bold text-lg">Critical Attention Fleet</h4>
+<div class="flex gap-3">
+<select class="text-sm border-slate-200 dark:border-slate-800 rounded-lg py-2 pl-3 pr-10 focus:ring-primary/20 bg-slate-50 dark:bg-slate-800">
+<option>All Models</option>
+<option>GS8</option>
+<option>Empow</option>
+<option>M6 Pro</option>
+</select>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                            Filter
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
+<tr>
+<th class="px-6 py-4">Vehicle Detail</th>
+<th class="px-6 py-4">VIN Number</th>
+<th class="px-6 py-4">Current Status</th>
+<th class="px-6 py-4">Condition</th>
+<th class="px-6 py-4">Days in yard</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+<img alt="GAC GS8 White" class="object-cover h-full w-full" data-alt="Close up of a white GAC GS8 SUV front" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAYIl0Mnnq2wZLckiOuqyxR5GJOlKEuWGuJgwGbxFyPeeTDHQxxctJ0k1WQu_TYarA-hZTK-sev_uGXx_VnIqF2YQX4ucTFjO2aLRMwISefqgkhlRLivNOkWsApbhHwYmSJ1oYiJee7IJrqAgZpQWuw-WJDsAyPZTIR0jwxaAtAuRJa-YFszBQkPTYyS50GQaI-s6c4xOgSlJmMGXAlC2LQ19el3_zOcoC6hWzIVAIF4SPfUyZkpGR8uPZaqJBZrt6iEE1wqFMrhrb"/>
+</div>
+<div>
+<p class="font-bold text-sm">GAC GS8 2024</p>
+<p class="text-xs text-slate-500">Pearl White • AWD Premium</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">GAC4X092281001</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-bold">
+<span class="size-1.5 rounded-full bg-blue-600"></span>
+                                        At Port
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold uppercase">Transit Hold</span>
+</td>
+<td class="px-6 py-4 text-sm">4 Days</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+<img alt="GAC Empow Silver" class="object-cover h-full w-full" data-alt="Sleek silver sedan front view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR8YMLofpXlPibvG_xB46g4YCLqvOm5gspkGS9Jif5bZUCsrkeNOWs1RyD5_-egG7xtH3OxwZbbDQ3is3lW8YEs7TO_NI0dxofweu8H7rR1qj9Sdw8bRhWRqW-M9OPPe9IKX-fZuccKq4pxN2bL0iqJZ_-YEtShQooXcuwrnz4n5vmZaOZlaLpcsolOf2r2rDzGSZAnkplDVekaKT3csVndIudYchKlwC-NZ5bwA3PUnkYz1-3AUrPh3heNCXBQBr-4K60KJrD6BBb"/>
+</div>
+<div>
+<p class="font-bold text-sm">GAC Empow</p>
+<p class="text-xs text-slate-500">Matte Gray • Sport Performance</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">GAC9S3345192233</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-bold">
+<span class="size-1.5 rounded-full bg-purple-600"></span>
+                                        PDI Queue
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-red-50 text-primary text-[10px] font-bold uppercase">Battery Check</span>
+</td>
+<td class="px-6 py-4 text-sm">12 Days</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+<img alt="GAC Emkoo Green" class="object-cover h-full w-full" data-alt="Futuristic green SUV front profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlm_hbK1T6OlFIYnDQNPzMTt78WMWgEFmGwysncXPn6nV_iVPaENcvcTLgLGrQHjrMHCnisFL7P2u6WdeFx44mz-Q2Ruovqmf-awvcUTJ410N9lA91y376HXKHxh0TkQZs63vH26XtGWP1mHx6PWcqPcK_QDw3VsklyE1xRka7iL-hbi0GCQFi1trXPuJJM_3jDO8DimNusSUdRJPSzS5AoHU2mOmhnCvfJr-JJOiNL6HTKL-QR5PiUeeGfYqUxC3whsNiR65j9FYk"/>
+</div>
+<div>
+<p class="font-bold text-sm">GAC Emkoo</p>
+<p class="text-xs text-slate-500">Emerald Green • Hybrid GL</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">GAC1K8827361541</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs font-bold">
+<span class="size-1.5 rounded-full bg-amber-600"></span>
+                                        Stockyard
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-[10px] font-bold uppercase">Storage Hold</span>
+</td>
+<td class="px-6 py-4 text-sm">45 Days</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+<img alt="Black SUV" class="object-cover h-full w-full" data-alt="Luxury black SUV in studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjmxQBOhGjL6KUnpfDGZAsueF2RorWR_6-YzFKp9S4N59TFEt6lJrQBoNivK68p5pVxomXC-eFbpb9n_hApbWdHFF-TCJVgO78VS87hC4M0OtMWAIjrj8f2T_pkfqPEfieUA17v_RQ69QejgC2Z1_kxCb7SEONPVoOjBcGmItzo_pdTkOzq2qlZP4tRoEdwdeYmsIrnIWDOwocoXY0YwadiDOqMrbOuuR-OWuG-F5GRXKvtm0n4gWrz2LVCAB-ozZoGqgOc1UKsqyH"/>
+</div>
+<div>
+<p class="font-bold text-sm">GAC GS4</p>
+<p class="text-xs text-slate-500">Shadow Black • Smart Tech</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-mono text-slate-600 dark:text-slate-400">GAC3G0019287342</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
+<span class="size-1.5 rounded-full bg-emerald-600"></span>
+                                        Ready
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 rounded bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase">Showroom Ready</span>
+</td>
+<td class="px-6 py-4 text-sm">2 Days</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<p class="text-sm text-slate-500 font-medium">Showing 4 of 14 Critical Attention items</p>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800">Previous</button>
+<button class="px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

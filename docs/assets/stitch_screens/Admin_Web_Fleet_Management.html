@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Admin - Invoicing &amp; Allocation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-tertiary-fixed": "#001d36",
+              "on-primary-fixed-variant": "#93000c",
+              "tertiary-fixed-dim": "#9dcaff",
+              "surface": "#f9f9f9",
+              "inverse-primary": "#ffb4ab",
+              "surface-container-highest": "#e2e2e2",
+              "secondary-container": "#e4e2e1",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "primary-container": "#eb0a1d",
+              "outline-variant": "#e9bcb7",
+              "on-secondary-container": "#656464",
+              "surface-container-low": "#f3f3f3",
+              "secondary": "#5f5e5e",
+              "outline": "#936e6a",
+              "background": "#f9f9f9",
+              "on-tertiary-fixed-variant": "#00497c",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed-variant": "#474747",
+              "on-secondary-fixed": "#1b1c1c",
+              "on-error-container": "#93000a",
+              "on-background": "#1a1c1c",
+              "on-surface-variant": "#5e3f3b",
+              "on-primary-fixed": "#410002",
+              "inverse-on-surface": "#f1f1f1",
+              "primary-fixed": "#ffdad6",
+              "surface-container": "#eeeeee",
+              "surface-tint": "#c00013",
+              "on-tertiary-container": "#fffdff",
+              "tertiary-fixed": "#d1e4ff",
+              "tertiary": "#0060a0",
+              "surface-variant": "#e2e2e2",
+              "surface-container-high": "#e8e8e8",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#0079c8",
+              "inverse-surface": "#2f3131",
+              "primary": "#bd0013",
+              "on-surface": "#1a1c1c",
+              "surface-dim": "#dadada",
+              "secondary-fixed": "#e4e2e1",
+              "primary-fixed-dim": "#ffb4ab",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9f9",
+              "on-primary-container": "#fffeff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased flex min-h-screen">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="flex flex-col h-full sticky top-0 left-0 h-screen w-64 bg-slate-50 dark:bg-zinc-900 border-r-0 z-40">
+<div class="p-8">
+<h1 class="text-xl font-black text-zinc-900 dark:text-white">StockMo Admin</h1>
+<p class="text-[10px] uppercase tracking-[0.1em] text-zinc-500 mt-1 font-bold">Executive Suite</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Active Tab: Reports (Closest match for Invoicing/Fleet focus) -->
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] label-sm uppercase tracking-[0.1em] text-xs">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-500 font-bold border-l-4 border-red-600 bg-red-50/50" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span class="font-['Inter'] label-sm uppercase tracking-[0.1em] text-xs">Fleet</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Inter'] label-sm uppercase tracking-[0.1em] text-xs">Team</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:scale-[1.02] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Inter'] label-sm uppercase tracking-[0.1em] text-xs">Reports</span>
+</a>
+</nav>
+<div class="p-8 border-t border-zinc-100 dark:border-zinc-800">
+<button class="w-full bg-primary text-on-primary py-3 font-bold text-xs uppercase tracking-widest rounded-lg hover:opacity-90 active:scale-95 transition-all">
+                Generate Report
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar (Execution from JSON) -->
+<header class="flex items-center justify-between px-8 w-full border-b border-zinc-100 dark:border-zinc-800 h-16 sticky top-0 z-50 bg-white/80 backdrop-blur-xl">
+<div class="flex items-center gap-8">
+<span class="hidden md:block text-lg font-black text-red-600">StockMo Precision</span>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-zinc-400 text-lg" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search fleet..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-zinc-600 dark:text-zinc-400">
+<span class="material-symbols-outlined cursor-pointer active:scale-95 hover:text-red-600 transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer active:scale-95 hover:text-red-600 transition-colors" data-icon="settings">settings</span>
+<span class="material-symbols-outlined cursor-pointer active:scale-95 hover:text-red-600 transition-colors" data-icon="help_outline">help_outline</span>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden bg-zinc-200">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="Portrait of a professional logistics manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-IyAmJb9fp5jfUGXt9yhIX8YjOwwjSm-q2o4_7ExpQ2lqr4NrWw0bx1eBS_EaXaOtDusECdJrfaurEm6bqn_Cz3Cx8HAFJwmmX_rzSefd1CRR7iuDI5Pduvec1poTg7mJZrYtZqALV4QvzmFmyEit36YLCHs7JBQvpykU0xGxB7tFbBuycjy1V_1GJMYbxtKtcE_0c4TSH9f5mhdkMnmWso93AX9OFKiv2TR7HZlcAXnK0h8jL9UYvngmba3kHv-PIqZZQK8xERs"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-10 max-w-[1600px] mx-auto w-full">
+<!-- Header Section with Asymmetry -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="text-4xl font-bold tracking-tight text-on-surface mb-2">Invoicing &amp; Allocation</h2>
+<div class="flex items-center gap-3">
+<span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+<p class="text-sm font-medium text-secondary">Cycle Status: <span class="text-on-surface font-bold">24 Units Available</span></p>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 bg-surface-container-lowest border border-outline-variant/30 text-sm font-bold uppercase tracking-wider rounded hover:bg-surface-container-low transition-colors">
+                        Export CSV
+                    </button>
+<button class="px-6 py-2.5 bg-primary text-on-primary text-sm font-bold uppercase tracking-wider rounded shadow-sm shadow-primary/20 hover:bg-primary-container transition-all">
+                        Bulk Allocate
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Main Table Section (Bento Style) -->
+<div class="col-span-12 lg:col-span-9 space-y-6">
+<!-- Tabs -->
+<div class="flex items-center gap-8 border-b border-outline-variant/10">
+<button class="pb-4 text-sm font-bold text-primary border-b-2 border-primary tracking-wide">All Units</button>
+<button class="pb-4 text-sm font-medium text-secondary hover:text-on-surface transition-colors tracking-wide">Allocated</button>
+<button class="pb-4 text-sm font-medium text-secondary hover:text-on-surface transition-colors tracking-wide">Unallocated</button>
+<button class="pb-4 text-sm font-medium text-secondary hover:text-on-surface transition-colors tracking-wide">Invoiced</button>
+</div>
+<!-- Modern Data Grid -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm shadow-zinc-200/50">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-secondary">Unit ID</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-secondary">Dealer</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-secondary">Region</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-secondary">Status</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-secondary text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-2 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity -ml-6 mr-1"></div>
+<span class="font-bold text-on-surface">VIN-90422</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Metro Cars Inc</p>
+<p class="text-xs text-secondary">ID: #MCI-220</p>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">NCR</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary">
+                                            Allocated
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+                                            Mark Invoiced
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-2 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity -ml-6 mr-1"></div>
+<span class="font-bold text-on-surface">VIN-88120</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Sterling Motors</p>
+<p class="text-xs text-secondary">ID: #STM-411</p>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">NCR</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-zinc-100 text-secondary">
+                                            Unallocated
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+                                            Allocate Now
+                                        </button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-2 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity -ml-6 mr-1"></div>
+<span class="font-bold text-on-surface">VIN-77219</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Premier Logistics</p>
+<p class="text-xs text-secondary">ID: #PLG-009</p>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">South-West</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700">
+                                            Invoiced
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right text-zinc-400">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-2 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity -ml-6 mr-1"></div>
+<span class="font-bold text-on-surface">VIN-91283</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="font-semibold text-on-surface">Metro Cars Inc</p>
+<p class="text-xs text-secondary">ID: #MCI-220</p>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">NCR</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary">
+                                            Allocated
+                                        </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+                                            Mark Invoiced
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recent Activity Sidebar (Glassmorphism) -->
+<div class="col-span-12 lg:col-span-3">
+<div class="bg-surface-container-lowest/80 backdrop-blur-md rounded-xl p-6 shadow-sm border border-outline-variant/10">
+<h3 class="text-xs font-black uppercase tracking-[0.2em] text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                            Recent Activity
+                        </h3>
+<div class="space-y-6">
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-primary"></div>
+<p class="text-[11px] font-bold text-secondary uppercase tracking-tighter mb-1">10:45 AM</p>
+<p class="text-sm text-on-surface leading-tight">
+<span class="font-bold">Metro Cars Inc</span> allocated <span class="font-bold">4 Units</span> (VIN-90XXX)
+                                </p>
+</div>
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-zinc-300"></div>
+<p class="text-[11px] font-bold text-secondary uppercase tracking-tighter mb-1">09:12 AM</p>
+<p class="text-sm text-on-surface leading-tight">
+                                    Invoice generated for <span class="font-bold">Premier Logistics</span> (#INV-2024-88)
+                                </p>
+</div>
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-zinc-300"></div>
+<p class="text-[11px] font-bold text-secondary uppercase tracking-tighter mb-1">Yesterday</p>
+<p class="text-sm text-on-surface leading-tight">
+                                    New batch of <span class="font-bold">12 Units</span> received at Central Hub
+                                </p>
+</div>
+<div class="relative pl-6 border-l border-outline-variant/30">
+<div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-primary"></div>
+<p class="text-[11px] font-bold text-secondary uppercase tracking-tighter mb-1">Yesterday</p>
+<p class="text-sm text-on-surface leading-tight">
+                                    System Alert: <span class="text-primary font-bold">Low stock</span> for NCR Region (2 Units left)
+                                </p>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-xs font-bold text-secondary hover:text-on-surface transition-colors border-t border-outline-variant/10">
+                            View Full Log
+                        </button>
+</div>
+<!-- Cycle Stats Card -->
+<div class="mt-8 bg-primary rounded-xl p-6 text-on-primary overflow-hidden relative">
+<div class="relative z-10">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Allocation Target</p>
+<h4 class="text-3xl font-black mt-1">82%</h4>
+<div class="w-full bg-white/20 h-1.5 rounded-full mt-4">
+<div class="bg-white w-[82%] h-full rounded-full"></div>
+</div>
+<p class="text-[11px] mt-4 opacity-90 leading-relaxed font-medium">On track to meet monthly logistics goal. 18 units pending final invoicing.</p>
+</div>
+<!-- Abstract Geometric Detail -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

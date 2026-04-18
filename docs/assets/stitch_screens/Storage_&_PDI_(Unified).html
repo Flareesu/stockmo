@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>STORAGE &amp; PDI - StockMo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#EB0A1D",
+                        "background": "#F8F5F6",
+                        "on-surface": "#1A1014",
+                        "secondary": "#6B7280",
+                        "border-alpha": "rgba(0,0,0,0.10)",
+                        "accent": "#EB0A1D"
+                    },
+                    fontFamily: {
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'card': '0 1px 3px rgba(0,0,0,0.06)',
+                    },
+                    borderRadius: {
+                        'card': '14px',
+                        'button': '10px'
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F5F6;
+            width: 390px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; font-size: 22px; }
+        .nav-icon-active { font-variation-settings: 'FILL' 1; }
+    </style>
+</head>
+<body class="text-on-surface antialiased pb-24">
+<!-- Top App Bar -->
+<header class="w-full sticky top-0 z-50 bg-white border-b border-border-alpha h-[56px] flex items-center px-4">
+<div class="flex items-center justify-between w-full">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-extrabold text-[18px] leading-tight text-on-surface">STORAGE &amp; PDI</h1>
+<span class="text-[11px] font-medium text-secondary">NYK Warehouse Operations</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-on-surface">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-zinc-200 overflow-hidden border border-border-alpha">
+<img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQfH5Y6Frt-_uRxXYhYI2W3NLu5NZqt9u-pKo45Bk5-wDIAG6DM96nAcPpzrDHK8--CoB-nqyJUSUtd99H9wB_0X5C50d0_vqxFOHLanvk0vtPp-SzNcHVqljVbRumURHtuZaFq3bPCm7hWpTP7IlNpCyqLyBFDBT7dXr_89EghX0tLK-OnfUnT4Tq-uHOtgko2fvhQ2_dBsoWrN_hQZdrdQBFMrd_1XVssQGe_0AMRVnN0vrKTNmjL7mbDTrwetK2bFth6yGaWdk"/>
+</div>
+</div>
+</div>
+</header>
+<main class="px-4 py-4 space-y-4">
+<!-- Stage Progress Tracker -->
+<section class="bg-white rounded-card border border-border-alpha shadow-card p-[12px_14px]">
+<div class="flex items-center justify-between relative">
+<div class="absolute top-3 left-0 w-full h-[1px] bg-zinc-200 -z-0"></div>
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-1.5 z-10 bg-white px-1">
+<div class="w-6 h-6 rounded-full border border-secondary bg-white flex items-center justify-center text-[10px] font-bold text-secondary">1</div>
+<span class="text-[9px] font-bold text-secondary uppercase tracking-wider">STENCIL</span>
+</div>
+<!-- Step 2 (Active) -->
+<div class="flex flex-col items-center gap-1.5 z-10 bg-white px-1">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-white">2</div>
+<span class="text-[9px] font-bold text-primary uppercase tracking-wider">PDI</span>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-1.5 z-10 bg-white px-1">
+<div class="w-6 h-6 rounded-full border border-zinc-200 bg-white flex items-center justify-center text-[10px] font-bold text-zinc-300">3</div>
+<span class="text-[9px] font-bold text-secondary uppercase tracking-wider">IIR</span>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-1.5 z-10 bg-white px-1">
+<div class="w-6 h-6 rounded-full border border-zinc-200 bg-white flex items-center justify-center text-[10px] font-bold text-zinc-300">4</div>
+<span class="text-[9px] font-bold text-secondary uppercase tracking-wider">QAS EVAL</span>
+</div>
+</div>
+</section>
+<!-- Summary Stats -->
+<section class="grid grid-cols-3 gap-2.5">
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex flex-col items-center text-center">
+<p class="text-[20px] font-extrabold text-on-surface">18</p>
+<p class="text-[9px] font-bold uppercase text-secondary leading-tight mt-0.5">In Storage</p>
+</div>
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex flex-col items-center text-center">
+<p class="text-[20px] font-extrabold text-primary">06</p>
+<p class="text-[9px] font-bold uppercase text-secondary leading-tight mt-0.5">Await PDI</p>
+</div>
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex flex-col items-center text-center">
+<p class="text-[20px] font-extrabold text-primary">03</p>
+<p class="text-[9px] font-bold uppercase text-secondary leading-tight mt-0.5">Pend QAS</p>
+</div>
+</section>
+<!-- STENCILING SECTION -->
+<section>
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[1.2px] mb-2">STENCILING</h2>
+<div class="space-y-2.5">
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex items-center justify-between">
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">SM-0055 · GS3 Emgrand</h3>
+<div class="flex gap-3 mt-1">
+<span class="text-[11px] font-medium text-secondary">Eng: <span class="text-green-600 font-bold">✓</span></span>
+<span class="text-[11px] font-medium text-secondary">Chas: <span class="text-green-600 font-bold">✓</span></span>
+</div>
+</div>
+<span class="text-[9px] font-bold text-green-600 uppercase">READY FOR PDI</span>
+</div>
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex items-center justify-between">
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">SM-0058 · Emgrand GL</h3>
+<div class="flex gap-3 mt-1">
+<span class="text-[11px] font-medium text-secondary">Eng: <span class="text-green-600 font-bold">✓</span></span>
+<span class="text-[11px] font-medium text-secondary">Chas: <span class="text-secondary font-bold">⬜</span></span>
+</div>
+</div>
+<button class="px-3 py-1.5 border border-primary text-primary rounded-button text-[9px] font-bold uppercase tracking-wider active:bg-primary/5">RECORD STENCIL</button>
+</div>
+</div>
+</section>
+<!-- PDI IN PROGRESS SECTION -->
+<section>
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[1.2px] mb-2">PDI IN PROGRESS</h2>
+<div class="space-y-2.5">
+<!-- PDI Card 1 -->
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">SM-0042 · GS3 Emgrand</h3>
+<p class="text-[11px] text-primary font-semibold mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> 1 issue found
+                            </p>
+</div>
+<span class="text-[13px] font-extrabold text-on-surface">72%</span>
+</div>
+<div class="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full" style="width: 72%"></div>
+</div>
+<button class="w-full py-2.5 bg-primary text-white text-[11px] font-bold uppercase tracking-widest rounded-button active:opacity-90">CONTINUE PDI</button>
+</div>
+<!-- PDI Card 2 -->
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card space-y-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">SM-0056 · Coolray Pro</h3>
+<p class="text-[11px] text-green-600 font-semibold mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> No issues
+                            </p>
+</div>
+<span class="text-[13px] font-extrabold text-on-surface">44%</span>
+</div>
+<div class="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full" style="width: 44%"></div>
+</div>
+<button class="w-full py-2.5 bg-primary text-white text-[11px] font-bold uppercase tracking-widest rounded-button active:opacity-90">CONTINUE PDI</button>
+</div>
+</div>
+</section>
+<!-- INITIAL INSPECTION REPORT SECTION -->
+<section>
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[1.2px] mb-2">INITIAL INSPECTION REPORT</h2>
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex items-center justify-between border-l-4 border-l-primary">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">IIR #2026-03-019</h3>
+<p class="text-[11px] font-medium text-secondary">5 vehicles · 2 with defects</p>
+</div>
+</div>
+<span class="bg-green-100 text-green-700 text-[9px] font-bold px-2 py-1 rounded uppercase">SUBMITTED</span>
+</div>
+</section>
+<!-- QAS EVALUATION QUEUE SECTION -->
+<section>
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[1.2px] mb-2">QAS EVALUATION QUEUE</h2>
+<div class="space-y-2.5">
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card space-y-3">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">SM-0042</h3>
+<p class="text-[11px] font-medium text-secondary italic">Defect: Hairline crack</p>
+</div>
+</div>
+<span class="bg-amber-100 text-amber-700 text-[9px] font-bold px-2 py-1 rounded uppercase">AWAITING DECISION</span>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-[11px] font-medium text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 1 day SLA
+                        </p>
+</div>
+</div>
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">SM-0039</h3>
+<p class="text-[9px] font-bold text-green-600 uppercase mt-0.5">Decision: APPROVE REPAIR</p>
+</div>
+</div>
+<button class="px-3 py-1.5 border border-zinc-200 text-secondary rounded-button text-[9px] font-bold uppercase tracking-wider active:bg-zinc-50">VIEW JOB ORDER</button>
+</div>
+</div>
+</section>
+<!-- ACTIVE REPAIRS SECTION -->
+<section>
+<h2 class="text-[11px] font-bold text-primary uppercase tracking-[1.2px] mb-2">ACTIVE REPAIRS</h2>
+<div class="bg-white p-[12px_14px] rounded-card border border-border-alpha shadow-card space-y-3">
+<div class="flex justify-between items-start">
+<div class="flex gap-3">
+<div class="w-10 h-10 rounded-lg bg-zinc-50 flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined">build</span>
+</div>
+<div>
+<h3 class="text-[15px] font-extrabold text-on-surface">J.O. #NYK-2026-0187</h3>
+<p class="text-[11px] font-medium text-secondary">Paint repair - hood</p>
+</div>
+</div>
+<span class="bg-amber-100 text-amber-700 text-[9px] font-bold px-2 py-1 rounded uppercase">IN REPAIR</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between text-[11px] font-bold">
+<span class="text-secondary uppercase">Progress</span>
+<span class="text-on-surface">40%</span>
+</div>
+<div class="w-full bg-zinc-100 rounded-full h-1.5 overflow-hidden">
+<div class="bg-amber-500 h-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Unified) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[390px] h-[64px] z-50 bg-white border-t border-border-alpha flex items-center shadow-[0_-1px_3px_rgba(0,0,0,0.06)]">
+<div class="flex justify-around items-center w-full px-2">
+<a class="flex flex-col items-center justify-center flex-1 text-secondary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">HOME</span>
+</a>
+<a class="flex flex-col items-center justify-center flex-1 text-secondary" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">INSPECT</span>
+</a>
+<div class="flex-1 flex justify-center -mt-8">
+<button class="w-[52px] h-[52px] bg-primary text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-size: 30px; font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center justify-center flex-1 text-primary" href="#">
+<span class="material-symbols-outlined nav-icon-active">warehouse</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">STORAGE</span>
+</a>
+<a class="flex flex-col items-center justify-center flex-1 text-secondary" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-[9px] font-bold tracking-[0.6px] uppercase mt-1">DELIVERY</span>
+</a>
+</div>
+</nav>
+</body></html>

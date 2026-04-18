@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#c8c6c6",
+              "on-tertiary-fixed": "#001d36",
+              "on-primary-fixed-variant": "#93000c",
+              "tertiary-fixed-dim": "#9dcaff",
+              "surface": "#f9f9f9",
+              "inverse-primary": "#ffb4ab",
+              "surface-container-highest": "#e2e2e2",
+              "secondary-container": "#e4e2e1",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "error": "#ba1a1a",
+              "primary-container": "#eb0a1d",
+              "outline-variant": "#e9bcb7",
+              "on-secondary-container": "#656464",
+              "surface-container-low": "#f3f3f3",
+              "secondary": "#5f5e5e",
+              "outline": "#936e6a",
+              "background": "#f9f9f9",
+              "on-tertiary-fixed-variant": "#00497c",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed-variant": "#474747",
+              "on-secondary-fixed": "#1b1c1c",
+              "on-error-container": "#93000a",
+              "on-background": "#1a1c1c",
+              "on-surface-variant": "#5e3f3b",
+              "on-primary-fixed": "#410002",
+              "inverse-on-surface": "#f1f1f1",
+              "primary-fixed": "#ffdad6",
+              "surface-container": "#eeeeee",
+              "surface-tint": "#c00013",
+              "on-tertiary-container": "#fffdff",
+              "tertiary-fixed": "#d1e4ff",
+              "tertiary": "#0060a0",
+              "surface-variant": "#e2e2e2",
+              "surface-container-high": "#e8e8e8",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#0079c8",
+              "inverse-surface": "#2f3131",
+              "primary": "#bd0013",
+              "on-surface": "#1a1c1c",
+              "surface-dim": "#dadada",
+              "secondary-fixed": "#e4e2e1",
+              "primary-fixed-dim": "#ffb4ab",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f9f9f9",
+              "on-primary-container": "#fffeff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.125rem",
+              "lg": "0.25rem",
+              "xl": "0.875rem",
+              "full": "0.75rem"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #F8F5F6;
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+</head>
+<body class="flex min-h-screen text-on-surface">
+<!-- SideNavBar (from JSON: Technician Profile) -->
+<aside class="flex flex-col h-full sticky top-0 left-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-zinc-900 font-['Inter'] antialiased tracking-tight">
+<div class="p-8">
+<h1 class="text-xl font-black tracking-tighter text-zinc-900 dark:text-white">StockMo</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-secondary font-bold opacity-50">Precision Logistics</p>
+</div>
+<nav class="flex-1 mt-4">
+<!-- Home (Active) -->
+<a class="flex items-center px-8 py-4 text-red-600 dark:text-red-500 font-bold border-l-4 border-red-600 bg-red-50/50 dark:bg-red-900/10 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="home">home</span>
+<span class="label-sm uppercase tracking-[0.1em] text-xs">Home</span>
+</a>
+<!-- Inspect -->
+<a class="flex items-center px-8 py-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="fact_check">fact_check</span>
+<span class="label-sm uppercase tracking-[0.1em] text-xs">Inspect</span>
+</a>
+<!-- Arrive -->
+<a class="flex items-center px-8 py-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="local_shipping">local_shipping</span>
+<span class="label-sm uppercase tracking-[0.1em] text-xs">Arrive</span>
+</a>
+<!-- Storage -->
+<a class="flex items-center px-8 py-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="inventory_2">inventory_2</span>
+<span class="label-sm uppercase tracking-[0.1em] text-xs">Storage</span>
+</a>
+<!-- Delivery -->
+<a class="flex items-center px-8 py-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="order_approve">order_approve</span>
+<span class="label-sm uppercase tracking-[0.1em] text-xs">Delivery</span>
+</a>
+</nav>
+<div class="p-8 mt-auto flex items-center gap-3 border-t border-zinc-100">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Technician Profile Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnevdgWheab5745DS20ZCqbHt6PmmxNpBoFXEjaBd5YKBXqxf77R3nIn0FR_QYWkNf4ksFrfsTLCzYudxcvEfG-q9fOYs8dBC6oFT0UsVHM-oELMChlvcsndp20CTvsVXP_MtqHZk3GMid8KfgaseTPV-XQhcwt0dcRxv8e8AikGmP6ZQFm51wN43L0K68aAO0dFGRVZ24sWFc1lP4-Bbbx8E_V0d0h_vi6u_VR0hQY2ZLeDhWzmYdZRGTVv24lYLqZwJE0pic_pw"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">M. Harrison</p>
+<p class="text-[10px] text-secondary">Lead Technician</p>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto">
+<!-- TopAppBar (from JSON) -->
+<header class="flex items-center justify-between px-10 w-full h-16 sticky top-0 z-50 bg-white/80 backdrop-blur-xl shadow-sm shadow-zinc-200/50">
+<div class="flex items-center gap-8">
+<h2 class="text-lg font-black text-red-600 tracking-tight">StockMo Precision</h2>
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-2 rounded-lg w-96">
+<span class="material-symbols-outlined text-zinc-400 text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 w-full" placeholder="Search by VIN or Stock #" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-zinc-600 hover:text-red-600 cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-zinc-600 hover:text-red-600 cursor-pointer transition-colors" data-icon="settings">settings</span>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="barcode_scanner">barcode_scanner</span>
+                    SCAN VIN
+                </button>
+</div>
+</header>
+<div class="p-10 space-y-10 max-w-7xl mx-auto">
+<!-- Dashboard Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<span class="label-sm uppercase tracking-[0.2em] text-[10px] font-bold text-primary">Overview</span>
+<h1 class="text-4xl font-bold tracking-tight text-on-surface mt-1">Technician Dashboard</h1>
+</div>
+<div class="text-right">
+<p class="text-xs font-medium text-secondary">Shift: Morning (06:00 - 14:00)</p>
+<p class="text-sm font-bold text-on-surface">Tuesday, Oct 24</p>
+</div>
+</div>
+<!-- Summary Cards (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border-l-4 border-zinc-200 flex flex-col justify-between h-40 group hover:border-red-600 transition-colors duration-300">
+<div class="flex justify-between items-start">
+<span class="label-sm uppercase tracking-widest text-[10px] font-bold text-secondary">Total Assigned</span>
+<span class="material-symbols-outlined text-zinc-300 group-hover:text-red-600 transition-colors" data-icon="assignment">assignment</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black tracking-tighter">12</span>
+<span class="text-xs font-bold text-zinc-400">UNITS</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border-l-4 border-zinc-200 flex flex-col justify-between h-40 group hover:border-red-600 transition-colors duration-300">
+<div class="flex justify-between items-start">
+<span class="label-sm uppercase tracking-widest text-[10px] font-bold text-secondary">PDI Due Today</span>
+<span class="material-symbols-outlined text-zinc-300 group-hover:text-red-600 transition-colors" data-icon="schedule">schedule</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black tracking-tighter">03</span>
+<span class="text-xs font-bold text-zinc-400">PENDING</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border-l-4 border-primary flex flex-col justify-between h-40 bg-red-50/10">
+<div class="flex justify-between items-start">
+<span class="label-sm uppercase tracking-widest text-[10px] font-bold text-primary">Overdue</span>
+<span class="material-symbols-outlined text-primary" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-5xl font-black tracking-tighter text-primary">02</span>
+<span class="text-xs font-bold text-primary opacity-60">CRITICAL</span>
+</div>
+</div>
+</div>
+<!-- Fleet Velocity Pipeline -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-sm font-black uppercase tracking-widest">Fleet Velocity Pipeline</h3>
+<span class="text-xs font-bold text-primary cursor-pointer hover:underline">View Live Map</span>
+</div>
+<div class="relative pt-2 pb-6">
+<!-- Pipeline Progress Visualization -->
+<div class="flex justify-between relative">
+<!-- Horizontal Line Background -->
+<div class="absolute top-1/2 left-0 w-full h-1 bg-surface-container-low -translate-y-1/2 rounded-full"></div>
+<div class="absolute top-1/2 left-0 w-3/4 h-1 bg-primary -translate-y-1/2 rounded-full"></div>
+<!-- Stage 1 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center border-4 border-white shadow-md">
+<span class="material-symbols-outlined text-white text-lg" data-icon="inbox">inbox</span>
+</div>
+<p class="mt-3 text-[10px] font-bold uppercase tracking-tighter text-on-surface">Intake</p>
+<p class="text-[9px] text-secondary font-medium">24 Units</p>
+</div>
+<!-- Stage 2 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center border-4 border-white shadow-md">
+<span class="material-symbols-outlined text-white text-lg" data-icon="fact_check">fact_check</span>
+</div>
+<p class="mt-3 text-[10px] font-bold uppercase tracking-tighter text-on-surface">Inspection</p>
+<p class="text-[9px] text-secondary font-medium">12 Units</p>
+</div>
+<!-- Stage 3 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center border-4 border-white shadow-md">
+<span class="material-symbols-outlined text-white text-lg" data-icon="build">build</span>
+</div>
+<p class="mt-3 text-[10px] font-bold uppercase tracking-tighter text-on-surface">Servicing</p>
+<p class="text-[9px] text-secondary font-medium">08 Units</p>
+</div>
+<!-- Stage 4 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center border-4 border-white shadow-sm">
+<span class="material-symbols-outlined text-zinc-400 text-lg" data-icon="local_shipping">local_shipping</span>
+</div>
+<p class="mt-3 text-[10px] font-bold uppercase tracking-tighter text-zinc-400">Ready</p>
+<p class="text-[9px] text-zinc-400 font-medium">16 Units</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Tables Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+<!-- My Tasks -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-sm font-black uppercase tracking-widest">My Tasks</h3>
+<span class="material-symbols-outlined text-zinc-400 cursor-pointer" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-zinc-100">
+<tr>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Asset / VIN</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Action</th>
+<th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-zinc-50">
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold">2024 Mustang Mach-E</p>
+<p class="text-[10px] text-zinc-400">VIN: ...8823-C</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-[10px] px-2 py-1 rounded bg-zinc-100 font-bold uppercase">PDI INSPECTION</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-[10px] font-bold text-primary uppercase">Overdue</span>
+</td>
+</tr>
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold">2023 F-150 Lightning</p>
+<p class="text-[10px] text-zinc-400">VIN: ...1145-L</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-[10px] px-2 py-1 rounded bg-zinc-100 font-bold uppercase">SOFTWARE UPGRADE</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-[10px] font-bold text-zinc-400 uppercase">In Progress</span>
+</td>
+</tr>
+<tr class="hover:bg-zinc-50 transition-colors">
+<td class="px-6 py-4">
+<p class="text-xs font-bold">2024 Bronco Raptor</p>
+<p class="text-[10px] text-zinc-400">VIN: ...9902-R</p>
+</td>
+<td class="px-6 py-4">
+<span class="text-[10px] px-2 py-1 rounded bg-zinc-100 font-bold uppercase">QUALITY GATE 2</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-[10px] font-bold text-secondary uppercase">Queued</span>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 border-t border-zinc-50 text-center">
+<button class="text-[10px] font-bold text-secondary uppercase tracking-widest hover:text-primary transition-colors">View All Assignments</button>
+</div>
+</div>
+</section>
+<!-- Recent Activity -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-sm font-black uppercase tracking-widest">Recent Activity</h3>
+<span class="material-symbols-outlined text-zinc-400 cursor-pointer" data-icon="history">history</span>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border-l-4 border-emerald-500 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded bg-emerald-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="check_circle">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-bold">PDI Complete: Bronco #772</p>
+<p class="text-[10px] text-zinc-400">12:44 PM • M. Harrison</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border-l-4 border-amber-500 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded bg-amber-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-amber-600 text-sm" data-icon="move_to_inbox">move_to_inbox</span>
+</div>
+<div>
+<p class="text-xs font-bold">Arrived: Transit XL (4 Units)</p>
+<p class="text-[10px] text-zinc-400">10:15 AM • Yard Team</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm border-l-4 border-red-500 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded bg-red-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-red-600 text-sm" data-icon="report">report</span>
+</div>
+<div>
+<p class="text-xs font-bold">Flagged: Mustang GT VIN...21</p>
+<p class="text-[10px] text-zinc-400">08:30 AM • System Alert</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-zinc-300 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Meta -->
+<footer class="pt-10 border-t border-zinc-200 flex justify-between items-center opacity-50">
+<p class="text-[10px] uppercase tracking-widest font-bold">StockMo Precision Logistics v4.2.0</p>
+<div class="flex gap-4">
+<p class="text-[10px] font-bold uppercase">System Status: Optimal</p>
+<p class="text-[10px] font-bold uppercase">Privacy</p>
+<p class="text-[10px] font-bold uppercase">Support</p>
+</div>
+</footer>
+</div>
+</main>
+</body></html>

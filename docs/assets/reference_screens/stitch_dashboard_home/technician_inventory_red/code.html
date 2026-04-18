@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Technician Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-white font-display text-slate-900">
+<div class="relative flex min-h-screen flex-col bg-white">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-white border-b border-slate-100">
+<div class="flex items-center justify-between px-4 pt-4 pb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-900 text-2xl">menu</span>
+<h1 class="text-xl font-bold tracking-tight text-slate-900">Inventory</h1>
+</div>
+<div class="relative">
+<button class="flex items-center justify-center h-10 w-10 rounded-full hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-slate-900 text-2xl">notifications</span>
+</button>
+<span class="absolute top-2 right-2 flex h-2 w-2 rounded-full bg-primary"></span>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-3">
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-3 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-slate-100 border-none rounded-lg py-3 pl-10 pr-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all outline-none" placeholder="Search vehicles, VIN, or parts" type="text"/>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex px-4 gap-6">
+<button class="border-b-2 border-primary pb-3 pt-2 text-sm font-bold text-slate-900">All Units</button>
+<button class="border-b-2 border-transparent pb-3 pt-2 text-sm font-medium text-slate-500 hover:text-slate-700">Priority</button>
+<button class="border-b-2 border-transparent pb-3 pt-2 text-sm font-medium text-slate-500 hover:text-slate-700">Ready</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto px-4 py-6 pb-24">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Recent Assignments</h3>
+<span class="text-xs font-medium text-primary">12 Units Total</span>
+</div>
+<!-- Vehicle Cards -->
+<div class="space-y-4">
+<!-- Vehicle Card 1 -->
+<div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-3">
+<div class="flex gap-4">
+<div class="h-16 w-16 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Front view of a silver sedan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAku_riHinpNjeLwSZ_ehRTsIzie9l85RcaOjFrh2R-D9U4wSkb_Jz3Ay3JPlBXurN5Tg9ly4znGeRXr3PokfbMCnPM_iMrEni1EdsHSTyIkuEtjaezNSFXlTDE6nYD56F105K4MH1Fc4H3aYrZZi_rQ9Z1XU2SnOhd-UrCtEg5tuyfeb3RYmfof931ScKmDe0YGk9-_bDzZBaPNL6Y0l0eeWXDrSqsk1rkU1FzqO2EAUjd5U689FAuNhO266VVx8OcZhqYvELJjEvp"/>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">2023 Toyota Camry</h4>
+<p class="text-sm text-slate-500">VIN: 4T1BF1FK...</p>
+<p class="text-xs text-slate-400 mt-1">Stall: B-12</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary text-[10px] font-bold text-white uppercase tracking-wider">Priority</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-50">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-xs">2h 15m remaining</span>
+</div>
+<button class="text-sm font-semibold text-primary">View Details</button>
+</div>
+</div>
+<!-- Vehicle Card 2 -->
+<div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-3">
+<div class="flex gap-4">
+<div class="h-16 w-16 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Modern dark SUV in showroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPvAaMPqrzXJ_vIprbE1ar8n_0UE1md8FSSOuRYk2wBu2mSAn8hqz1SMHOsuYJV58WK8JInH03ZisIKlPNAMgqosblYuaF8XX_-cO0vHN1vxYMhN-mmkdN4CCtdkLTSOd2EWZ0nHeCHczK15zdN2b9N_e44hzRAq1Ugj6iDQB4k9d6WsUA9cXXBnMAK8CkTCGRUk9fhRgAJoVasqqdwfAQeORzsqMPy6_d-oyc8LnWODaLQsuB78H5Dw6mSdaoI94vU_SNHlywbmLG"/>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">2024 Honda CR-V</h4>
+<p class="text-sm text-slate-500">VIN: 5J6RW1H5...</p>
+<p class="text-xs text-slate-400 mt-1">Stall: A-04</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary/10 text-[10px] font-bold text-primary uppercase tracking-wider">Ready</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-50">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs">Inspection complete</span>
+</div>
+<button class="text-sm font-semibold text-primary">Update Status</button>
+</div>
+</div>
+<!-- Vehicle Card 3 -->
+<div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-3">
+<div class="flex gap-4">
+<div class="h-16 w-16 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Blue luxury sports car" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEoELbu0WvMH4EPuP_54hcAkYY-ZVLfcCKPE9Qeo0JW8xvclNPqL8fGP-028v5VeESkD5tziZOwrThbTrLuWwVcJF0OP9P28mJDRgiIRJsb-X0jjvAJuBLbxk39T5sDnJsIHnhyOml0JZ3t3gk-Hl8bXrbtIH3Z4ioBKXOfAD6yRcCrY8bZHMDLXwZSAs1Or3qvH-XYQuYfYNHL48bWKP8HxMjQBej-qP_KfsfaAe5MdtB8KqkwJcwiIJdhjDSfF_IOsv1-EQUPG9Q"/>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">2022 BMW M4</h4>
+<p class="text-sm text-slate-500">VIN: WBS53AY0...</p>
+<p class="text-xs text-slate-400 mt-1">Stall: C-09</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-slate-100 text-[10px] font-bold text-slate-600 uppercase tracking-wider">In Progress</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-50">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">build</span>
+<span class="text-xs">Engine diagnostics</span>
+</div>
+<button class="text-sm font-semibold text-primary">Resume Task</button>
+</div>
+</div>
+<!-- Vehicle Card 4 -->
+<div class="bg-white border border-slate-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start justify-between mb-3">
+<div class="flex gap-4">
+<div class="h-16 w-16 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
+<img class="h-full w-full object-cover" data-alt="Red classic sports car" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASGf_6W2LulWqe42aeVOO5IG9buO9hHHHbPnnyByWh9EPwNLdF0K1SXcpuTXhiMQne4jjUhd3Z5EGE0ceV3xrHFeIp3fQ0uOUfVioQx4vgNpFZfOUIXfUrZje-r9wtVG1yUkDOt6WkijDRCXjk5kFXYAVIGXjoEab9AJFi-cX9ECmAm9-uaL6dH-DqqBR7yX2zOrOw5aqBqjzh26Y4U4FuZuaE5-PhYQyvEZivN2M0-N75BPtHZREq6AVOdMKWtIM4kPadRHy8Q2sv"/>
+</div>
+<div>
+<h4 class="font-bold text-slate-900">2021 Ford Mustang</h4>
+<p class="text-sm text-slate-500">VIN: 1FA6P8CF...</p>
+<p class="text-xs text-slate-400 mt-1">Stall: B-01</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-primary text-[10px] font-bold text-white uppercase tracking-wider">Priority</span>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-slate-50">
+<div class="flex items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined text-sm">warning</span>
+<span class="text-xs">Parts backordered</span>
+</div>
+<button class="text-sm font-semibold text-primary">View Logistics</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-4 pb-6 pt-2 z-20">
+<div class="flex justify-between items-center max-w-lg mx-auto">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">inventory_2</span>
+<span class="text-[10px] font-bold">Stock</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="text-[10px] font-medium">Tasks</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-medium">History</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

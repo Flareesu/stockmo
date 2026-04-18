@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#EB0A1D",
+              "background": "#F8F5F6",
+              "on-surface": "#1A1014",
+              "secondary": "#6B7280",
+              "inactive": "#9CA3AF",
+              "success": "#22C55E",
+            },
+            fontFamily: {
+              "sans": ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              "card": "14px",
+              "btn": "10px",
+            },
+            boxShadow: {
+              "card": "0 1px 3px rgba(0,0,0,0.06)",
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 22px;
+        }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #F8F5F6;
+            max-width: 390px;
+            margin: 0 auto;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .nav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.6px; }
+        .section-heading { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; color: #EB0A1D; text-transform: uppercase; margin-bottom: 8px; }
+        .card-padding { padding: 12px 14px; }
+    </style>
+</head>
+<body class="text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-4 h-[56px] w-full sticky top-0 z-50 bg-[#F9F9F9]/80 backdrop-blur-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="directions_car">directions_car</span>
+<div class="flex items-center gap-1.5">
+<h1 class="font-bold tracking-tight uppercase text-lg text-on-surface">StockMo</h1>
+<span class="text-[9px] bg-gray-200 px-1 py-0.5 rounded font-bold text-secondary">V2</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-primary/20">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<span class="text-[9px] font-bold text-primary tracking-tight">47 UNITS</span>
+</div>
+<span class="material-symbols-outlined text-on-surface" data-icon="settings" style="font-size: 20px;">settings</span>
+</div>
+</header>
+<main class="px-4 mt-4 space-y-4">
+<!-- Greeting Section -->
+<section>
+<div class="flex justify-between items-end">
+<div>
+<p class="text-[9px] font-bold tracking-[1.2px] uppercase text-secondary mb-0.5">GACI Logistics</p>
+<h2 class="text-[18px] font-bold text-on-surface">Operations Summary</h2>
+</div>
+<p class="text-[11px] font-medium text-secondary pb-0.5">March 23, 2026</p>
+</div>
+</section>
+<!-- Hero Card: Active Fleet -->
+<section>
+<div class="relative overflow-hidden rounded-card card-padding text-white shadow-card bg-gradient-to-br from-[#1A1014] to-[#3D1A28]">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-[9px] font-bold tracking-[1.2px] opacity-60 uppercase mb-0.5">Active Fleet</p>
+<div class="flex items-baseline gap-1.5">
+<span class="text-5xl font-extrabold tracking-tighter">47</span>
+<span class="text-[11px] font-medium opacity-80 italic">units in transit</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-md">
+<div class="w-1.5 h-1.5 rounded-full bg-success animate-pulse"></div>
+<span class="text-[9px] font-bold tracking-widest uppercase">Live</span>
+</div>
+</div>
+<div>
+<p class="text-[9px] font-bold mb-3 opacity-70 uppercase tracking-widest">7 STAGES ACTIVE</p>
+<div class="grid grid-cols-4 gap-2">
+<!-- Progress items simplified for 390px view -->
+<div class="space-y-1">
+<div class="flex justify-between text-[8px] font-bold uppercase opacity-50"><span>Port</span><span>3</span></div>
+<div class="h-0.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-white w-[30%]"></div></div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[8px] font-bold uppercase opacity-50"><span>Recv</span><span>5</span></div>
+<div class="h-0.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-white w-[50%]"></div></div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[8px] font-bold uppercase opacity-50"><span>PDI</span><span>8</span></div>
+<div class="h-0.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-white w-[80%]"></div></div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-[8px] font-bold uppercase opacity-50"><span>Store</span><span>18</span></div>
+<div class="h-0.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-white w-[95%]"></div></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-3 gap-[10px]">
+<div class="bg-white card-padding rounded-card border border-black/10 shadow-card">
+<p class="text-[9px] font-bold tracking-widest text-secondary uppercase mb-1">Avg PDI</p>
+<p class="text-[15px] font-bold text-on-surface">2.8d</p>
+</div>
+<div class="bg-white card-padding rounded-card border border-black/10 shadow-card">
+<p class="text-[9px] font-bold tracking-widest text-secondary uppercase mb-1">Pass Rate</p>
+<p class="text-[15px] font-bold text-on-surface">94%</p>
+</div>
+<div class="bg-white card-padding rounded-card border border-black/10 shadow-card">
+<p class="text-[9px] font-bold tracking-widest text-secondary uppercase mb-1">Pending</p>
+<p class="text-[15px] font-bold text-on-surface">12</p>
+</div>
+</section>
+<!-- Needs Attention -->
+<section>
+<div class="flex justify-between items-center mb-2">
+<h3 class="section-heading mb-0">Needs Attention</h3>
+<span class="text-[9px] font-bold text-primary tracking-widest uppercase">View All</span>
+</div>
+<div class="space-y-[10px]">
+<div class="bg-white card-padding rounded-card border border-black/10 shadow-card border-l-4 border-l-primary flex justify-between items-center">
+<div>
+<div class="flex items-center gap-1.5 mb-0.5">
+<span class="text-[13px] font-bold text-on-surface">SM-0042</span>
+<span class="text-[11px] font-medium text-secondary">GS3 Emgrand</span>
+</div>
+<p class="text-[11px] font-medium text-secondary">QAS evaluation overdue</p>
+</div>
+<p class="text-[9px] font-bold text-primary uppercase">3 Days</p>
+</div>
+<div class="bg-white card-padding rounded-card border border-black/10 shadow-card border-l-4 border-l-[#F59E0B] flex justify-between items-center">
+<div>
+<div class="flex items-center gap-1.5 mb-0.5">
+<span class="text-[13px] font-bold text-on-surface">SM-0038</span>
+<span class="text-[11px] font-medium text-secondary">GS8</span>
+</div>
+<p class="text-[11px] font-medium text-secondary">Buy-off inspection due</p>
+</div>
+<p class="text-[9px] font-bold text-[#F59E0B] uppercase">Today</p>
+</div>
+</div>
+</section>
+<!-- Pending Job Orders -->
+<section>
+<h3 class="section-heading">Pending Job Orders</h3>
+<div class="flex gap-[10px] overflow-x-auto hide-scrollbar -mx-4 px-4 pb-2">
+<div class="min-w-[240px] bg-white card-padding rounded-card border border-black/10 shadow-card">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[13px] font-bold text-on-surface">SM-0051</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-gray-100 text-secondary uppercase">Awaiting QAS</span>
+</div>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-[44px] h-[44px] rounded-full bg-gray-100 flex items-center justify-center text-[15px] font-bold text-secondary">JD</div>
+<div>
+<p class="text-[13px] font-bold text-on-surface">John Doe</p>
+<p class="text-[11px] font-medium text-secondary">Lead Technician</p>
+</div>
+</div>
+<button class="w-full h-9 bg-primary text-white text-[9px] font-bold tracking-widest uppercase rounded-btn shadow-sm">Review Details</button>
+</div>
+<div class="min-w-[240px] bg-white card-padding rounded-card border border-black/10 shadow-card">
+<div class="flex justify-between items-start mb-3">
+<span class="text-[13px] font-bold text-on-surface">SM-0049</span>
+<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-success/10 text-success uppercase">Approved</span>
+</div>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-[44px] h-[44px] rounded-full bg-gray-100 flex items-center justify-center text-[15px] font-bold text-secondary">AM</div>
+<div>
+<p class="text-[13px] font-bold text-on-surface">Alice Moore</p>
+<p class="text-[11px] font-medium text-secondary">Logistics Coordinator</p>
+</div>
+</div>
+<button class="w-full h-9 border border-black/10 text-on-surface text-[9px] font-bold tracking-widest uppercase rounded-btn">View Order</button>
+</div>
+</div>
+</section>
+<!-- Team Overview -->
+<section>
+<h3 class="section-heading">Technician Status</h3>
+<div class="space-y-[10px]">
+<div class="flex items-center justify-between card-padding bg-white rounded-card border border-black/10 shadow-card">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-[44px] h-[44px] rounded-full bg-gray-100 flex items-center justify-center text-[15px] font-bold text-secondary">JD</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-success border-2 border-white rounded-full"></div>
+</div>
+<div>
+<p class="text-[13px] font-bold text-on-surface">James Dean</p>
+<p class="text-[9px] font-bold text-secondary uppercase tracking-tighter">Status: Active</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[13px] font-bold text-on-surface">4 Units</p>
+<p class="text-[9px] font-bold text-secondary uppercase">Assigned</p>
+</div>
+</div>
+<div class="flex items-center justify-between card-padding bg-white rounded-card border border-black/10 shadow-card">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-[44px] h-[44px] rounded-full bg-gray-100 flex items-center justify-center text-[15px] font-bold text-secondary">RK</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-inactive border-2 border-white rounded-full"></div>
+</div>
+<div>
+<p class="text-[13px] font-bold text-on-surface">Robert King</p>
+<p class="text-[9px] font-bold text-secondary uppercase tracking-tighter">Status: Break</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-[13px] font-bold text-on-surface">2 Units</p>
+<p class="text-[9px] font-bold text-secondary uppercase">Assigned</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 h-[64px] z-50 flex justify-around items-center bg-white border-t border-black/10 mx-auto max-w-[390px]">
+<div class="flex flex-col items-center justify-center text-primary w-1/4">
+<span class="material-symbols-outlined mb-0.5" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="nav-label">DASHBOARD</span>
+</div>
+<div class="flex flex-col items-center justify-center text-inactive w-1/4">
+<span class="material-symbols-outlined mb-0.5" data-icon="local_shipping">local_shipping</span>
+<span class="nav-label">FLEET</span>
+</div>
+<div class="flex flex-col items-center justify-center text-inactive w-1/4">
+<span class="material-symbols-outlined mb-0.5" data-icon="groups">groups</span>
+<span class="nav-label">TEAM</span>
+</div>
+<div class="flex flex-col items-center justify-center text-inactive w-1/4">
+<span class="material-symbols-outlined mb-0.5" data-icon="analytics">analytics</span>
+<span class="nav-label">REPORTS</span>
+</div>
+</nav>
+</body></html>

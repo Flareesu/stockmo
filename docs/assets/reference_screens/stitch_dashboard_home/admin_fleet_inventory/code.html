@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StockMo Admin - Fleet Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eb0a1d",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto bg-white dark:bg-slate-900 shadow-xl overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center p-4 justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl">menu</span>
+<h1 class="text-lg font-bold tracking-tight">Fleet Inventory</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+<span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-primary ring-2 ring-white"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Admin user profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtMvdxyXVbQjZUFp09fcZ3rw08Wx5XKmYWSOUp3J3eZuEaFpxlZXfgrwlZkwsLbpo6HT_i6JmBIh7Xh13jv4Xk4ZFK2Kjyo046NC6zfGUfYZWa9h2ISW69gEU9SANwQJWL8HFcJ43yGIHD-ikU9pbHY7de9RSomDoP20ZklryWGba2Lr20mLBTMwJqdf19qGq91Txe25cnRlTpGHKkAAp6b-jq544dEMl4gB5Quur9dDakCTWzXre9zPDcfMeL8nMq3lsExkntNTDF"/>
+</div>
+</div>
+</div>
+<!-- Persistent Search Bar -->
+<div class="px-4 pb-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400">search</span>
+<input class="w-full h-11 pl-10 pr-4 bg-slate-100 dark:bg-slate-800 border-none rounded-lg focus:ring-2 focus:ring-primary text-sm" placeholder="Search VIN, Model or Technician" type="text"/>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex gap-2 px-4 pb-4 overflow-x-auto no-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-white px-4 text-sm font-medium">
+                    All Vehicles
+                </button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium">
+                    Port <span class="text-[10px] bg-slate-200 dark:bg-slate-700 px-1.5 rounded text-slate-500">12</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium">
+                    PDI <span class="text-[10px] bg-slate-200 dark:bg-slate-700 px-1.5 rounded text-slate-500">8</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 text-sm font-medium">
+                    Ready <span class="text-[10px] bg-slate-200 dark:bg-slate-700 px-1.5 rounded text-slate-500">24</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-4 space-y-4 mb-20">
+<div class="flex justify-between items-center">
+<h2 class="font-bold text-slate-900 dark:text-white">Active Inventory (44)</h2>
+<button class="text-primary text-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">tune</span> Sort
+                </button>
+</div>
+<!-- Vehicle Card 1 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_car</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight">2024 Toyota Camry SE</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-mono">VIN: 4T1BF1FK1RU5...672</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">Port</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-100 dark:border-slate-700">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Assigned Technician</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-5 h-5 rounded-full bg-slate-200">
+<img class="w-full h-full rounded-full" data-alt="Technician profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_9-zv2AS6B7FLH-wZVGirmSLER75-PgfGRcqLNpdm7xHvkRKOfmhAsgPCxb7Jb_Yb7pJrs73SEsZAlGLMUN3xGZlsKqbcWnnMb3OavzIIF0J68WLpodqF2Ka0WvF01GVUQHc31NDFmYSUEV_4KPSR1GY8SrouY54Uj0PaJhpE8sy6zf58Yt2S5DvBfW_heU4X4eGC9eAiwpKSyVZc8qzktXxnJ3ONPHp57k_FPP9inD4LJB4rQHMYinaKGuquyq4my6t5YEqQ_5r2"/>
+</div>
+<p class="text-xs font-medium">Marcus Chen</p>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Arrival Date</p>
+<p class="text-xs font-medium mt-1">Oct 24, 2023</p>
+</div>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold">1</div>
+</div>
+<button class="text-primary text-sm font-bold">View Details</button>
+</div>
+</div>
+<!-- Vehicle Card 2 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm border-l-4 border-l-primary">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">electric_car</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight">2024 Tesla Model Y</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-mono">VIN: 7SAYGDEE4PF...129</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider">PDI Stage</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-100 dark:border-slate-700">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Assigned Technician</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-5 h-5 rounded-full bg-slate-200">
+<img class="w-full h-full rounded-full" data-alt="Technician profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApd7o9CCsdtXX46ChsW3QLGjs1VjQMOZysZR0V5JW4ATSdB3xGU7zreF_IUXBqrwSFXyWSG76w2oXGvemIXD880g3e3YGW-Mh4b2xvMyKZvsxjuhAPkxVFjCnCU3p152_pjCPcVt-HHASZyj4dHzG65INUXlKP_OvMVvzD82v_-Qqljl0jpeKpQBJAmQNAcQjAFUvU2iN-m1s8ilxQWckrpMdBvEvbyQuoYGFTZef9nMwsEz0X-F-_QUwNfZr67zueuaZSCBuue7Wa"/>
+</div>
+<p class="text-xs font-medium">Sarah Jenkins</p>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Stage Completion</p>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mt-2">
+<div class="bg-primary h-1.5 rounded-full w-[65%]"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mt-3">
+<p class="text-xs text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span> Due in 2h
+                    </p>
+<button class="text-primary text-sm font-bold">View Details</button>
+</div>
+</div>
+<!-- Vehicle Card 3 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">airport_shuttle</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight">2023 Ford Transit-350</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-mono">VIN: 1FTBW2CK8PK...881</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider">Ready</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-100 dark:border-slate-700">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Assigned Technician</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-5 h-5 rounded-full bg-slate-200">
+<img class="w-full h-full rounded-full" data-alt="Technician profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAgA6ryR1hEKHMS56w_E2OLkeYnfzZygnjE84gjVfidsyusfMXno1MA-aDrOZoK6chLb-elv2RCnq4vNsECz5XknEzXZ2DTas94C8LkV63kIt_0tkQPu6awRYz9NJmFqRPM2Bg1vZta8jhwaYtNeCFrzKBdnmaZUbnXeb2CKZY1P-65ls2F364v5V-DZ_tf3TEc-LoOOqTf_jI6wjex9S4tVuHjK6W7AJoIGgVPgFREi5qCrr5S9QjZVJ9TKXVFNsDGXoObkZ65y8C"/>
+</div>
+<p class="text-xs font-medium">John Doe</p>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Location</p>
+<p class="text-xs font-medium mt-1">Row B, Spot 14</p>
+</div>
+</div>
+<div class="flex justify-between items-center mt-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span>
+<p class="text-[10px] font-bold text-emerald-500 uppercase">Quality Inspected</p>
+</div>
+<button class="text-primary text-sm font-bold">View Details</button>
+</div>
+</div>
+<!-- Vehicle Card 4 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">directions_car</span>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white leading-tight">2024 Honda Civic Sport</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-mono">VIN: 1HGFE2F58RE...004</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 text-[10px] font-bold uppercase tracking-wider">Stockyard</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-100 dark:border-slate-700">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Assigned Technician</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-5 h-5 rounded-full bg-slate-200">
+<img class="w-full h-full rounded-full" data-alt="Technician profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgH2pdmgoRd1hdvzHhWH8ACdAoJGiKEzq8V5c2vjZEzhAzrdz4wRDe5Q_MOJVG6QNQIpOgc5pDAuRdB6toI748KOxvzeF__s8W1vBCaqDb8mUoHr2BgmxMUR_XZtxN6HRWUSRQ3LiFEAfDw6edh8LqAFi5pn6taRlzXIgU91CNxIOFQTAVmfF2kCvtvUfTg8htnd-lUedigUMmfsnOX7eTPxp2Y0lxrpCCbsM7idZpaiIvvUAPziyDIzMJNtTAyK0-_IudZd6kpJp6"/>
+</div>
+<p class="text-xs font-medium">Unassigned</p>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-semibold">Hold Reason</p>
+<p class="text-xs font-medium mt-1 text-primary">Awaiting Parts</p>
+</div>
+</div>
+<div class="flex justify-end mt-3">
+<button class="bg-primary text-white px-4 py-1.5 rounded-lg text-xs font-bold">Assign Tech</button>
+</div>
+</div>
+</main>
+<!-- Navigation -->
+<nav class="fixed bottom-0 w-full max-w-md bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex justify-between items-center z-50">
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-primary active-fill">garage</span>
+<span class="text-[10px] font-bold text-primary">Inventory</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">engineering</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary">Technicians</span>
+</a>
+<div class="relative -top-6">
+<button class="w-14 h-14 bg-primary rounded-full shadow-lg flex items-center justify-center text-white ring-4 ring-white dark:ring-slate-900">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">monitoring</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary">Reports</span>
+</a>
+<a class="flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">settings</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary">Settings</span>
+</a>
+</nav>
+</div>
+</body></html>
