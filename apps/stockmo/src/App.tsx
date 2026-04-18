@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useAuth } from './hooks/useAuth';
 import { getFeatureFlags, type FeatureFlags } from './lib/featureFlags';
 import { hasMigrated, hasLocalData, migrateLocalStorageToSupabase } from './lib/migrateFromLocalStorage';
@@ -150,6 +151,7 @@ export default function App() {
           onSignOut={auth.signOut}
         />
       )}
+      <SpeedInsights />
     </>
   );
 }
