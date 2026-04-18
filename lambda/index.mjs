@@ -136,8 +136,8 @@ async function resolveVehicleStages(rawStatuses) {
   // Normalise a raw label → URL-safe slug
   const toSlug = str =>
     str.trim().toLowerCase()
-      .replace(/[^a-z0-9]+/g, '_')
-      .replace(/^_|_$/g, '');
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
 
   // Build unique slug → original label map
   const needed = new Map(); // slug → display name (title-cased)
