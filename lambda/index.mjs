@@ -125,6 +125,62 @@ function processRow(row, known, extra) {
   return vehicle;
 }
 
+// ─── Stage resolution ────────────────────────────────────────────────────────
+
+/**
+ * Converts a raw inventory status string (e.g. "In-Transit", "Available for Delivery")
+ * into a pipeline_stages slug. If the slug doesn't exist in the DB, a new stage row
+ * is created automatically. Returns a Map<rawStatusLower → slug>.
+ */
+async function resolveVehicleStages(rawStatuses) {
+  // Normalise a raw label → URL-safe slug
+  const toSlug = str =>
+    str.trim().toLowerCase()
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_|_$/g, '');
+
+  // Build unique slug → original label map
+  const needed = new Map(); // slug → display name (title-cased)
+  for (const raw of rawStatuses) {
+    if (!raw) continue;
+    const slug = toSlug(raw);
+    if (!needed.has(slug)) {
+      // Title-case the raw label for the display name
+      const name = raw.trim().replace(/\b\w/g, c => c.toUpperCase());
+      needed.set(slug, name);
+    }
+  }
+
+  // Fetch all existing pipeline_stages
+  const { data: existing } = await sb.from('pipeline_stages').select('slug, ord');
+  const existingSlugs = new Set((existing || []).map(s => s.slug));
+  const maxOrd = (existing || []).reduce((m, s) => Math.max(m, s.ord || 0), 0);
+
+  // Create missing stages
+  const missing = [...needed.entries()].filter(([slug]) => !existingSlugs.has(slug));
+  if (missing.length > 0) {
+    const DEFAULT_COLORS = ['#6b7280','#F59E0B','#10B981','#3B82F6','#8B5CF6','#EF4444','#059669','#EC4899'];
+    const newRows = missing.map(([slug, name], i) => ({
+      slug,
+      name,
+      color: DEFAULT_COLORS[i % DEFAULT_COLORS.length],
+      ord:   maxOrd + i + 1,
+      active: true,
+    }));
+    const { error } = await sb.from('pipeline_stages').insert(newRows);
+    if (error) console.error('Auto-create pipeline_stages error:', error);
+    else console.log(`Auto-created ${newRows.length} pipeline stage(s):`, newRows.map(r => r.slug).join(', '));
+  }
+
+  // Return lookup: rawStatusLower → slug
+  const lookup = new Map();
+  for (const raw of rawStatuses) {
+    if (!raw) continue;
+    lookup.set(raw.trim().toLowerCase(), toSlug(raw));
+  }
+  return lookup;
+}
+
 // ─── ID generation ───────────────────────────────────────────────────────────
 
 async function getNextVehicleNumber() {
@@ -331,11 +387,71 @@ export async function handler(event) {
 
     console.log(`Parsed ${vehicles.length} valid vehicles, ${skipped} skipped`);
 
-    // 5. Batch insert into Supabase
+    // 4b. Resolve inventory status → pipeline_stages slug (auto-create missing stages)
+    const rawStages = vehicles.map(v => v.stage).filter(Boolean);
+    const stageSlugMap = rawStages.length > 0 ? await resolveVehicleStages(rawStages) : new Map();
+
+    // Fallback slug for vehicles with no inventory status column in the sheet
+    let fallbackSlug = null;
+    if (vehicles.some(v => !v.stage)) {
+      const { data: firstStage } = await sb
+        .from('pipeline_stages').select('slug').eq('active', true).order('ord').limit(1).single();
+      fallbackSlug = firstStage?.slug || null;
+    }
+
+    // Apply resolved slugs back to vehicles
+    for (const v of vehicles) {
+      if (v.stage) {
+        v.stage = stageSlugMap.get(v.stage.trim().toLowerCase()) || v.stage;
+      } else {
+        v.stage = fallbackSlug;
+      }
+    }
+
+    // 5. Deduplicate: split parsed vehicles into new (INSERT) vs existing (UPDATE)
+    const allVins = vehicles.map(v => v.vin).filter(Boolean);
+    let existingByVin = {};
+    if (allVins.length > 0) {
+      // Fetch in chunks to avoid query length limits
+      for (let ci = 0; ci < allVins.length; ci += 100) {
+        const { data: chunk } = await sb
+          .from('vehicles')
+          .select('id,vin,model,variant,color,engine,fuel,lot,dealer,notes,extra_fields')
+          .in('vin', allVins.slice(ci, ci + 100));
+        (chunk || []).forEach(r => { existingByVin[r.vin] = r; });
+      }
+    }
+
+    const UPDATABLE_FIELDS = ['model', 'variant', 'color', 'engine', 'fuel', 'lot', 'dealer', 'notes', 'extra_fields'];
+    const toInsert = [];
+    const toUpdate = []; // { id, changes }
+
+    for (const v of vehicles) {
+      const existing = existingByVin[v.vin];
+      if (!existing) {
+        toInsert.push(v);
+      } else {
+        const changes = {};
+        for (const f of UPDATABLE_FIELDS) {
+          if (v[f] !== undefined && String(v[f] ?? '') !== String(existing[f] ?? '')) {
+            changes[f] = v[f];
+          }
+        }
+        if (Object.keys(changes).length > 0) {
+          toUpdate.push({ id: existing.id, changes });
+        } else {
+          skipped++; // identical row — skip
+        }
+      }
+    }
+
+    console.log(`Dedup: ${toInsert.length} new, ${toUpdate.length} changed, ${skipped} identical`);
+
+    // 6a. Batch insert new vehicles + seed templates
     let importedCount = 0;
 
-    for (let i = 0; i < vehicles.length; i += BATCH_SIZE) {
-      const batch = vehicles.slice(i, i + BATCH_SIZE);
+    for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
+      const batch = toInsert.slice(i, i + BATCH_SIZE);
 
       const { error } = await sb.from('vehicles').insert(batch);
       if (error) {
@@ -346,27 +462,44 @@ export async function handler(event) {
 
       importedCount += batch.length;
 
-      // Seed templates for each vehicle in the batch
+      // Seed templates only for newly inserted vehicles
       await Promise.all(batch.map(v => seedTemplates(v.id).catch(err => {
         console.error(`Template seed error for ${v.id}:`, err);
         errors.push({ vehicleId: v.id, error: `Template seed failed: ${err.message}` });
       })));
     }
 
-    // 6. Update import log
+    // 6b. Update changed vehicles (no template re-seed — existing check rows preserved)
+    let updatedCount = 0;
+    await Promise.all(toUpdate.map(({ id, changes }) =>
+      sb.from('vehicles').update(changes).eq('id', id)
+        .then(({ error }) => {
+          if (!error) {
+            updatedCount++;
+          } else {
+            console.error(`Update error for ${id}:`, error);
+            errors.push({ vehicleId: id, error: `Update failed: ${error.message}` });
+          }
+        })
+    ));
+
+    console.log(`Import done: ${importedCount} inserted, ${updatedCount} updated`);
+
+    // 7. Update import log
     await updateImportLog(logId, {
       status: 'done',
       total_rows: rawData.length - 1,
       imported: importedCount,
       skipped,
       extra_columns: extraColumnNames,
-      error_log: errors.length > 0 ? errors : null,
+      error_log: errors.length > 0 ? { errors, updated: updatedCount } : { updated: updatedCount },
     });
 
-    // 7. Tag S3 object as processed
+    // 8. Tag S3 object as processed
     await tagS3Object(bucket, key, {
       'import-status':  'done',
       'import-count':   String(importedCount),
+      'import-updated': String(updatedCount),
       'import-skipped': String(skipped),
       'import-log-id':  logId || '',
     });

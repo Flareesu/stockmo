@@ -179,7 +179,7 @@
         dealerGroup:   row.dealer_group   || '',
         region:        row.region         || '',
         lot:         row.lot          || '',
-        stage:       row.stage        || 'port',
+        stage:       row.stage        || '',
         img:         row.cover_photo_url || imgForType(type),
         arrivalDate: row.arrival_date || null,
         pdiDate:     row.pdi_date,
@@ -1479,14 +1479,100 @@
       );
     }
 
+    /* ─── AccountCard (shared across tech/admin/employee settings) ─── */
+    function AccountCard({ userProfile, userEmail, role, onProfileChange, avatarColor }) {
+      const profileName = (userProfile?.name || '').trim();
+      const displayName = profileName || (userEmail ? userEmail.split('@')[0] : 'User');
+      const initials = (profileName || userEmail || 'U')
+        .split(/[\s.@]+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'U';
+
+      const [editing, setEditing] = useState(false);
+      const [draft, setDraft] = useState(profileName);
+      const [saving, setSaving] = useState(false);
+      React.useEffect(() => { setDraft(profileName); }, [profileName]);
+
+      const roleLabel = role === 'admin' ? 'Administrator' : role === 'employee' ? 'Employee' : 'Technician';
+      const roleChip  = role === 'admin'
+        ? 'bg-primary/10 text-primary'
+        : role === 'employee'
+          ? 'bg-blue-100 text-blue-600'
+          : 'bg-emerald-100 text-emerald-600';
+
+      const save = async () => {
+        const next = draft.trim();
+        if (!next || next === profileName) { setEditing(false); return; }
+        if (!userProfile?.id) return;
+        setSaving(true);
+        const { error } = await sb.from('user_profiles').update({ name: next }).eq('id', userProfile.id);
+        if (error) {
+          console.error('profile update', error);
+          setSaving(false);
+          await stockmoDialog.alert({ title: 'Save failed', message: error.message });
+          return;
+        }
+        if (role === 'tech') {
+          const ini = next.split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'T';
+          await sb.from('technicians').update({ name: next, initials: ini }).eq('profile_id', userProfile.id);
+        }
+        await onProfileChange?.();
+        setSaving(false);
+        setEditing(false);
+      };
+
+      return (
+        <div className="bg-white px-5 lg:px-8 pb-5 border-b border-gray-100 lg:max-w-4xl lg:mx-auto lg:w-full">
+          <div className="flex items-center gap-4 mt-5">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center text-white text-[20px] font-black shadow-md flex-shrink-0"
+              style={{ backgroundColor: avatarColor || '#1A1A2E' }}>{initials}</div>
+            <div className="flex-1 min-w-0">
+              {editing ? (
+                <div className="space-y-2">
+                  <input
+                    autoFocus value={draft}
+                    onChange={e => setDraft(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') { setDraft(profileName); setEditing(false); } }}
+                    placeholder="Your full name"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-[15px] font-bold text-navy outline-none focus:border-primary transition-colors"
+                  />
+                  <div className="flex items-center gap-2">
+                    <button onClick={save} disabled={saving || !draft.trim()}
+                      className="px-4 py-1.5 bg-primary text-white text-[11px] font-black uppercase tracking-widest rounded-full disabled:opacity-40 hover:brightness-110 transition-all">
+                      {saving ? 'Saving…' : 'Save'}
+                    </button>
+                    <button onClick={() => { setDraft(profileName); setEditing(false); }}
+                      className="px-4 py-1.5 bg-gray-100 text-muted text-[11px] font-black uppercase tracking-widest rounded-full hover:bg-gray-200 transition-colors">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <div className="text-[18px] font-black text-navy truncate">{displayName}</div>
+                    <button onClick={() => setEditing(true)} title="Edit name"
+                      className="p-1 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0">
+                      <Icon name="edit" className="text-muted text-[16px]" />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className={`text-[9px] font-black uppercase tracking-[0.12em] ${roleChip} px-2 py-0.5 rounded-full`}>{roleLabel}</span>
+                  </div>
+                  {userEmail && <div className="text-[11px] text-primary font-medium mt-0.5 truncate">{userEmail}</div>}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     /* ─── TechSettingsScreen ─── */
-    function TechSettingsScreen({ navigate, vehicles, currentTechId, t, lang, setLang, onNotificationClick, unreadCount }) {
+    function TechSettingsScreen({ navigate, vehicles, currentTechId, t, lang, setLang, onNotificationClick, unreadCount, userProfile, userEmail, role, refreshUserProfile }) {
       const tech = techById(currentTechId);
       const [emailAlerts, setEmailAlerts] = useState(true);
       const [pushNotifs,  setPushNotifs]  = useState(true);
       const holds = vehicles.filter(v => v.assignedTech === currentTechId && v.stage === 'hold').length;
       const overdueCount = vehicles.filter(v => v.assignedTech === currentTechId && v.stage === 'stock' && hasMaintDue(v)).length;
-      const techEmail = tech.name.toLowerCase().replace(' ', '.') + '@stockmo.com';
       return (
         <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
           <header className="bg-white px-5 pt-12 lg:pt-6 pb-4 shadow-card">
@@ -1507,16 +1593,7 @@
             </div>
           </header>
           <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
-            <div className="bg-white px-5 pb-5 border-b border-gray-100">
-              <div className="flex items-center gap-4 mt-5">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center text-white text-[20px] font-black shadow-md" style={{backgroundColor:tech.color}}>{tech.ini}</div>
-                <div>
-                  <div className="text-[18px] font-black text-navy">{tech.name}</div>
-                  <div className="text-[12px] text-muted">{tech.role}</div>
-                  <div className="text-[11px] text-primary font-medium mt-0.5">{techEmail}</div>
-                </div>
-              </div>
-            </div>
+            <AccountCard userProfile={userProfile} userEmail={userEmail} role={role || 'tech'} avatarColor={tech?.color} onProfileChange={refreshUserProfile} />
             <div className="p-4 space-y-4">
               <div>
                 <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2 px-1">{t('notifications')}</h2>
@@ -2538,14 +2615,36 @@
     }
 
     /* ─── AdminDashboard ─── */
-    function AdminDashboard({ navigate, vehicles, technicians, onNotificationClick, onAddVehicle, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role }) {
+    function AdminDashboard({ navigate, vehicles, technicians, onNotificationClick, onAddVehicle, unreadCount, onOpenDetail, t, canEdit: canEditProp = true, role, pipelineStages = [] }) {
       const all = vehicles;
+      const [showModelsModal, setShowModelsModal] = useState(false);
+      const [modelSearch, setModelSearch]         = useState('');
+
+      // Default stage config used when pipeline_stages not yet loaded
+      const DEFAULT_STAGE_META = {
+        port:     { name: 'Port / Inbound',     color: '#F59E0B' },
+        pdi:      { name: 'PDI',                color: '#10B981' },
+        hold:     { name: 'On Hold',            color: '#EF4444' },
+        stock:    { name: 'In Stock',           color: '#3B82F6' },
+        ready:    { name: 'Ready for Delivery', color: '#8B5CF6' },
+        released: { name: 'Released',           color: '#059669' },
+      };
+
+      // Build dynamic stage list from DB — fall back to defaults if not loaded
+      const stagesActive = pipelineStages.filter(s => s.active).sort((a,b) => a.ord - b.ord);
+      const STAGE_KEYS = stagesActive.length
+        ? stagesActive.map(s => s.slug)
+        : Object.keys(DEFAULT_STAGE_META);
+      const STAGE_META = stagesActive.length
+        ? Object.fromEntries(stagesActive.map(s => [s.slug, s]))
+        : DEFAULT_STAGE_META;
+
       const { pipeline, holdVehicles, recent, modelsInPipeline } = React.useMemo(() => {
-        const counts = { port: 0, pdi: 0, hold: 0, stock: 0, ready: 0, released: 0 };
+        const counts = {};
+        STAGE_KEYS.forEach(k => { counts[k] = 0; });
         const holds = [];
         const recentList = [];
-        const STAGES = ['port','pdi','hold','stock','ready'];
-        const STAGE_COLOR = { port:'bg-amber-500', pdi:'bg-green-500', hold:'bg-red-500', stock:'bg-blue-500', ready:'bg-purple-500' };
+        const NON_RELEASED = STAGE_KEYS.filter(k => k !== 'released');
         const modelMap = {};
         all.forEach(v => {
           if (counts[v.stage] !== undefined) counts[v.stage] += 1;
@@ -2560,7 +2659,7 @@
               : null;
             holds.push({ ...v, issues, daysHeld });
           }
-          if (STAGES.includes(v.stage)) {
+          if (NON_RELEASED.includes(v.stage)) {
             const key = (v.model || 'Unknown') + (v.variant ? ` · ${v.variant}` : '');
             if (!modelMap[key]) modelMap[key] = { name: key, total: 0, byStage: {} };
             modelMap[key].total += 1;
@@ -2569,20 +2668,22 @@
           v.history.slice(0, 2).forEach(h => recentList.push({ vid: v.label || v.model, text: h }));
         });
         recentList.sort((a, b) => b.text.localeCompare(a.text));
+        const stageColors = Object.fromEntries(STAGE_KEYS.map(k => [k, STAGE_META[k]?.color || '#6b7280']));
         return {
-          pipeline: [
-            { label:'PORT',     count: counts.port,     color:'bg-orange-500'  },
-            { label:'PDI',      count: counts.pdi,      color:'bg-green-500'   },
-            { label:'HOLD',     count: counts.hold,     color:'bg-red-500'     },
-            { label:'STOCK',    count: counts.stock,    color:'bg-blue-500'    },
-            { label:'READY',    count: counts.ready,    color:'bg-purple-500'  },
-            { label:'RELEASED', count: counts.released, color:'bg-emerald-500' },
-          ],
+          pipeline: STAGE_KEYS.map(k => ({
+            label: (STAGE_META[k]?.name || k).toUpperCase(),
+            count: counts[k] || 0,
+            color: STAGE_META[k]?.color || '#6b7280',
+          })),
           holdVehicles: holds,
           recent: recentList,
-          modelsInPipeline: { rows: Object.values(modelMap).sort((a,b) => b.total - a.total), stages: STAGES, colors: STAGE_COLOR },
+          modelsInPipeline: {
+            rows: Object.values(modelMap).sort((a,b) => b.total - a.total),
+            stages: NON_RELEASED,
+            colors: stageColors,
+          },
         };
-      }, [all]);
+      }, [all, STAGE_KEYS.join(','), JSON.stringify(STAGE_META)]);
 
       return (
         <div className="min-h-screen bg-[#F5F5F5] flex flex-col">
@@ -2647,7 +2748,8 @@
                 <div className="flex items-end justify-between gap-1 lg:gap-3">
                   {pipeline.map(p => (
                     <div key={p.label} className="flex flex-col items-center gap-2 flex-1">
-                      <div className={`w-10 h-10 lg:w-16 lg:h-16 ${p.color} rounded-full flex items-center justify-center text-white text-[11px] lg:text-[18px] font-black shadow-md cursor-pointer hover:scale-110 transition-transform`}
+                      <div style={{ background: p.color }}
+                        className="w-10 h-10 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-white text-[11px] lg:text-[18px] font-black shadow-md cursor-pointer hover:scale-110 transition-transform"
                         onClick={() => navigate('fleet-list')}>
                         {p.count < 10 ? `0${p.count}` : p.count}
                       </div>
@@ -2660,7 +2762,7 @@
               {/* Models in Pipeline */}
               {modelsInPipeline.rows.length > 0 && (
                 <div className="bg-white rounded-[20px] p-4 lg:p-6 shadow-card">
-                  <div className="flex items-center justify-between mb-3">
+                  <button className="flex items-center justify-between w-full mb-3" onClick={() => setShowModelsModal(true)}>
                     <div className="flex items-center gap-2">
                       <Icon name="directions_car" fill className="text-primary text-[22px]" />
                       <span className="font-bold text-navy text-[14px] lg:text-[16px]">Models in Pipeline</span>
@@ -2668,31 +2770,89 @@
                     <span className="text-[10px] font-bold text-muted uppercase tracking-wider">
                       {modelsInPipeline.rows.reduce((a,r) => a + r.total, 0)} active units
                     </span>
-                  </div>
-                  <div className="space-y-2">
-                    {modelsInPipeline.rows.slice(0, 8).map(row => (
-                      <div key={row.name} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+                  </button>
+                  <div className="space-y-1.5">
+                    {modelsInPipeline.rows.slice(0, 5).map(row => (
+                      <div key={row.name} className="flex items-center gap-3 py-1.5 border-b border-gray-50 last:border-0">
                         <div className="flex-1 min-w-0">
                           <div className="text-[12px] font-bold text-navy truncate">{row.name}</div>
-                          <div className="flex flex-wrap gap-1 mt-1">
+                          <div className="flex gap-0.5 mt-1 h-1.5 rounded-full overflow-hidden w-full">
                             {modelsInPipeline.stages.map(s => {
                               const c = row.byStage[s] || 0;
                               if (!c) return null;
                               return (
-                                <span key={s} className="flex items-center gap-1 text-[9px] font-bold text-muted">
-                                  <span className={`w-1.5 h-1.5 rounded-full ${modelsInPipeline.colors[s]}`} />
-                                  {c} {s.toUpperCase()}
-                                </span>
+                                <div key={s} style={{ width: (c / row.total * 100).toFixed(1) + '%', background: modelsInPipeline.colors[s] }} className="h-full" title={`${c} ${(STAGE_META[s]?.name || s).toUpperCase()}`} />
                               );
                             })}
                           </div>
                         </div>
-                        <span className="text-[16px] font-black text-navy flex-shrink-0">{row.total}</span>
+                        <span className="text-[15px] font-black text-navy flex-shrink-0">{row.total}</span>
                       </div>
                     ))}
-                    {modelsInPipeline.rows.length > 8 && (
-                      <div className="text-[10px] text-center text-muted pt-1">+{modelsInPipeline.rows.length - 8} more models</div>
-                    )}
+                  </div>
+                  {modelsInPipeline.rows.length > 0 && (
+                    <button onClick={() => setShowModelsModal(true)}
+                      className="w-full mt-2.5 py-1.5 text-[11px] font-bold text-primary hover:underline text-center">
+                      View all {modelsInPipeline.rows.length} model{modelsInPipeline.rows.length !== 1 ? 's' : ''} →
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Models in Pipeline — full modal */}
+              {showModelsModal && (
+                <div className="fixed inset-0 z-[60] bg-black/50 flex items-end lg:items-center justify-center" onClick={() => setShowModelsModal(false)}>
+                  <div className="bg-white rounded-t-[28px] lg:rounded-[28px] w-full lg:max-w-2xl max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+                    <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100 flex-shrink-0">
+                      <div className="flex items-center gap-2">
+                        <Icon name="directions_car" fill className="text-primary text-[22px]" />
+                        <span className="font-black text-navy text-[16px]">All Models in Pipeline</span>
+                      </div>
+                      <button onClick={() => setShowModelsModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <Icon name="close" className="text-navy" />
+                      </button>
+                    </div>
+                    <div className="px-5 pt-3 flex-shrink-0">
+                      <input
+                        value={modelSearch}
+                        onChange={e => setModelSearch(e.target.value)}
+                        placeholder="Search models…"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-[13px] text-navy outline-none focus:border-primary transition-colors"
+                      />
+                      {/* Stage legend */}
+                      <div className="flex flex-wrap gap-2 mt-2 mb-1">
+                        {modelsInPipeline.stages.map(s => (
+                          <span key={s} className="flex items-center gap-1 text-[9px] font-bold text-muted uppercase tracking-wide">
+                            <span style={{ background: modelsInPipeline.colors[s] }} className="w-2 h-2 rounded-full flex-shrink-0" />
+                            {STAGE_META[s]?.name || s}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="overflow-y-auto flex-1 px-5 pb-5 space-y-1.5 mt-1">
+                      {modelsInPipeline.rows
+                        .filter(r => r.name.toLowerCase().includes(modelSearch.toLowerCase()))
+                        .map(row => (
+                          <div key={row.name} className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+                            <div className="flex-1 min-w-0">
+                              <div className="text-[12px] font-bold text-navy truncate">{row.name}</div>
+                              <div className="flex flex-wrap gap-1.5 mt-1">
+                                {modelsInPipeline.stages.map(s => {
+                                  const c = row.byStage[s] || 0;
+                                  if (!c) return null;
+                                  return (
+                                    <span key={s} className="flex items-center gap-1 text-[10px] font-bold text-muted">
+                                      <span style={{ background: modelsInPipeline.colors[s] }} className="w-1.5 h-1.5 rounded-full" />
+                                      {c} {(STAGE_META[s]?.name || s).toUpperCase()}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            <span className="text-[16px] font-black text-navy flex-shrink-0">{row.total}</span>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -4075,7 +4235,7 @@
     }
 
     /* ─── SettingsScreen ─── */
-    function SettingsScreen({ navigate, vehicles, onNotificationClick, unreadCount, t, lang, setLang, role }) {
+    function SettingsScreen({ navigate, vehicles, onNotificationClick, unreadCount, t, lang, setLang, role, userProfile, userEmail, refreshUserProfile }) {
       const [emailAlerts, setEmailAlerts] = useState(true);
       const [pushNotifs,  setPushNotifs]  = useState(true);
       return (
@@ -4098,16 +4258,7 @@
             </div>
           </header>
           <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
-            <div className="bg-white px-5 lg:px-8 pb-5 border-b border-gray-100 lg:max-w-4xl lg:mx-auto lg:w-full">
-              <div className="flex items-center gap-4 mt-5">
-                <div className="w-16 h-16 rounded-full bg-navy flex items-center justify-center text-white text-[20px] font-black shadow-md">JD</div>
-                <div>
-                  <div className="text-[18px] font-black text-navy">Jane Doe</div>
-                  <div className="text-[12px] text-muted">{t('administrator')}</div>
-                  <div className="text-[11px] text-primary font-medium mt-0.5">jane.doe@stockmo.com</div>
-                </div>
-              </div>
-            </div>
+            <AccountCard userProfile={userProfile} userEmail={userEmail} role={role || 'admin'} onProfileChange={refreshUserProfile} />
             <div className="p-4 lg:px-8 lg:py-6 space-y-4 lg:max-w-4xl lg:mx-auto">
               <div>
                 <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted mb-2 px-1">{t('notifications')}</h2>
@@ -4161,14 +4312,10 @@
     }
 
     /* ─── EmployeeSettingsScreen ─── */
-    function EmployeeSettingsScreen({ navigate, onNotificationClick, unreadCount, t, lang, setLang, userProfile, userEmail }) {
+    function EmployeeSettingsScreen({ navigate, onNotificationClick, unreadCount, t, lang, setLang, userProfile, userEmail, refreshUserProfile }) {
       const [emailAlerts, setEmailAlerts] = useState(true);
       const [pushNotifs,  setPushNotifs]  = useState(true);
-
-      const name     = userProfile?.name  || 'Employee';
-      const email    = userEmail          || '';
-      const initials = name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'EU';
-      const perms    = userProfile?.permissions || {};
+      const perms = userProfile?.permissions || {};
 
       const PERM_LABELS = {
         edit:    { label: 'Edit Vehicles',  icon: 'edit'        },
@@ -4198,19 +4345,7 @@
           </header>
 
           <main className="flex-1 overflow-y-auto pb-20 lg:pb-8">
-            {/* Profile card */}
-            <div className="bg-white px-5 lg:px-8 pb-5 border-b border-gray-100">
-              <div className="lg:max-w-4xl lg:mx-auto flex items-center gap-4 mt-5">
-                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-[20px] font-black shadow-md shadow-primary/20">{initials}</div>
-                <div>
-                  <div className="text-[18px] font-black text-navy">{name}</div>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-[10px] font-black uppercase tracking-[0.12em] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Employee</span>
-                  </div>
-                  {email && <div className="text-[11px] text-primary font-medium mt-0.5">{email}</div>}
-                </div>
-              </div>
-            </div>
+            <AccountCard userProfile={userProfile} userEmail={userEmail} role="employee" onProfileChange={refreshUserProfile} />
 
             <div className="p-4 lg:px-8 lg:py-6 space-y-4 lg:max-w-4xl lg:mx-auto">
 
@@ -4411,7 +4546,8 @@
       const saveEdit = async () => {
         if (!editName.trim()) return;
         setSaving(true);
-        await sb.from('pipeline_stages').update({ name: editName.trim(), color: editColor }).eq('id', editId);
+        const { error } = await sb.from('pipeline_stages').update({ name: editName.trim(), color: editColor }).eq('id', editId);
+        if (error) { console.error('pipeline update', error); await stockmoDialog.alert({ title: 'Save failed', message: error.message }); setSaving(false); return; }
         setStages(prev => prev.map(s => s.id === editId ? { ...s, name: editName.trim(), color: editColor } : s));
         setEditId(null); setSaving(false);
       };
@@ -4420,7 +4556,9 @@
         if (!newName.trim()) return;
         setSaving(true);
         const maxOrder = stages.reduce((m, s) => Math.max(m, s.ord || 0), 0);
-        const { data } = await sb.from('pipeline_stages').insert({ name: newName.trim(), color: newColor, ord: maxOrder + 1 }).select().single();
+        const slug = newName.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || `stage_${maxOrder + 1}`;
+        const { data, error } = await sb.from('pipeline_stages').insert({ name: newName.trim(), color: newColor, ord: maxOrder + 1, slug, active: true }).select().single();
+        if (error) { console.error('pipeline insert', error); await stockmoDialog.alert({ title: 'Add failed', message: error.message }); setSaving(false); return; }
         if (data) setStages(prev => [...prev, data]);
         setNewName(''); setSaving(false);
       };
@@ -4433,7 +4571,8 @@
           danger: true,
         });
         if (!ok) return;
-        await sb.from('pipeline_stages').delete().eq('id', id);
+        const { error } = await sb.from('pipeline_stages').delete().eq('id', id);
+        if (error) { console.error('pipeline delete', error); await stockmoDialog.alert({ title: 'Delete failed', message: error.message }); return; }
         setStages(prev => prev.filter(s => s.id !== id));
       };
 
@@ -4552,15 +4691,36 @@
         const update = tab === 'maint'
           ? { name: editFields.name.trim(), frequency_days: Number(editFields.frequency_days) || 30, priority: editFields.priority }
           : { name: editFields.name.trim(), section: editFields.section, priority: editFields.priority };
-        await sb.from(table).update(update).eq('id', item.id);
+        const { error } = await sb.from(table).update(update).eq('id', item.id);
+        if (error) { console.error('template update', error); showToastMsg?.('Save failed: ' + error.message); setSaving(false); return; }
         setItems(prev => prev.map(i => i.id === item.id ? { ...i, ...update } : i));
+
+        // Cascade name/section/priority changes to existing pending check rows
+        try {
+          if (tab === 'pdi') {
+            await sb.from('pdi_checks')
+              .update({ name: update.name, section: update.section, priority: update.priority })
+              .eq('item_id', item.id).eq('state', 'pending');
+          } else if (tab === 'final') {
+            await sb.from('final_checks')
+              .update({ name: update.name, section: update.section, priority: update.priority })
+              .eq('item_id', item.id).eq('state', 'pending');
+          } else if (tab === 'maint') {
+            await sb.from('stock_maintenance')
+              .update({ name: update.name, freq_days: update.frequency_days, priority: update.priority })
+              .eq('task_id', item.id).eq('state', 'pending');
+          }
+        } catch (cascadeErr) {
+          console.error('cascade update error', cascadeErr);
+        }
+
         setEditId(null); setSaving(false);
       };
 
       const deleteItem = async (item) => {
         const ok = await stockmoDialog.confirm({
           title: 'Delete item?',
-          message: `"${item.name}" will be removed.`,
+          message: `"${item.name}" will be removed from the template. Existing vehicles in progress keep this item — only new vehicles will skip it.`,
           confirmLabel: 'Delete',
           danger: true,
         });
@@ -4576,8 +4736,43 @@
         const row = tab === 'maint'
           ? { name: newName.trim(), frequency_days: Number(newFreq) || 30, priority: newPriority, ord: maxOrd + 1, active: true }
           : { name: newName.trim(), section: newSection, priority: newPriority, ord: maxOrd + 1, active: true };
-        const { data } = await sb.from(table).insert(row).select().single();
-        if (data) setItems(prev => [...prev, data]);
+        const { data, error } = await sb.from(table).insert(row).select().single();
+        if (error) { console.error('template insert', error); showToastMsg?.('Add failed: ' + error.message); setSaving(false); return; }
+        if (data) {
+          setItems(prev => [...prev, data]);
+          // Seed this new template item onto all existing in-flight vehicles (not yet released)
+          try {
+            const { data: inFlight } = await sb.from('vehicles').select('id').neq('stage', 'released');
+            if (inFlight?.length) {
+              const today = new Date().toISOString().split('T')[0];
+              let seedRows;
+              let checkTable;
+              let conflictKey;
+              if (tab === 'pdi') {
+                checkTable = 'pdi_checks';
+                conflictKey = 'vehicle_id,item_id';
+                seedRows = inFlight.map(v => ({ vehicle_id: v.id, item_id: data.id, section: data.section, name: data.name, priority: data.priority, state: 'pending' }));
+              } else if (tab === 'final') {
+                checkTable = 'final_checks';
+                conflictKey = 'vehicle_id,item_id';
+                seedRows = inFlight.map(v => ({ vehicle_id: v.id, item_id: data.id, section: data.section, name: data.name, priority: data.priority, state: 'pending' }));
+              } else if (tab === 'maint') {
+                checkTable = 'stock_maintenance';
+                conflictKey = 'vehicle_id,task_id';
+                const freqDays = Number(newFreq) || 30;
+                const nextDue = new Date(today);
+                nextDue.setDate(nextDue.getDate() + freqDays);
+                const nextDueStr = nextDue.toISOString().split('T')[0];
+                seedRows = inFlight.map(v => ({ vehicle_id: v.id, task_id: data.id, name: data.name, freq_days: freqDays, priority: data.priority, state: 'pending', last_done: today, next_due: nextDueStr }));
+              }
+              if (seedRows && checkTable) {
+                await sb.from(checkTable).upsert(seedRows, { onConflict: conflictKey });
+              }
+            }
+          } catch (seedErr) {
+            console.error('seed new item to in-flight vehicles error', seedErr);
+          }
+        }
         setNewName(''); setSaving(false);
       };
 
@@ -5494,6 +5689,7 @@
         try { localStorage.setItem('stockmo_lang', lang); } catch {}
       }, [lang]);
       const [dataReady,      setDataReady]        = useState(false);
+      const [pipelineStages, setPipelineStages]   = useState([]);
 
       const t = (key, vars) => {
         const dict = translations[lang] || translations.en;
@@ -5513,6 +5709,12 @@
           return data;
         }
         return null;
+      };
+      const refreshUserProfile = async () => {
+        const uid = session?.user?.id || lastUidRef.current;
+        if (!uid) return;
+        await loadUserProfile(uid);
+        await loadTechnicians();
       };
 
       /* ── load all vehicles from Supabase ── */
@@ -5545,6 +5747,12 @@
         _techsRef.current = list;
       };
 
+      /* ── load pipeline stages ── */
+      const loadPipelineStages = async () => {
+        const { data } = await sb.from('pipeline_stages').select('*').order('ord');
+        if (data) setPipelineStages(data);
+      };
+
       /* ── load notifications ── */
       const loadNotifications = async (uid) => {
         const { data } = await sb.from('notifications').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(30);
@@ -5558,7 +5766,7 @@
 
       /* ── full data bootstrap ── */
       const loadAllData = async (uid) => {
-        await Promise.all([loadVehicles(), loadTechnicians(), loadNotifications(uid)]);
+        await Promise.all([loadVehicles(), loadTechnicians(), loadNotifications(uid), loadPipelineStages()]);
         setDataReady(true);
       };
 
@@ -5705,6 +5913,17 @@
               color: notifColor(n.icon),
             }, ...prev]);
             showToastMsg(n.title);
+          })
+          .subscribe();
+        return () => sb.removeChannel(chan);
+      }, [session]);
+
+      /* ── realtime: pipeline_stages — dashboard updates live when admin edits config ── */
+      useEffect(() => {
+        if (!session) return;
+        const chan = sb.channel('pipeline-stages-live')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'pipeline_stages' }, () => {
+            loadPipelineStages();
           })
           .subscribe();
         return () => sb.removeChannel(chan);
@@ -6136,8 +6355,10 @@
         currentTechId: userProfile?.id || '',
         userProfile,
         userEmail: session?.user?.email || '',
+        refreshUserProfile,
         role, perms, canEdit: userCanEdit, canConfig: userCanConfig,
         onOpenDetail: openDetail,
+        pipelineStages,
         t, lang, setLang,
       };
 
@@ -6171,7 +6392,7 @@
         'pipeline-manager':  <PipelineManagerScreen  navigate={navigate} t={t} />,
         'checklist-editor':  <ChecklistEditorScreen  navigate={navigate} t={t} />,
         'model-manager':     <ModelManagerScreen     navigate={navigate} t={t} />,
-        'employee-settings': <EmployeeSettingsScreen navigate={navigate} onNotificationClick={() => setShowNotifs(true)} unreadCount={notifications.filter(n => !n.read).length} t={t} lang={lang} setLang={setLang} userProfile={userProfile} userEmail={session?.user?.email || ''} />,
+        'employee-settings': <EmployeeSettingsScreen {...shared} />,
       };
 
       const showSidebar = session && userProfile && view !== 'login';
