@@ -420,15 +420,17 @@
                   })()}
 
                   {/* Footer */}
-                  <div className="px-5 lg:px-6 py-3 border-t border-gray-100 flex items-center justify-between flex-shrink-0">
-                    <div className="flex items-center gap-3">
+                  <div className="px-5 lg:px-6 py-3 border-t border-gray-100 flex items-center justify-between flex-shrink-0"
+                    style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}>
+                    <div className="flex flex-col gap-1">
                       <span className="text-[11px] text-muted">
                         <span className="font-black text-navy">{assignedToMe}</span> assigned to {assigningTech?.name}
                       </span>
                       {assignedToMe > 0 && (
                         <button onClick={handleUnassignAll} disabled={batchSaving}
-                          className="text-[10px] font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
-                          Unassign all
+                          className="no-min flex items-center gap-1 px-3 py-1.5 rounded-full border border-red-200 bg-red-50 text-[11px] font-bold text-red-500 hover:bg-red-100 hover:text-red-700 active:scale-[0.97] transition-all disabled:opacity-40">
+                          <Icon name="person_remove" className="text-[13px]" />
+                          Unassign All
                         </button>
                       )}
                     </div>

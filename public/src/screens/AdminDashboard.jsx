@@ -129,18 +129,18 @@
                   <Icon name="bar_chart" fill className="text-primary text-[22px]" />
                   <span className="font-bold text-navy text-[14px] lg:text-[16px]">{t('pipelineProgress')}</span>
                 </div>
-                <div className="flex items-stretch justify-between gap-1.5 lg:gap-3">
+                <div className="flex items-stretch gap-2 lg:gap-3 overflow-x-auto no-scroll snap-x snap-mandatory pb-1 -mx-1 px-1">
                   {pipeline.map(p => (
                     <button
                       key={p.label}
                       type="button"
                       onClick={() => navigate('fleet-list')}
-                      className="no-min flex-1 min-w-0 bg-white rounded-xl shadow-card border-l-[3px] flex flex-col items-start px-2 py-2 lg:px-3 lg:py-3 gap-0.5 active:scale-[0.98] lg:hover:shadow-card-hover transition-all"
+                      className="no-min snap-start flex-shrink-0 min-w-[100px] lg:flex-1 lg:min-w-0 bg-white rounded-xl shadow-card border-l-[3px] flex flex-col items-start px-2.5 py-2.5 lg:px-3 lg:py-3 gap-1 active:scale-[0.98] lg:hover:shadow-card-hover transition-all"
                       style={{ borderLeftColor: p.color }}>
-                      <span className="text-[14px] lg:text-[22px] font-black leading-none" style={{ color: p.color }}>
+                      <span className="text-[16px] lg:text-[22px] font-black leading-none" style={{ color: p.color }}>
                         {String(p.count).padStart(2, '0')}
                       </span>
-                      <span className="text-[7px] lg:text-[9px] font-bold uppercase tracking-wider text-muted leading-tight line-clamp-2 text-left">
+                      <span className="text-[8px] lg:text-[9px] font-bold uppercase tracking-wider text-muted leading-tight text-left w-full">
                         {p.label}
                       </span>
                     </button>
