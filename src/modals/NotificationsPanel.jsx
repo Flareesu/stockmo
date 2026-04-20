@@ -2,16 +2,18 @@
     function NotificationsPanel({ onClose, notifications, onMarkAllRead, t }) {
       const unread = notifications.filter(n => !n.read).length;
       return (
-        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex lg:justify-end" onClick={onClose}>
-          {/* Mobile: slides down from top | Desktop: slides in from right */}
+        <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-start lg:justify-end" onClick={onClose}>
+          {/* Mobile: bottom sheet · Desktop: slides in from right */}
           <div
-            className="w-full max-w-[430px] lg:max-w-[400px] bg-white shadow-2xl flex flex-col anim-slide-down
-              rounded-b-[32px] lg:rounded-none lg:rounded-l-[24px]
-              absolute top-0 left-1/2 -translate-x-1/2
-              lg:static lg:translate-x-0 lg:h-full"
-            style={{ maxHeight: '80vh' }}
+            className="w-full max-w-[430px] lg:max-w-[400px] bg-white shadow-2xl flex flex-col anim-slide-up lg:anim-slide-down
+              rounded-t-[28px] lg:rounded-none lg:rounded-l-[24px] lg:h-full"
+            style={{ maxHeight: '88vh' }}
             onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-5 pt-14 lg:pt-6 pb-4 border-b border-gray-100 flex-shrink-0">
+
+            {/* Drag handle — mobile only */}
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mt-3 flex-shrink-0 lg:hidden" />
+
+            <div className="flex items-center justify-between px-5 pt-3 lg:pt-14 pb-4 border-b border-gray-100 flex-shrink-0">
               <div>
                 <h2 className="font-black text-navy text-[18px]">{t('notificationsTitle')}</h2>
                 <p className="text-[11px] text-muted">{unread > 0 ? t('unread', {count: unread}) : t('allCaughtUp')}</p>
@@ -21,7 +23,7 @@
                 <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><Icon name="close" className="text-navy" /></button>
               </div>
             </div>
-            <div className="overflow-y-auto flex-1">
+            <div className="overflow-y-auto overscroll-contain flex-1">
               {notifications.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
                   <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center">
@@ -46,7 +48,7 @@
                 </div>
               ))}
             </div>
-            <div className="h-6 flex-shrink-0" />
+            <div className="flex-shrink-0" style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }} />
           </div>
         </div>
       );

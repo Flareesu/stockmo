@@ -561,10 +561,10 @@
           )}
 
           {/* Panel — mobile: bottom sheet · desktop: centered dialog */}
-          <div className="w-full max-w-[430px] lg:max-w-[960px] bg-[#F5F5F5] rounded-t-[32px] lg:rounded-[24px] shadow-2xl anim-slide-up flex flex-col lg:flex-row overflow-hidden" style={{ maxHeight:'94vh' }} onClick={e => e.stopPropagation()}>
+          <div className="w-full max-w-[430px] lg:max-w-[960px] bg-[#F5F5F5] rounded-t-[32px] lg:rounded-[24px] shadow-2xl anim-slide-up flex flex-col lg:flex-row overflow-hidden" style={{ height:'92svh', maxHeight:'92vh' }} onClick={e => e.stopPropagation()}>
 
             {/* ═══ LEFT COLUMN ═══ */}
-            <div className="flex-shrink-0 lg:w-[300px] flex flex-col lg:bg-white lg:border-r lg:border-gray-100">
+            <div className="flex-shrink-0 lg:w-[300px] flex flex-col lg:bg-white lg:border-r lg:border-gray-100 lg:overflow-hidden">
 
               {/* Mobile drag handle */}
               <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-3 flex-shrink-0 lg:hidden" />
@@ -656,17 +656,17 @@
             </div>{/* end LEFT COLUMN */}
 
             {/* ═══ RIGHT COLUMN ═══ */}
-            <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-              <nav className="bg-white border-b border-gray-100 flex px-2 flex-shrink-0">
+            <div className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
+              <nav className="bg-white border-b border-gray-100 flex-shrink-0 flex overflow-x-auto no-scroll px-1">
                 {[['VEHICLE','tabVehicle','lg:hidden'],['PDI','tabPdi',''],['MAINT','tabMaint',''],['FINAL','tabFinal',''],['NOTES','tabNotes',''],['REPORTS','tabReports',''],['HISTORY','tabHistory','']].map(([key,tKey,extra]) => (
                   <button key={key} onClick={() => setTab(key)}
-                    className={`flex-1 py-3 text-[9px] font-bold tracking-widest transition-colors ${extra} ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
+                    className={`flex-shrink-0 px-3 py-3 text-[9px] font-bold tracking-widest transition-colors whitespace-nowrap ${extra} ${tab === key ? 'text-primary border-b-2 border-primary' : 'text-muted border-b-2 border-transparent'}`}>
                     {t(tKey)}
                   </button>
                 ))}
               </nav>
 
-              <div className="flex-1 overflow-y-auto p-4 pb-8">
+              <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-8">
 
                 {/* VEHICLE tab — mobile only */}
                 {tab === 'VEHICLE' && (
