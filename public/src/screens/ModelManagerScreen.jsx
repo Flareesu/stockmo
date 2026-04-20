@@ -1,5 +1,5 @@
     /* ─── ModelManagerScreen ─── */
-    function ModelManagerScreen({ navigate, t }) {
+    function ModelManagerScreen({ navigate, t, vehicles, role }) {
       const [models, setModels]     = useState([]);
       const [loading, setLoading]   = useState(true);
       const [expanded, setExpanded] = useState(null);
@@ -90,17 +90,12 @@
 
       return (
         <div className="min-h-screen bg-[#F5F5F5]">
-          <div className="bg-white px-5 pt-12 lg:pt-6 pb-4 flex items-center gap-3">
-            <button onClick={() => navigate('admin-dashboard')} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Icon name="arrow_back" className="text-navy" />
-            </button>
-            <div>
-              <h1 className="text-[20px] font-black text-navy">Model Manager</h1>
-              <p className="text-[11px] text-muted">Add or remove vehicle model configurations.</p>
-            </div>
+          <div className="bg-white px-5 pt-12 lg:pt-6 pb-4">
+            <h1 className="text-[20px] font-black text-navy">Model Manager</h1>
+            <p className="text-[11px] text-muted">Add or remove vehicle model configurations.</p>
           </div>
           <ConfigSubNav navigate={navigate} current="model-manager" />
-          <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:max-w-3xl lg:mx-auto">
+          <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:max-w-3xl lg:mx-auto pb-24 lg:pb-6">
             {loading ? (
               <div className="flex justify-center py-12"><div className="w-6 h-6 border-[3px] border-primary border-t-transparent rounded-full animate-spin" /></div>
             ) : models.map(m => (
@@ -213,6 +208,7 @@
               </button>
             </div>
           </div>
+          <AdminBottomNav navigate={navigate} currentView="model-manager" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }

@@ -723,9 +723,9 @@
         'hold-tracker':      <HoldTrackerScreen     {...shared} db={db} session={session} />,
         'reports':           <ReportsScreen         {...shared} />,
         'settings':          <SettingsScreen        {...shared} />,
-        'pipeline-manager':  <PipelineManagerScreen  navigate={navigate} t={t} />,
-        'checklist-editor':  <ChecklistEditorScreen  navigate={navigate} t={t} />,
-        'model-manager':     <ModelManagerScreen     navigate={navigate} t={t} />,
+        'pipeline-manager':  <PipelineManagerScreen  navigate={navigate} t={t} vehicles={vehicles} role={role} />,
+        'checklist-editor':  <ChecklistEditorScreen  navigate={navigate} t={t} vehicles={vehicles} role={role} />,
+        'model-manager':     <ModelManagerScreen     navigate={navigate} t={t} vehicles={vehicles} role={role} />,
         'employee-settings': <EmployeeSettingsScreen {...shared} />,
       };
 

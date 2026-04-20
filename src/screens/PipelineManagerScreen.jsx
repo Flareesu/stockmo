@@ -1,5 +1,5 @@
     /* ─── PipelineManagerScreen ─── */
-    function PipelineManagerScreen({ navigate, t }) {
+    function PipelineManagerScreen({ navigate, t, vehicles, role }) {
       const [stages, setStages] = useState([]);
       const [loading, setLoading] = useState(true);
       const [editId, setEditId] = useState(null);
@@ -68,17 +68,12 @@
 
       return (
         <div className="min-h-screen bg-[#F5F5F5]">
-          <div className="bg-white px-5 pt-12 lg:pt-6 pb-4 flex items-center gap-3">
-            <button onClick={() => navigate('admin-dashboard')} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Icon name="arrow_back" className="text-navy" />
-            </button>
-            <div>
-              <h1 className="text-[20px] font-black text-navy">Pipeline Stages</h1>
-              <p className="text-[11px] text-muted">Reorder or rename stages. Changes apply immediately.</p>
-            </div>
+          <div className="bg-white px-5 pt-12 lg:pt-6 pb-4">
+            <h1 className="text-[20px] font-black text-navy">Pipeline Stages</h1>
+            <p className="text-[11px] text-muted">Reorder or rename stages. Changes apply immediately.</p>
           </div>
           <ConfigSubNav navigate={navigate} current="pipeline-manager" />
-          <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:max-w-3xl lg:mx-auto">
+          <div className="p-4 lg:px-8 lg:py-6 space-y-3 lg:max-w-3xl lg:mx-auto pb-24 lg:pb-6">
             {loading ? (
               <div className="flex justify-center py-12"><div className="w-6 h-6 border-[3px] border-primary border-t-transparent rounded-full animate-spin" /></div>
             ) : stages.map((s, idx) => (
@@ -124,6 +119,7 @@
               </div>
             </div>
           </div>
+          <AdminBottomNav navigate={navigate} currentView="pipeline-manager" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }

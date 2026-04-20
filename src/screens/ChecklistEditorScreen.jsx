@@ -1,5 +1,5 @@
     /* ─── ChecklistEditorScreen ─── */
-    function ChecklistEditorScreen({ navigate, t }) {
+    function ChecklistEditorScreen({ navigate, t, vehicles, role }) {
       const [tab,         setTab]         = useState('pdi');
       const [items,       setItems]       = useState([]);
       const [loading,     setLoading]     = useState(true);
@@ -126,17 +126,12 @@
 
       return (
         <div className="min-h-screen bg-[#F5F5F5]">
-          <div className="bg-white px-5 pt-12 lg:pt-6 pb-4 flex items-center gap-3">
-            <button onClick={() => navigate('admin-dashboard')} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <Icon name="arrow_back" className="text-navy" />
-            </button>
-            <div>
-              <h1 className="text-[20px] font-black text-navy">Checklist Editor</h1>
-              <p className="text-[11px] text-muted">Manage PDI, Maintenance &amp; Final Check templates.</p>
-            </div>
+          <div className="bg-white px-5 pt-12 lg:pt-6 pb-4">
+            <h1 className="text-[20px] font-black text-navy">Checklist Editor</h1>
+            <p className="text-[11px] text-muted">Manage PDI, Maintenance &amp; Final Check templates.</p>
           </div>
           <ConfigSubNav navigate={navigate} current="checklist-editor" />
-          <div className="lg:max-w-3xl lg:mx-auto">
+          <div className="lg:max-w-3xl lg:mx-auto pb-24 lg:pb-6">
           <nav className="bg-white border-b border-gray-100 flex px-2">
             {[['pdi','PDI'],['maint','Maintenance'],['final','Final']].map(([key, label]) => (
               <button key={key} onClick={() => setTab(key)}
@@ -250,6 +245,7 @@
             </div>
           </div>
           </div>{/* end lg:max-w-3xl */}
+          <AdminBottomNav navigate={navigate} currentView="checklist-editor" vehicles={vehicles} t={t} role={role} />
         </div>
       );
     }
