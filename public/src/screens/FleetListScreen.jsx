@@ -272,9 +272,10 @@
                   { slug:'released', name:'Released to Dealer',  color:'#10b981' },
                 ];
                 return (
-                  <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6"
+                  <div className="fixed inset-0 bg-black/50 z-50 anim-fade-in flex items-end lg:items-center justify-center lg:p-6 pb-16 lg:pb-6"
                     onClick={() => setSelectedModel(null)}>
-                    <div className="w-full max-w-[430px] lg:max-w-[560px] bg-white rounded-t-[28px] lg:rounded-[24px] shadow-2xl flex flex-col anim-slide-up max-h-[85vh]"
+                    <div className="w-full max-w-[430px] lg:max-w-[560px] bg-white rounded-t-[28px] lg:rounded-[24px] shadow-2xl flex flex-col anim-slide-up overflow-hidden"
+                      style={{ maxHeight: '82vh' }}
                       onClick={e => e.stopPropagation()}>
                       <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mt-3 lg:hidden flex-shrink-0" />
                       <div className="px-5 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
