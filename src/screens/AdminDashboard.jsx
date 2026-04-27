@@ -78,7 +78,7 @@
                   <Icon name="garage" fill className="text-white text-lg" />
                 </div>
                 <div>
-                  <div className="font-black text-navy text-[15px] leading-tight">StockMo</div>
+                  <div className="font-black text-navy text-[15px] leading-tight">GVIMS</div>
                   <div className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted">{t('administratorPanel')}</div>
                 </div>
               </div>

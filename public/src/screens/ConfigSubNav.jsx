@@ -1,9 +1,10 @@
     /* ─── Shared sub-nav for admin config screens ─── */
     function ConfigSubNav({ navigate, current }) {
       const tabs = [
-        { key: 'pipeline-manager',  label: 'Pipeline', icon: 'account_tree' },
-        { key: 'checklist-editor',  label: 'Checklists', icon: 'checklist' },
-        { key: 'model-manager',     label: 'Models', icon: 'directions_car' },
+        { key: 'pipeline-manager',    label: 'Pipeline',   icon: 'account_tree' },
+        { key: 'checklist-editor',    label: 'Checklists', icon: 'checklist' },
+        { key: 'model-manager',       label: 'Models',     icon: 'directions_car' },
+        { key: 'order-form-editor',   label: 'Orders',     icon: 'receipt_long' },
       ];
       return (
         <div className="bg-white border-b border-gray-100 flex px-2">

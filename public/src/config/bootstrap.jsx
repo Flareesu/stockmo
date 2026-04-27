@@ -2,10 +2,11 @@
 
     /* ─── SUPABASE CLIENT ─── */
     const { createClient } = supabase;
-    const sb = createClient(
-      'https://jqnekpwerbfzrybsxcsv.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxbmVrcHdlcmJmenJ5YnN4Y3N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDM4NjQsImV4cCI6MjA5MTk3OTg2NH0.IJro2kA77epVt5uO6nXcrIoDh9BKCkafQrdi2VNpNhg'
-    );
+    const _isLocal = ['localhost', '127.0.0.1', ''].includes(window.location.hostname);
+    const _sbConfig = _isLocal
+      ? { url: 'https://jqnekpwerbfzrybsxcsv.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpxbmVrcHdlcmJmenJ5YnN4Y3N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0MDM4NjQsImV4cCI6MjA5MTk3OTg2NH0.IJro2kA77epVt5uO6nXcrIoDh9BKCkafQrdi2VNpNhg' }
+      : { url: 'https://eoxwapxwdshfmlyubfkw.supabase.co', key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVveHdhcHh3ZHNoZm1seXViZmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODkyOTMsImV4cCI6MjA4OTM2NTI5M30.Bxtva5Uf6r4buGISB-R7jKlbKjRnOdvfYQp6kh7n-tQ' };
+    const sb = createClient(_sbConfig.url, _sbConfig.key);
 
     /* ─── MODULE-LEVEL TECH REF (lets global techById stay reactive) ─── */
     const _techsRef = { current: [] };
@@ -172,6 +173,7 @@
         navFleet: 'Fleet',
         navTeam: 'Team',
         navHolds: 'Holds',
+        navOrders: 'Orders',
         navReports: 'Reports',
         navAdmin: 'Admin',
         navConfig: 'Config',
@@ -349,6 +351,7 @@
         navFleet: 'Fleet',
         navTeam: 'Koponan',
         navHolds: 'Hawak',
+        navOrders: 'Mga Order',
         navReports: 'Ulat',
         navAdmin: 'Admin',
         navConfig: 'Config',
@@ -526,6 +529,7 @@
         navFleet: '车队',
         navTeam: '团队',
         navHolds: '维修',
+        navOrders: '订单',
         navReports: '报表',
         navAdmin: '管理',
         navConfig: '配置',

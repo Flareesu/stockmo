@@ -4,6 +4,7 @@
       { id:'fleet',   icon:'directions_car', labelKey:'navFleet',   target:'fleet-list'        },
       { id:'team',    icon:'group',          labelKey:'navTeam',    target:'team'              },
       { id:'holds',   icon:'build_circle',   labelKey:'navHolds',   target:'hold-tracker'      },
+      { id:'orders',  icon:'receipt_long',   labelKey:'navOrders',  target:'orders'            },
       { id:'config',  icon:'tune',           labelKey:'navConfig',  target:'pipeline-manager'  },
       { id:'admin',   icon:'settings',       labelKey:'navAdmin',   target:'settings'          },
     ];
@@ -13,12 +14,13 @@
       { id:'fleet',   icon:'directions_car',   labelKey:'navFleet',   target:'fleet-list'        },
       { id:'team',    icon:'group',            labelKey:'navTeam',    target:'team'              },
       { id:'holds',   icon:'build_circle',     labelKey:'navHolds',   target:'hold-tracker'      },
+      { id:'orders',  icon:'receipt_long',     labelKey:'navOrders',  target:'orders'            },
       { id:'acct',    icon:'manage_accounts',  labelKey:'navAccount', target:'employee-settings' },
     ];
     const VIEW_TO_NAV = {
       'admin-dashboard':'dash','fleet-list':'fleet','team':'team',
-      'hold-tracker':'holds',
-      'pipeline-manager':'config','checklist-editor':'config','model-manager':'config',
+      'hold-tracker':'holds','orders':'orders',
+      'pipeline-manager':'config','checklist-editor':'config','model-manager':'config','order-form-editor':'config',
       'settings':'admin',
       'employee-settings':'acct',
     };
