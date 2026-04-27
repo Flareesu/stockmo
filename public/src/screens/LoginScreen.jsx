@@ -22,8 +22,8 @@
                 <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-primary-glow mb-4">
                   <Icon name="garage" fill className="text-white text-3xl" />
                 </div>
-                <h1 className="text-[2rem] font-black text-navy leading-tight text-center">StockMo</h1>
-                <p className="text-[12px] text-muted font-bold uppercase tracking-[0.14em] mt-1">Automotive Intelligence</p>
+                <h1 className="text-[2rem] font-black text-navy leading-tight text-center">GVIMS</h1>
+                <p className="text-[10px] text-muted font-bold uppercase tracking-[0.14em] mt-1 text-center">GAC Vehicle Inventory Management System</p>
               </div>
 
               <div className="bg-white rounded-[24px] shadow-card p-6 space-y-4">
@@ -34,7 +34,7 @@
                     <input
                       type="email" value={email} onChange={e => setEmail(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleLogin()}
-                      placeholder="you@stockmo.com"
+                      placeholder="you@gac.com"
                       className="flex-1 bg-transparent text-[13px] text-navy placeholder:text-muted outline-none"
                     />
                   </div>
@@ -74,7 +74,7 @@
             </div>
           </div>
           <footer className="px-6 pb-8 pt-2 text-center">
-            <div className="text-[10px] text-muted">© 2025 StockMo Global Operations</div>
+            <div className="text-[10px] text-muted">© 2026 GVIMS — GAC</div>
           </footer>
         </div>
       );

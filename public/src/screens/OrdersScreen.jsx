@@ -1,10 +1,26 @@
-    /* ─── Orders: constants ─── */
-    const ORD_S = ['draft','pending','approved','in_transit','arrived','fulfilled','cancelled'];
-    const ORD_LABELS = { draft:'Draft', pending:'Pending', approved:'Approved', in_transit:'In Transit', arrived:'Arrived', fulfilled:'Fulfilled', cancelled:'Cancelled' };
-    const ORD_ICONS  = { draft:'edit_note', pending:'hourglass_top', approved:'thumb_up', in_transit:'local_shipping', arrived:'where_to_vote', fulfilled:'check_circle', cancelled:'cancel' };
-    const ORD_COLORS = { draft:'bg-gray-100 text-gray-600', pending:'bg-amber-100 text-amber-700', approved:'bg-blue-100 text-blue-700', in_transit:'bg-purple-100 text-purple-700', arrived:'bg-teal-100 text-teal-700', fulfilled:'bg-emerald-100 text-emerald-700', cancelled:'bg-red-100 text-red-600' };
-    const ORD_PRI    = { low:'bg-gray-100 text-gray-500', normal:'bg-blue-50 text-blue-600', high:'bg-orange-100 text-orange-600', urgent:'bg-red-100 text-red-600' };
-    const ORD_NEXT   = { draft:['pending','cancelled'], pending:['approved','cancelled'], approved:['in_transit','cancelled'], in_transit:['arrived'], arrived:['fulfilled','cancelled'], fulfilled:[], cancelled:[] };
+    /* ─── Orders: dynamic config (mutated by OrdersScreen.loadData from order_statuses / order_priorities) ─── */
+    let ORD_S = ['draft','pending','approved','in_transit','arrived','fulfilled','cancelled'];
+    let ORD_LABELS = { draft:'Draft', pending:'Pending', approved:'Approved', in_transit:'In Transit', arrived:'Arrived', fulfilled:'Fulfilled', cancelled:'Cancelled' };
+    let ORD_ICONS  = { draft:'edit_note', pending:'hourglass_top', approved:'thumb_up', in_transit:'local_shipping', arrived:'where_to_vote', fulfilled:'check_circle', cancelled:'cancel' };
+    let ORD_COLORS = { draft:'bg-gray-100 text-gray-600', pending:'bg-amber-100 text-amber-700', approved:'bg-blue-100 text-blue-700', in_transit:'bg-purple-100 text-purple-700', arrived:'bg-teal-100 text-teal-700', fulfilled:'bg-emerald-100 text-emerald-700', cancelled:'bg-red-100 text-red-600' };
+    let ORD_PRI    = { low:'bg-gray-100 text-gray-500', normal:'bg-blue-50 text-blue-600', high:'bg-orange-100 text-orange-600', urgent:'bg-red-100 text-red-600' };
+    let ORD_NEXT   = { draft:['pending','cancelled'], pending:['approved','cancelled'], approved:['in_transit','cancelled'], in_transit:['arrived'], arrived:['fulfilled','cancelled'], fulfilled:[], cancelled:[] };
+    let ORD_PRI_LABELS = { low:'Low', normal:'Normal', high:'High', urgent:'Urgent' };
+    function applyOrdersConfig({ statuses, priorities }) {
+      if (statuses?.length) {
+        const sorted = [...statuses].sort((a,b) => (a.ord||0) - (b.ord||0));
+        ORD_S      = sorted.map(s => s.key);
+        ORD_LABELS = Object.fromEntries(sorted.map(s => [s.key, s.label]));
+        ORD_ICONS  = Object.fromEntries(sorted.map(s => [s.key, s.icon]));
+        ORD_COLORS = Object.fromEntries(sorted.map(s => [s.key, s.badge_class]));
+        ORD_NEXT   = Object.fromEntries(sorted.map(s => [s.key, s.next_keys || []]));
+      }
+      if (priorities?.length) {
+        const sorted = [...priorities].sort((a,b) => (a.ord||0) - (b.ord||0));
+        ORD_PRI        = Object.fromEntries(sorted.map(p => [p.key, p.badge_class]));
+        ORD_PRI_LABELS = Object.fromEntries(sorted.map(p => [p.key, p.label]));
+      }
+    }
 
     function OrdStatusBadge({ status, size = 'sm' }) {
       const cls = ORD_COLORS[status] || 'bg-gray-100 text-gray-500';
@@ -221,10 +237,11 @@
     }
 
     /* ─── OrderFormModal ─── */
-    function OrderFormModal({ order, models, dealers, onClose, onSave, allVehicles, session }) {
+    function OrderFormModal({ order, models, dealers, formFields, priorities, onClose, onSave, onDelete, allVehicles, session }) {
       const isEdit = !!order;
       const [tab, setTab] = useState('order');
       const [saving, setSaving] = useState(false);
+      const [deleting, setDeleting] = useState(false);
 
       const [form, setForm] = useState({
         order_number: order?.order_number || '',
@@ -249,7 +266,17 @@
         shipping_phone: order?.shipping_phone || '',
         shipped_date: order?.shipped_date || '',
         shipping_notes: order?.shipping_notes || '',
+        custom_fields: order?.custom_fields || {},
       });
+
+      const BUILTIN_KEYS = new Set(['invoice_number','cs_number','order_date','expected_arrival','priority','notes','model_id','variant','color','engine','fuel','quantity','dealer_id','shipping_provider','tracking_number','shipped_date','shipping_contact','shipping_phone','shipping_notes']);
+
+      const fieldsByTab = useMemo(() => {
+        const out = { order:[], unit:[], dealer:[], logistics:[] };
+        (formFields || []).filter(f => f.active).sort((a,b)=>(a.ord||0)-(b.ord||0))
+          .forEach(f => { if (out[f.tab]) out[f.tab].push(f); });
+        return out;
+      }, [formFields]);
 
       const [assignedVehicles, setAssignedVehicles] = useState([]);
       const [ovLoading, setOvLoading] = useState(false);
@@ -293,6 +320,22 @@
         }
         await sb.rpc('unassign_vehicle_from_order', { p_order_id: order.id, p_vehicle_id: vehicleId });
         setAssignedVehicles(prev => prev.filter(x => x.vehicle_id !== vehicleId));
+      };
+
+      const handleDelete = async () => {
+        if (!isEdit) return;
+        const ok = await stockmoDialog.confirm({
+          title: 'Delete order?',
+          message: `${order.order_number} and all its vehicle assignments, history, and notes will be removed. This cannot be undone.`,
+          confirmLabel: 'Delete',
+          danger: true,
+        });
+        if (!ok) return;
+        setDeleting(true);
+        const { error } = await sb.from('orders').delete().eq('id', order.id);
+        setDeleting(false);
+        if (error) { stockmoDialog.alert({ title: 'Delete Error', message: error.message }); return; }
+        if (onDelete) onDelete(order); else onSave();
       };
 
       const handleSave = async () => {
@@ -356,82 +399,90 @@
             ))}
           </div>
 
-          {tab === 'order' && (
-            <div className="grid grid-cols-2 gap-3">
-              <OInput label="Invoice #" value={form.invoice_number} onChange={v => upd('invoice_number', v)} className="col-span-1" />
-              <OInput label="CS #" value={form.cs_number} onChange={v => upd('cs_number', v)} className="col-span-1" />
-              <OInput label="Order Date" type="date" value={form.order_date} onChange={v => upd('order_date', v)} required className="col-span-1" />
-              <OInput label="Expected Arrival" type="date" value={form.expected_arrival} onChange={v => upd('expected_arrival', v)} className="col-span-1" />
-              <OSelect label="Priority" value={form.priority} onChange={v => upd('priority', v)}
-                options={['low','normal','high','urgent'].map(p => ({ value:p, label:p.charAt(0).toUpperCase()+p.slice(1) }))}
-                className="col-span-1" />
-              <OTextarea label="Notes" value={form.notes} onChange={v => upd('notes', v)} rows={2} className="col-span-2" />
-            </div>
-          )}
+          {(() => {
+            const renderField = (f) => {
+              const isBuiltin = BUILTIN_KEYS.has(f.field_key);
+              const val = isBuiltin ? form[f.field_key] : (form.custom_fields?.[f.field_key] ?? '');
+              const setVal = (v) => isBuiltin
+                ? upd(f.field_key, v)
+                : setForm(s => ({ ...s, custom_fields: { ...(s.custom_fields || {}), [f.field_key]: v } }));
 
-          {tab === 'unit' && (
-            <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-3">
-                <OSelect label="Model *" value={form.model_id} onChange={handleModelChange}
-                  options={models.map(m => ({ value: m.id, label: m.name }))} required className="col-span-2" />
-                <OInput label="Variant" value={form.variant} onChange={v => upd('variant', v)} />
-                <OInput label="Color" value={form.color} onChange={v => upd('color', v)} />
-                <OInput label="Engine" value={form.engine} onChange={v => upd('engine', v)} />
-                <OInput label="Fuel" value={form.fuel} onChange={v => upd('fuel', v)} />
-                <div className="col-span-2 flex flex-col gap-1">
-                  <span className="text-[11px] font-bold text-muted uppercase tracking-wide">Quantity</span>
-                  <div className="flex items-center gap-3">
-                    <button onClick={() => upd('quantity', Math.max(1, form.quantity - 1))}
-                      className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 text-lg font-black">−</button>
-                    <span className="text-[18px] font-black text-navy w-8 text-center">{form.quantity}</span>
-                    <button onClick={() => upd('quantity', form.quantity + 1)}
-                      className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/80 text-lg font-black">+</button>
+              if (f.field_key === 'quantity') {
+                return (
+                  <div key={f.id} className="col-span-2 flex flex-col gap-1">
+                    <span className="text-[11px] font-bold text-muted uppercase tracking-wide">{f.label}{f.required && <span className="text-red-500 ml-0.5">*</span>}</span>
+                    <div className="flex items-center gap-3">
+                      <button onClick={() => upd('quantity', Math.max(1, form.quantity - 1))}
+                        className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 text-lg font-black">−</button>
+                      <span className="text-[18px] font-black text-navy w-8 text-center">{form.quantity}</span>
+                      <button onClick={() => upd('quantity', form.quantity + 1)}
+                        className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary/80 text-lg font-black">+</button>
+                    </div>
                   </div>
-                </div>
-              </div>
-              {isEdit && (
-                <div>
-                  <p className="text-[11px] font-black text-muted uppercase tracking-wide mb-2">Assign Fleet Units</p>
-                  {ovLoading ? <p className="text-[12px] text-muted">Loading…</p> : (
-                    <VehicleAssignmentPanel
-                      orderId={order?.id} allVehicles={allVehicles}
-                      assignedVehicles={assignedVehicles}
-                      onAssign={handleAssign} onUnassign={handleUnassign}
-                      quantity={form.quantity}
-                    />
+                );
+              }
+              if (f.type === 'textarea') {
+                return <OTextarea key={f.id} label={f.label} value={val} onChange={setVal} rows={2} className="col-span-2" />;
+              }
+              if (f.type === 'select') {
+                let opts = f.options || [];
+                let onChangeFn = setVal;
+                if (f.field_key === 'priority') opts = (priorities || []).filter(p => p.active).sort((a,b)=>(a.ord||0)-(b.ord||0)).map(p => ({ value: p.key, label: p.label }));
+                else if (f.field_key === 'model_id') { opts = models.map(m => ({ value: m.id, label: m.name })); onChangeFn = handleModelChange; }
+                else if (f.field_key === 'dealer_id') { opts = dealers.map(d => ({ value: d.id, label: d.name })); onChangeFn = handleDealerChange; }
+                return <OSelect key={f.id} label={f.label} value={val} onChange={onChangeFn} options={opts} required={f.required} className={f.field_key === 'model_id' ? 'col-span-2' : 'col-span-1'} />;
+              }
+              const inputType = f.type === 'date' ? 'date' : f.type === 'number' ? 'number' : 'text';
+              return <OInput key={f.id} label={f.label} type={inputType} value={val} onChange={setVal} required={f.required} className="col-span-1" />;
+            };
+
+            const tabFields = fieldsByTab[tab] || [];
+            if (tab === 'unit') {
+              return (
+                <div className="flex flex-col gap-4">
+                  <div className="grid grid-cols-2 gap-3">{tabFields.map(renderField)}</div>
+                  {isEdit && (
+                    <div>
+                      <p className="text-[11px] font-black text-muted uppercase tracking-wide mb-2">Assign Fleet Units</p>
+                      {ovLoading ? <p className="text-[12px] text-muted">Loading…</p> : (
+                        <VehicleAssignmentPanel
+                          orderId={order?.id} allVehicles={allVehicles}
+                          assignedVehicles={assignedVehicles}
+                          onAssign={handleAssign} onUnassign={handleUnassign}
+                          quantity={form.quantity}
+                        />
+                      )}
+                    </div>
+                  )}
+                  {!isEdit && (
+                    <p className="text-[11px] text-muted text-center py-2 bg-blue-50 rounded-xl">Save the order first, then assign fleet units from the detail view.</p>
                   )}
                 </div>
-              )}
-              {!isEdit && (
-                <p className="text-[11px] text-muted text-center py-2 bg-blue-50 rounded-xl">Save the order first, then assign fleet units from the detail view.</p>
-              )}
-            </div>
-          )}
-
-          {tab === 'dealer' && (
-            <div className="grid grid-cols-2 gap-3">
-              <OSelect label="Dealer" value={form.dealer_id} onChange={handleDealerChange}
-                options={dealers.map(d => ({ value: d.id, label: d.name }))} className="col-span-2" />
-              {!form.dealer_id && (
-                <OInput label="Dealer Name (manual)" value={form.dealer_name} onChange={v => upd('dealer_name', v)} className="col-span-2" />
-              )}
-            </div>
-          )}
-
-          {tab === 'logistics' && (
-            <div className="grid grid-cols-2 gap-3">
-              <OInput label="Shipping Provider" value={form.shipping_provider} onChange={v => upd('shipping_provider', v)} className="col-span-2" />
-              <OInput label="Tracking Number" value={form.tracking_number} onChange={v => upd('tracking_number', v)} className="col-span-1" />
-              <OInput label="Ship Date" type="date" value={form.shipped_date} onChange={v => upd('shipped_date', v)} className="col-span-1" />
-              <OInput label="Contact Person" value={form.shipping_contact} onChange={v => upd('shipping_contact', v)} className="col-span-1" />
-              <OInput label="Contact Phone" value={form.shipping_phone} onChange={v => upd('shipping_phone', v)} className="col-span-1" />
-              <OTextarea label="Shipping Notes" value={form.shipping_notes} onChange={v => upd('shipping_notes', v)} rows={3} className="col-span-2" />
-            </div>
-          )}
+              );
+            }
+            if (tab === 'dealer') {
+              return (
+                <div className="grid grid-cols-2 gap-3">
+                  {tabFields.map(renderField)}
+                  {!form.dealer_id && (
+                    <OInput label="Dealer Name (manual)" value={form.dealer_name} onChange={v => upd('dealer_name', v)} className="col-span-2" />
+                  )}
+                </div>
+              );
+            }
+            return <div className="grid grid-cols-2 gap-3">{tabFields.map(renderField)}</div>;
+          })()}
           </div>
-          <div className="flex justify-end gap-2 px-5 py-3 border-t border-gray-100 flex-shrink-0">
+          <div className="flex items-center gap-2 px-5 py-3 border-t border-gray-100 flex-shrink-0">
+            {isEdit && (
+              <button onClick={handleDelete} disabled={saving || deleting}
+                className="px-3 py-2 text-[12px] font-black text-red-600 rounded-full hover:bg-red-50 disabled:opacity-50 flex items-center gap-1.5">
+                {deleting ? <><Icon name="progress_activity" className="text-base animate-spin" /> Deleting…</> : <><Icon name="delete" className="text-base" /> Delete</>}
+              </button>
+            )}
+            <div className="flex-1" />
             <button onClick={onClose} className="px-4 py-2 text-[12px] font-bold text-muted rounded-full border border-gray-200 hover:bg-gray-50">Cancel</button>
-            <button onClick={handleSave} disabled={saving}
+            <button onClick={handleSave} disabled={saving || deleting}
               className="px-5 py-2 text-[12px] font-black text-white bg-primary rounded-full hover:bg-primary/80 disabled:opacity-50 flex items-center gap-1.5">
               {saving ? <><Icon name="progress_activity" className="text-base animate-spin" /> Saving…</> : <><Icon name="save" className="text-base" /> Save Order</>}
             </button>
@@ -441,7 +492,7 @@
     }
 
     /* ─── OrderDetailPanel ─── */
-    function OrderDetailPanel({ order, allVehicles, models, dealers, onClose, onRefresh, session, role }) {
+    function OrderDetailPanel({ order, allVehicles, models, dealers, formFields, priorities, onClose, onRefresh, onDelete, session, role }) {
       const [tab, setTab] = useState('details');
       const [history, setHistory] = useState([]);
       const [notes, setNotes] = useState([]);
@@ -656,9 +707,11 @@
           {editOpen && (
             <OrderFormModal
               order={order} models={models} dealers={dealers}
+              formFields={formFields} priorities={priorities}
               allVehicles={allVehicles} session={session}
               onClose={() => setEditOpen(false)}
               onSave={() => { setEditOpen(false); onRefresh(order.status); }}
+              onDelete={() => { setEditOpen(false); if (onDelete) onDelete(order); else onClose(); }}
             />
           )}
         </div>
@@ -771,6 +824,9 @@
       const [models, setModels] = useState([]);
       const [dealers, setDealers] = useState([]);
       const [fleetVehicles, setFleetVehicles] = useState([]);
+      const [statuses, setStatuses] = useState([]);
+      const [priorities, setPriorities] = useState([]);
+      const [formFields, setFormFields] = useState([]);
       const [statusFilter, setStatusFilter] = useState('all');
       const [search, setSearch] = useState('');
       const [newOrderOpen, setNewOrderOpen] = useState(false);
@@ -781,16 +837,23 @@
 
       const loadData = async () => {
         setLoading(true);
-        const [oRes, mRes, dRes, vRes] = await Promise.all([
+        const [oRes, mRes, dRes, vRes, sRes, pRes, fRes] = await Promise.all([
           sb.from('orders').select('*').order('created_at', { ascending: false }),
           sb.from('vehicle_models').select('id, name').order('name'),
           sb.from('dealers').select('*').eq('active', true).order('name'),
           sb.from('vehicles').select('id, model, color, stage, lot, vin').order('created_at', { ascending: false }),
+          sb.from('order_statuses').select('*').order('ord'),
+          sb.from('order_priorities').select('*').order('ord'),
+          sb.from('order_form_fields').select('*').order('tab').order('ord'),
         ]);
+        applyOrdersConfig({ statuses: sRes.data, priorities: pRes.data });
         setOrders(oRes.data || []);
         setModels(mRes.data || []);
         setDealers(dRes.data || []);
         setFleetVehicles(vRes.data || []);
+        setStatuses(sRes.data || []);
+        setPriorities(pRes.data || []);
+        setFormFields(fRes.data || []);
         setLoading(false);
       };
 
@@ -829,7 +892,7 @@
         <div className="flex flex-col h-full bg-[#F5F5F5]">
           <header className="bg-white shadow-sm px-4 pt-safe flex items-center justify-between" style={{ paddingTop: 'max(env(safe-area-inset-top),12px)', paddingBottom: 12 }}>
             <div>
-              <p className="text-[11px] text-muted font-medium">StockMo</p>
+              <p className="text-[11px] text-muted font-medium">GVIMS</p>
               <h1 className="text-[18px] font-black text-navy leading-tight">Orders</h1>
             </div>
             <div className="flex items-center gap-2">
@@ -887,7 +950,7 @@
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-[13px] font-black text-navy">{o.order_number}</span>
                       <OrdStatusBadge status={o.status} />
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${ORD_PRI[o.priority]}`}>{o.priority}</span>
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${ORD_PRI[o.priority] || 'bg-gray-100 text-gray-500'}`}>{ORD_PRI_LABELS[o.priority] || o.priority}</span>
                     </div>
                     <p className="text-[12px] text-muted mt-0.5 truncate">{o.model_name} {o.variant ? `· ${o.variant}` : ''}</p>
                     {o.dealer_name && <p className="text-[11px] text-muted truncate">{o.dealer_name}</p>}
@@ -907,6 +970,7 @@
           {newOrderOpen && (
             <OrderFormModal
               order={null} models={models} dealers={dealers}
+              formFields={formFields} priorities={priorities}
               allVehicles={fleetVehicles} session={session}
               onClose={() => setNewOrderOpen(false)} onSave={handleOrderSaved}
             />
@@ -916,8 +980,10 @@
             <OrderDetailPanel
               order={selectedOrder} allVehicles={fleetVehicles}
               models={models} dealers={dealers}
+              formFields={formFields} priorities={priorities}
               onClose={() => setSelectedOrder(null)}
               onRefresh={handleDetailRefresh}
+              onDelete={() => { setSelectedOrder(null); loadData(); }}
               session={session} role={role}
             />
           )}

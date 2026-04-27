@@ -20,7 +20,7 @@
     const VIEW_TO_NAV = {
       'admin-dashboard':'dash','fleet-list':'fleet','team':'team',
       'hold-tracker':'holds','orders':'orders',
-      'pipeline-manager':'config','checklist-editor':'config','model-manager':'config',
+      'pipeline-manager':'config','checklist-editor':'config','model-manager':'config','order-form-editor':'config',
       'settings':'admin',
       'employee-settings':'acct',
     };

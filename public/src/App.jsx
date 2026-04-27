@@ -119,7 +119,7 @@
                 if (profile.role === 'tech') setOnline(s.user.id, true);
                 loadAllData(s.user.id);
                 const defaultDest = (profile.role === 'admin' || profile.role === 'employee') ? 'admin-dashboard' : 'tech-home';
-                const adminViews = ['admin-dashboard','fleet-list','team','reports','settings','pipeline-manager','checklist-editor','model-manager','hold-tracker','orders'];
+                const adminViews = ['admin-dashboard','fleet-list','team','reports','settings','pipeline-manager','checklist-editor','model-manager','order-form-editor','hold-tracker','orders'];
                 const employeeViews = ['admin-dashboard','fleet-list','team','reports','hold-tracker','orders','employee-settings'];
                 const techViews  = ['tech-home','tech-inspect','tech-stockyard','tech-delivery','tech-settings'];
                 const validViews = profile.role === 'admin' ? adminViews : profile.role === 'employee' ? employeeViews : techViews;
@@ -727,6 +727,7 @@
         'pipeline-manager':  <PipelineManagerScreen  navigate={navigate} t={t} vehicles={vehicles} role={role} />,
         'checklist-editor':  <ChecklistEditorScreen  navigate={navigate} t={t} vehicles={vehicles} role={role} />,
         'model-manager':     <ModelManagerScreen     navigate={navigate} t={t} vehicles={vehicles} role={role} />,
+        'order-form-editor': <OrderFormEditorScreen  navigate={navigate} t={t} vehicles={vehicles} role={role} />,
         'employee-settings': <EmployeeSettingsScreen {...shared} />,
       };
 
